@@ -1,7 +1,6 @@
 use tauri_plugin_log::Target;
 use tauri_plugin_log::TargetKind;
 use log::{ info, warn, error, debug };
-use tauri::Manager;
 use libloading::{ Library, Symbol };
 use std::ffi::CStr;
 use std::ffi::CString;
@@ -11,6 +10,8 @@ use std::ptr;
 use std::str;
 use lazy_static::lazy_static;
 
+const LOG_FILE_NAME: &str = "mathapp";
+const MODEL_FILE_NAME: &str = "DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf";
 lazy_static! {
     static ref GGML_BASE_LIB: (PathBuf, Library) = load_library("libggml-base.dylib");
     static ref GGML_LIB: (PathBuf, Library) = load_library("libggml.dylib");
@@ -29,16 +30,13 @@ fn load_library(lib_name: &str) -> (PathBuf, Library) {
     (lib_path, library)
 }
 
-unsafe extern "C" {
-    fn generate_text(
-        model_path: *const c_char,
-        prompt: *const c_char,
-        n_predict: c_int,
-        ngl: c_int
-    ) -> *const c_char;
+fn model_path() -> String {
+    let model_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("assets")
+        .join("models")
+        .join(MODEL_FILE_NAME);
+    model_path.to_str().unwrap().to_string()
 }
-
-const LOG_FILE_NAME: &str = "mathapp";
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
@@ -48,15 +46,23 @@ fn greet(name: &str) -> String {
     error!("Greeting {}", name);
 
     let res = echo_rust(name).unwrap_or_else(|e| {
-        error!("Failed to generate text: {}", e);
-        "Failed to generate text".to_string()
+        error!("Failed to echo text: {}", e);
+        "Failed to echo text".to_string()
     });
     format!("Hello, {}! Wassup? You've been greeted from Rust!", res)
 }
 
 #[tauri::command]
-fn generate(prompt: &str) -> String {
-    prompt.to_string()
+fn llm_generate(prompt: &str) -> String {
+    let path = model_path();
+    const N_PREDICT: i32 = 4096;
+    const NGL: i32 = 99;
+    info!("Using model path: {}", path);
+    let res = generate_text_rust(&path, prompt, N_PREDICT, NGL).unwrap_or_else(|e| {
+        error!("Failed to generate text: {}", e);
+        "Failed to generate text".to_string()
+    });
+    format!("Hello, {}", res)
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -74,7 +80,7 @@ pub fn run() {
                 .build()
         )
         .plugin(tauri_plugin_opener::init())
-        .setup(move |app| {
+        .setup(move |_app| {
             debug!("loading: {:?}", GGML_BASE_LIB.0);
             debug!("loading: {:?}", GGML_LIB.0);
             debug!("loading: {:?}", LLAMA_LIB.0);
@@ -82,7 +88,7 @@ pub fn run() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![greet, generate])
+        .invoke_handler(tauri::generate_handler![llm_generate])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
@@ -115,7 +121,11 @@ pub fn generate_text_rust(
     let c_prompt = CString::new(prompt).map_err(|e| e.to_string())?;
 
     unsafe {
-        let result_ptr = generate_text(c_model_path.as_ptr(), c_prompt.as_ptr(), n_predict, ngl);
+        let func: Symbol<
+            unsafe extern "C" fn(*const c_char, *const c_char, c_int, c_int) -> *const c_char
+        > = MATHAPP_LIB.1.get(b"generate_text\0").map_err(|e| e.to_string())?;
+
+        let result_ptr = func(c_model_path.as_ptr(), c_prompt.as_ptr(), n_predict, ngl);
         if result_ptr == ptr::null() {
             return Err("Failed to generate text".to_string());
         }

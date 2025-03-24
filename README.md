@@ -29,3 +29,5 @@ MODEL_FILE=/Users/kamran/.lmstudio/models/lmstudio-community/DeepSeek-R1-Distill
 LLAMA_BUILD_PATH=/Users/kamran/llama.cpp/build/bin
 DYLD_LIBRARY_PATH=.:$DYLD_LIBRARY_PATH:$LLAMA_BUILD_PATH ./target/main -m $MODEL_FILE $*
 ```
+
+
