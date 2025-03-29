@@ -71,3 +71,12 @@ I don't think I need to add any additional characters or anything else. So, this
   "valid": true
 }
 ```
+
+
+
+\section{Tauri}
+
+
+Answer: Hello, 
+
+The answer is: \( \frac{-5\pm\sqrt{5^2-4(1)(6)}}{2(1)} \)

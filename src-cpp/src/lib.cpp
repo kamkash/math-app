@@ -4,36 +4,86 @@
 #include <string>
 #include <vector>
 
+#ifdef _WIN32
+#define EXPORT __declspec(dllexport)
+#else
+#define EXPORT __attribute__((visibility("default")))
+#endif
+
 extern "C"
 {
-    __attribute__((visibility("default")))
-    const char *echo(const char *str)
+    std::mutex model_mutex;
+    static llama_model *model = nullptr;
+    static llama_context *ctx = nullptr;
+    static const llama_vocab *vocab = nullptr;
+    static llama_sampler *smpl = nullptr;
+
+    EXPORT const char *echo(const char *str)
     {
         static std::string result;
         result = std::string(str) + " from C++";
         return result.c_str();
     }
 
-    const char *generate_text(const char *model_path, const char *prompt, int n_predict, int ngl)
+    EXPORT bool init(const char *model_path, int ngl)
     {
-        static std::string result;
-        result.clear();
+        std::lock_guard<std::mutex> lock(model_mutex);
 
-        // load dynamic backends
-        ggml_backend_load_all();
+        if (model == nullptr)
+        {
+            // load dynamic backends
+            ggml_backend_load_all();
+        }
+        else
+        {
+            llama_model_free(model);
+            model = nullptr;
+            if (ctx != nullptr)
+            {
+                llama_free(ctx);
+                ctx = nullptr;
+            }
+            if (smpl != nullptr)
+            {
+                llama_sampler_free(smpl);
+                smpl = nullptr;
+            }
+        }
 
         // initialize the model
         llama_model_params model_params = llama_model_default_params();
         model_params.n_gpu_layers = ngl;
 
-        llama_model *model = llama_model_load_from_file(model_path, model_params);
-        const llama_vocab *vocab = llama_model_get_vocab(model);
+        model = llama_model_load_from_file(model_path, model_params);
+        vocab = llama_model_get_vocab(model);
 
-        if (model == NULL)
+        if (model == nullptr)
         {
             fprintf(stderr, "%s: error: unable to load model\n", __func__);
+            return false;
+        }
+
+        // initialize the sampler
+        if (smpl == nullptr)
+        {
+            auto sparams = llama_sampler_chain_default_params();
+            sparams.no_perf = false;
+            smpl = llama_sampler_chain_init(sparams);
+            llama_sampler_chain_add(smpl, llama_sampler_init_greedy());
+        }
+        return true;
+    }
+
+    EXPORT const char *generate_text(const char *prompt, int n_predict)
+    {
+        if (model == nullptr)
+        {
+            fprintf(stderr, "%s: error: model is not initialized. call init() first\n", __func__);
             return nullptr;
         }
+
+        static std::string result;
+        result.clear();
 
         // tokenize the prompt
         const int n_prompt = -llama_tokenize(vocab, prompt, strlen(prompt), NULL, 0, true, true);
@@ -44,27 +94,33 @@ extern "C"
             return nullptr;
         }
 
-        // initialize the context
-        llama_context_params ctx_params = llama_context_default_params();
-        ctx_params.n_ctx = n_prompt + n_predict - 1;
-        ctx_params.n_batch = n_prompt;
-        ctx_params.no_perf = false;
-
-        llama_context *ctx = llama_init_from_model(model, ctx_params);
-        if (ctx == NULL)
+        if (ctx == nullptr)
         {
-            fprintf(stderr, "%s: error: failed to create the llama_context\n", __func__);
-            return nullptr;
-        }
+            // initialize the context
+            llama_context_params ctx_params = llama_context_default_params();
+            ctx_params.n_ctx = n_prompt + n_predict - 1;
+            ctx_params.n_batch = n_prompt;
+            ctx_params.no_perf = false;
 
-        // initialize the sampler
-        auto sparams = llama_sampler_chain_default_params();
-        sparams.no_perf = false;
-        llama_sampler *smpl = llama_sampler_chain_init(sparams);
-        llama_sampler_chain_add(smpl, llama_sampler_init_greedy());
+            ctx = llama_init_from_model(model, ctx_params);
+            if (ctx == NULL)
+            {
+                fprintf(stderr, "%s: error: failed to create the llama_context\n", __func__);
+                return nullptr;
+            }
+        }
 
         // prepare a batch for the prompt
         llama_batch batch = llama_batch_get_one(prompt_tokens.data(), prompt_tokens.size());
+        // check if we have enough space in the context to evaluate this batch
+        int n_ctx = llama_n_ctx(ctx);
+        int n_ctx_used = llama_kv_self_used_cells(ctx);
+        if (n_ctx_used + batch.n_tokens > n_ctx)
+        {
+            printf("\033[0m\n");
+            fprintf(stderr, "context size exceeded\n");
+            return nullptr;
+        }
 
         // main loop
         const auto t_main_start = ggml_time_us();
@@ -105,9 +161,12 @@ extern "C"
         llama_perf_context_print(ctx);
         fprintf(stderr, "\n");
 
-        llama_sampler_free(smpl);
-        llama_free(ctx);
-        llama_model_free(model);
+        // todo: why do we need to free the context
+        if (ctx != nullptr)
+        {
+            llama_free(ctx);
+            ctx = nullptr;
+        }
 
         return result.c_str();
     }

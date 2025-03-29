@@ -6,21 +6,34 @@
   <link rel="stylesheet" href="/src/styles.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tauri App</title>
+  <script type="module" src="/src/assets/tex-mml-chtml.js" defer></script>
   <script type="module" src="/src/main.ts" defer></script>
 
 </head>
 
 <body>
   <main class="container">
+    <button style="display: block; margin: 0 auto;" id="new_chat">New Chat</button>
     <form class="row" id="greet-form">
-      <input id="prompt-input" placeholder="Enter a name..." />
-      <button type="submit">Okay</button>
+      <input id="prompt-input" placeholder="What's up..." />
+      <button type="submit">Go</button>
     </form>
     <p id="greet-msg"></p>
     <div id="content">
       <p id="content-text"></p>
-    </div>    
+    </div>
+    <textarea id="latex-input" style="height: 200px;"></textarea>
+    <div id="math-output"></div>
   </main>
+  <script>
+    const input = document.getElementById('latex-input');
+    const output = document.getElementById('math-output');
+
+    input.addEventListener('input', () => {
+      output.innerHTML = '\\[' + input.value + '\\]';
+      MathJax.typeset([output]);
+    });    
+  </script>
 </body>
 
 </html>

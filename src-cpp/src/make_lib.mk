@@ -16,6 +16,7 @@ $(TARGET_DIR):
 
 $(TARGET): $(OBJ)
 	$(CC) -shared -o $@ $^ $(LDFLAGS)
+	@echo "dylib $@ created"
 
 $(STATIC_TARGET): $(OBJ)
 	@echo "Creating static library $@"

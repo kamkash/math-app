@@ -10,8 +10,13 @@ use std::ptr;
 use std::str;
 use lazy_static::lazy_static;
 
+pub mod chain;
+
 const LOG_FILE_NAME: &str = "mathapp";
-const MODEL_FILE_NAME: &str = "DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf";
+// pub const MODEL_FILE_NAME: &str = "DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf";
+pub const MODEL_FILE_NAME: &str = "gemma-3-4b-it-Q4_K_M.gguf";
+const NGL: i32 = 99;
+
 lazy_static! {
     static ref GGML_BASE_LIB: (PathBuf, Library) = load_library("libggml-base.dylib");
     static ref GGML_LIB: (PathBuf, Library) = load_library("libggml.dylib");
@@ -30,7 +35,7 @@ fn load_library(lib_name: &str) -> (PathBuf, Library) {
     (lib_path, library)
 }
 
-fn model_path() -> String {
+pub fn model_path() -> String {
     let model_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("assets")
         .join("models")
@@ -53,16 +58,24 @@ fn greet(name: &str) -> String {
 }
 
 #[tauri::command]
+fn new_topic() -> () {
+    info!("New topic");
+    let res = init_math_app_rust(NGL).unwrap_or_else(|e| {
+        error!("Failed to initialize mathapp: {}", e);
+        0
+    });
+    info!("math app init {}", res);
+}
+
+
+#[tauri::command]
 fn llm_generate(prompt: &str) -> String {
-    let path = model_path();
     const N_PREDICT: i32 = 4096;
-    const NGL: i32 = 99;
-    info!("Using model path: {}", path);
-    let res = generate_text_rust(&path, prompt, N_PREDICT, NGL).unwrap_or_else(|e| {
+    let res = generate_text_rust(prompt, N_PREDICT).unwrap_or_else(|e| {
         error!("Failed to generate text: {}", e);
         "Failed to generate text".to_string()
     });
-    format!("Hello, {}", res)
+    format!("{}", res)
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -85,12 +98,29 @@ pub fn run() {
             debug!("loading: {:?}", GGML_LIB.0);
             debug!("loading: {:?}", LLAMA_LIB.0);
             debug!("loading: {:?}", MATHAPP_LIB.0);
-
+            let res = init_math_app_rust(NGL).unwrap_or_else(|e| {
+                error!("Failed to initialize mathapp: {}", e);
+                0
+            });
+            info!("math app init {}", res);
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![llm_generate])
+        .invoke_handler(tauri::generate_handler![new_topic, llm_generate, greet])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+pub fn init_math_app_rust(ngl: i32) -> Result<i32, String> {
+    unsafe {
+        let func: Symbol<unsafe extern "C" fn(*const c_char, c_int) -> c_int> = MATHAPP_LIB.1.get(
+            b"init\0"
+        ).expect("Failed to load init_math_app");
+        let result = func(model_path().as_ptr() as *const c_char, ngl);
+        if result == 0 {
+            return Err("Failed to initialize mathapp".to_string());
+        }
+        Ok(result)
+    }
 }
 
 pub fn echo_rust(estr: &str) -> Result<String, String> {
@@ -111,21 +141,15 @@ pub fn echo_rust(estr: &str) -> Result<String, String> {
     }
 }
 
-pub fn generate_text_rust(
-    model_path: &str,
-    prompt: &str,
-    n_predict: i32,
-    ngl: i32
-) -> Result<String, String> {
-    let c_model_path = CString::new(model_path).map_err(|e| e.to_string())?;
+pub fn generate_text_rust(prompt: &str, n_predict: i32) -> Result<String, String> {
     let c_prompt = CString::new(prompt).map_err(|e| e.to_string())?;
 
     unsafe {
         let func: Symbol<
-            unsafe extern "C" fn(*const c_char, *const c_char, c_int, c_int) -> *const c_char
+            unsafe extern "C" fn(*const c_char, c_int) -> *const c_char
         > = MATHAPP_LIB.1.get(b"generate_text\0").map_err(|e| e.to_string())?;
 
-        let result_ptr = func(c_model_path.as_ptr(), c_prompt.as_ptr(), n_predict, ngl);
+        let result_ptr = func(c_prompt.as_ptr(), n_predict);
         if result_ptr == ptr::null() {
             return Err("Failed to generate text".to_string());
         }
