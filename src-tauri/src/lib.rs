@@ -17,12 +17,22 @@ const LOG_FILE_NAME: &str = "mathapp";
 pub const MODEL_FILE_NAME: &str = "gemma-3-4b-it-Q4_K_M.gguf";
 const NGL: i32 = 99;
 
+#[cfg(target_os = "linux")]
+lazy_static! {
+    static ref GGML_BASE_LIB: (PathBuf, Library) = load_library("libggml-base.so");
+    static ref GGML_LIB: (PathBuf, Library) = load_library("libggml.so");
+    static ref LLAMA_LIB: (PathBuf, Library) = load_library("libllama.so");
+    static ref MATHAPP_LIB: (PathBuf, Library) = load_library("libmathapp.so");
+}
+
+#[cfg(target_os = "macos")]
 lazy_static! {
     static ref GGML_BASE_LIB: (PathBuf, Library) = load_library("libggml-base.dylib");
     static ref GGML_LIB: (PathBuf, Library) = load_library("libggml.dylib");
     static ref LLAMA_LIB: (PathBuf, Library) = load_library("libllama.dylib");
     static ref MATHAPP_LIB: (PathBuf, Library) = load_library("libmathapp.dylib");
 }
+
 
 fn load_library(lib_name: &str) -> (PathBuf, Library) {
     let lib_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
@@ -111,11 +121,12 @@ pub fn run() {
 }
 
 pub fn init_math_app_rust(ngl: i32) -> Result<i32, String> {
+    let c_model_path = CString::new(model_path()).map_err(|e| e.to_string())?;
     unsafe {
         let func: Symbol<unsafe extern "C" fn(*const c_char, c_int) -> c_int> = MATHAPP_LIB.1.get(
             b"init\0"
         ).expect("Failed to load init_math_app");
-        let result = func(model_path().as_ptr() as *const c_char, ngl);
+        let result = func(c_model_path.as_ptr() as *const c_char, ngl);
         if result == 0 {
             return Err("Failed to initialize mathapp".to_string());
         }

@@ -28,6 +28,7 @@ extern "C"
 
     EXPORT bool init(const char *model_path, int ngl)
     {
+        fprintf(stderr, "%s: model file path %s\n", __func__, model_path);
         std::lock_guard<std::mutex> lock(model_mutex);
 
         if (model == nullptr)
@@ -82,6 +83,7 @@ extern "C"
             fprintf(stderr, "%s: error: model is not initialized. call init() first\n", __func__);
             return nullptr;
         }
+        fprintf(stderr, "%s: Prompt: %s\n", __func__, prompt);
 
         static std::string result;
         result.clear();
