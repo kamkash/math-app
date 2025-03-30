@@ -1,7 +1,22 @@
+OS := $(shell uname)
 CXX = g++
 CC = clang++
-CXXFLAGS = -std=c++17 -Wall -I/Users/kamran/llama.cpp/include -I/Users/kamran/llama.cpp/ggml/include
-LDFLAGS = -L/Users/kamran/llama.cpp/build/bin -lllama -lggml -lggml-base 
+
+ifeq ($(OS), Darwin)  # macOS
+	LLAMA_CPP_PATH = /Users/kamran/llama.cpp
+	DY_TARGET=dylib
+endif
+ifeq ($(OS), Linux)
+	LLAMA_CPP_PATH = /media/kamran/T7/llama.cpp
+	DY_TARGET=so
+endif
+
+LLAMA_INCLUDE=$(LLAMA_CPP_PATH)/include
+GGML_INCLUDE=$(LLAMA_CPP_PATH)/ggml/include
+LLAMA_LIBS=$(LLAMA_CPP_PATH)/build/bin
+
+CXXFLAGS = -std=c++17 -Wall -I$(LLAMA_INCLUDE) -I$(GGML_INCLUDE)
+LDFLAGS = -L$(LLAMA_LIBS) -lllama -lggml -lggml-base 
 
 TARGET_DIR = ../target
 SRC = main.cpp

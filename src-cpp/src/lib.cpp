@@ -3,6 +3,7 @@
 #include <cstring>
 #include <string>
 #include <vector>
+#include <mutex>
 
 #ifdef _WIN32
 #define EXPORT __declspec(dllexport)
