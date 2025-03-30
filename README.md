@@ -148,3 +148,124 @@ Sources
 [39] [PDF] katex: Rendering Math to HTML, 'MathML', or R-Documentation Format https://cran.rstudio.com/web/packages/katex/katex.pdf
 
 
+## llama.cpp Linux build
+To build llama.cpp with GCC and CMake on Ubuntu, follow these steps:
+
+⸻
+
+1. Install Dependencies
+
+Ensure you have GCC, CMake, and Make installed:
+
+sudo apt update
+sudo apt install build-essential cmake
+
+Optional: Install OpenBLAS for better performance:
+
+sudo apt install libopenblas-dev
+
+
+
+⸻
+
+2. Clone the llama.cpp Repository
+
+If you haven’t already:
+
+git clone https://github.com/ggerganov/llama.cpp
+cd llama.cpp
+
+
+
+⸻
+
+3. Set GCC as the Compiler
+
+Check your GCC version:
+
+gcc --version
+g++ --version
+
+If you have multiple versions, you can list them:
+
+update-alternatives --list gcc
+update-alternatives --list g++
+
+To ensure GCC is used instead of Clang, explicitly set the compilers when configuring CMake.
+
+⸻
+
+4. Configure and Build with CMake
+
+Basic Build
+
+mkdir build && cd build
+-DCMAKE_CXX_FLAGS="-I/media/kamran/T7/vulkan/1.4.309.0/x86_64/include"
+export CMAKE_INCLUDE_PATH=/media/kamran/T7/vulkan/1.4.309.0/x86_64/include
+export Vulkan_INCLUDE_DIR=/media/kamran/T7/vulkan/1.4.309.0/x86_64/include
+cmake .. -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DVulkan_INCLUDE_DIR=$Vulkan_INCLUDE_DIR -DGGML_VULKAN=ON -DCMAKE_CXX_FLAGS="-I/media/kamran/T7/vulkan/1.4.309.0/x86_64/include"
+cmake --build . --parallel
+
+-- cmake .. -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
+
+This tells CMake to use GCC (gcc) and G++ (g++).
+
+⸻
+
+5. Enable Optimizations (Optional)
+
+Enable AVX2 (for modern CPUs)
+
+cmake .. -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DLLAMA_AVX2=ON
+cmake --build . --parallel
+
+Enable AVX-512 (for newer Intel CPUs)
+
+cmake .. -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DLLAMA_AVX512=ON
+cmake --build . --parallel
+
+Enable OpenBLAS
+
+cmake .. -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DLLAMA_OPENBLAS=ON
+cmake --build . --parallel
+
+
+
+⸻
+
+6. Run a Test
+
+After building, return to the llama.cpp directory and test:
+
+./build/bin/main -h
+
+If you have a GGUF model, you can test inference:
+
+./build/bin/main -m models/your_model.gguf -p "Hello, how are you?"
+
+
+
+⸻
+
+7. (Optional) Install
+
+To install llama.cpp system-wide:
+
+sudo cmake --install build
+
+This places the binaries in /usr/local/bin.
+
+⸻
+
+Troubleshooting
+	1.	If make still uses Clang, explicitly set the compiler:
+
+export CC=gcc
+export CXX=g++
+
+
+	2.	If you get permission errors, try:
+
+sudo cmake --build . --parallel
+
+⸻

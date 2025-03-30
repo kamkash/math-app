@@ -1,12 +1,14 @@
 OS := $(shell uname)
-CXX = g++
-CC = clang++
 
 ifeq ($(OS), Darwin)  # macOS
+	CXX = g++
+	CC = clang++
 	LLAMA_CPP_PATH = /Users/kamran/llama.cpp
 	DY_TARGET=dylib
 endif
 ifeq ($(OS), Linux)
+	CXX = g++
+	CC = gcc
 	LLAMA_CPP_PATH = /media/kamran/T7/llama.cpp
 	DY_TARGET=so
 endif
