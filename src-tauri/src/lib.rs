@@ -1,14 +1,14 @@
-use tauri_plugin_log::Target;
-use tauri_plugin_log::TargetKind;
-use log::{ info, warn, error, debug };
-use libloading::{ Library, Symbol };
+use lazy_static::lazy_static;
+use libloading::{Library, Symbol};
+use log::{debug, error, info, warn};
 use std::ffi::CStr;
 use std::ffi::CString;
-use std::ffi::{ c_char, c_int };
+use std::ffi::{c_char, c_int};
 use std::path::PathBuf;
 use std::ptr;
 use std::str;
-use lazy_static::lazy_static;
+use tauri_plugin_log::Target;
+use tauri_plugin_log::TargetKind;
 
 pub mod chain;
 
@@ -16,6 +16,16 @@ const LOG_FILE_NAME: &str = "mathapp";
 // pub const MODEL_FILE_NAME: &str = "DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf";
 pub const MODEL_FILE_NAME: &str = "gemma-3-4b-it-Q4_K_M.gguf";
 const NGL: i32 = 99;
+const _SAMPLE_JSON_ARRAY_GRAMMAR: &str = r#"(root ::= "[" (ws value (ws "," ws value)*)? ws "]"
+                                            value ::= object | array | string | number | boolean | null
+                                            object ::= "{" (ws pair (ws "," ws pair)*)? ws "}"
+                                            pair ::= string ws ":" ws value
+                                            string ::= "\"" (char* - ("\\" (["\\/bfnrtu][0-9a-fA-F]{4})))* "\""
+                                            char ::= [^\u0000-\u001F\u0022\u005C]
+                                            number ::= "-"? ([0-9] | [1-9][0-9]*) ("." [0-9]+)? ([eE][-+]? [0-9]+)?
+                                            boolean ::= "true" | "false"
+                                            null ::= "null"
+                                            ws ::= [ \t\n\r]*)"#;
 
 #[cfg(target_os = "linux")]
 lazy_static! {
@@ -33,15 +43,13 @@ lazy_static! {
     static ref MATHAPP_LIB: (PathBuf, Library) = load_library("libmathapp.dylib");
 }
 
-
 fn load_library(lib_name: &str) -> (PathBuf, Library) {
     let lib_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("assets")
         .join("libs")
         .join(lib_name);
-    let library = unsafe {
-        Library::new(&lib_path).expect(&format!("Failed to load library: {}", lib_name))
-    };
+    let library =
+        unsafe { Library::new(&lib_path).expect(&format!("Failed to load library: {}", lib_name)) };
     (lib_path, library)
 }
 
@@ -77,7 +85,6 @@ fn new_topic() -> () {
     info!("math app init {}", res);
 }
 
-
 #[tauri::command]
 fn llm_generate(prompt: &str) -> String {
     const N_PREDICT: i32 = 4096;
@@ -94,13 +101,11 @@ pub fn run() {
         file_name: Some(LOG_FILE_NAME.into()),
     });
     let log_target_stdout: Target = Target::new(TargetKind::Stdout);
-    tauri::Builder
-        ::default()
+    tauri::Builder::default()
         .plugin(
-            tauri_plugin_log::Builder
-                ::default()
+            tauri_plugin_log::Builder::default()
                 .targets(vec![log_target_dir, log_target_stdout])
-                .build()
+                .build(),
         )
         .plugin(tauri_plugin_opener::init())
         .setup(move |_app| {
@@ -120,12 +125,16 @@ pub fn run() {
         .expect("error while running tauri application");
 }
 
+//
+//////////////////// FFI functions //////////////////////
+//
 pub fn init_math_app_rust(ngl: i32) -> Result<i32, String> {
     let c_model_path = CString::new(model_path()).map_err(|e| e.to_string())?;
     unsafe {
-        let func: Symbol<unsafe extern "C" fn(*const c_char, c_int) -> c_int> = MATHAPP_LIB.1.get(
-            b"init\0"
-        ).expect("Failed to load init_math_app");
+        let func: Symbol<unsafe extern "C" fn(*const c_char, c_int) -> c_int> = MATHAPP_LIB
+            .1
+            .get(b"init\0")
+            .expect("Failed to load init_math_app");
         let result = func(c_model_path.as_ptr() as *const c_char, ngl);
         if result == 0 {
             return Err("Failed to initialize mathapp".to_string());
@@ -136,13 +145,12 @@ pub fn init_math_app_rust(ngl: i32) -> Result<i32, String> {
 
 pub fn echo_rust(estr: &str) -> Result<String, String> {
     unsafe {
-        let func: Symbol<unsafe extern "C" fn(*const c_char) -> *const c_char> = MATHAPP_LIB.1.get(
-            b"echo\0"
-        ).map_err(|e| e.to_string())?;
+        let func: Symbol<unsafe extern "C" fn(*const c_char) -> *const c_char> =
+            MATHAPP_LIB.1.get(b"echo\0").map_err(|e| e.to_string())?;
 
         let result_ptr = func(estr.as_ptr() as *const c_char);
         if result_ptr == ptr::null() {
-            return Err("Failed to generate text".to_string());
+            return Err("Failed to echo".to_string());
         }
         let c_str = CStr::from_ptr(result_ptr);
         c_str
@@ -156,9 +164,10 @@ pub fn generate_text_rust(prompt: &str, n_predict: i32) -> Result<String, String
     let c_prompt = CString::new(prompt).map_err(|e| e.to_string())?;
 
     unsafe {
-        let func: Symbol<
-            unsafe extern "C" fn(*const c_char, c_int) -> *const c_char
-        > = MATHAPP_LIB.1.get(b"generate_text\0").map_err(|e| e.to_string())?;
+        let func: Symbol<unsafe extern "C" fn(*const c_char, c_int) -> *const c_char> = MATHAPP_LIB
+            .1
+            .get(b"generate_text\0")
+            .map_err(|e| e.to_string())?;
 
         let result_ptr = func(c_prompt.as_ptr(), n_predict);
         if result_ptr == ptr::null() {
@@ -171,3 +180,35 @@ pub fn generate_text_rust(prompt: &str, n_predict: i32) -> Result<String, String
             .map_err(|e| e.to_string())
     }
 }
+
+pub fn add_grammar_rust(grammar: &str) -> Result<i32, String> {
+    unsafe {
+        let func: Symbol<unsafe extern "C" fn(*const c_char) -> c_int> = MATHAPP_LIB
+            .1
+            .get(b"add_grammar\0")
+            .map_err(|e| e.to_string())?;
+
+        let result = func(grammar.as_ptr() as *const c_char);
+        if result == 0 {
+            return Err("Failed to add grammar".to_string());
+        }
+        Ok(result)
+    }
+}
+
+pub fn new_topic_rust(topic: &str) -> Result<i32, String> {
+    unsafe {
+        let func: Symbol<unsafe extern "C" fn(*const c_char) -> c_int> = MATHAPP_LIB
+            .1
+            .get(b"new_topic\0")
+            .map_err(|e| e.to_string())?;
+
+        let result = func(topic.as_ptr() as *const c_char);
+        if result == 0 {
+            return Err("Failed new topic".to_string());
+        }
+        Ok(result)
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////

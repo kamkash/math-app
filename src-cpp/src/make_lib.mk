@@ -13,11 +13,12 @@ ifeq ($(OS), Linux)
 	DY_TARGET=so
 endif
 
+JSON_INCLUDE=include
 LLAMA_INCLUDE=$(LLAMA_CPP_PATH)/include
 GGML_INCLUDE=$(LLAMA_CPP_PATH)/ggml/include
 LLAMA_LIBS=$(LLAMA_CPP_PATH)/build/bin
 
-CXXFLAGS = -std=c++17 -Wall -I$(LLAMA_INCLUDE) -I$(GGML_INCLUDE)
+CXXFLAGS = -std=c++17 -Wall -I$(LLAMA_INCLUDE) -I$(GGML_INCLUDE) -I$(JSON_INCLUDE)
 LDFLAGS = -L$(LLAMA_LIBS) -lllama -lggml -lggml-base 
 
 TARGET_DIR = ../target

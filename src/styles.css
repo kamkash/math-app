@@ -21,6 +21,29 @@
   -webkit-text-size-adjust: 100%;
 }
 
+.kktoolbar {
+  margin: 0;
+  padding-top: 10vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+
+}
+
+.kktoolbar button {
+  font-size: 0.75em;  
+}
+
+form button {
+  margin: 0px;
+  font-size: 0.8em;  
+  width: 5.2em;
+  height: 2.8em;
+  background-color: #ffffff;
+  color: #0f0f0f;
+}
+
 .container {
   margin: 0;
   padding-top: 10vh;
@@ -85,6 +108,7 @@ button:active {
   border-color: #396cd8;
   background-color: #e8e8e8;
 }
+
 
 input,
 button {
