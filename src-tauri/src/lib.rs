@@ -16,16 +16,8 @@ const LOG_FILE_NAME: &str = "mathapp";
 // pub const MODEL_FILE_NAME: &str = "DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf";
 pub const MODEL_FILE_NAME: &str = "gemma-3-4b-it-Q4_K_M.gguf";
 const NGL: i32 = 99;
-const _SAMPLE_JSON_ARRAY_GRAMMAR: &str = r#"(root ::= "[" (ws value (ws "," ws value)*)? ws "]"
-                                            value ::= object | array | string | number | boolean | null
-                                            object ::= "{" (ws pair (ws "," ws pair)*)? ws "}"
-                                            pair ::= string ws ":" ws value
-                                            string ::= "\"" (char* - ("\\" (["\\/bfnrtu][0-9a-fA-F]{4})))* "\""
-                                            char ::= [^\u0000-\u001F\u0022\u005C]
-                                            number ::= "-"? ([0-9] | [1-9][0-9]*) ("." [0-9]+)? ([eE][-+]? [0-9]+)?
-                                            boolean ::= "true" | "false"
-                                            null ::= "null"
-                                            ws ::= [ \t\n\r]*)"#;
+const _SAMPLE_LIST_GRAMMAR: &str = r#"root ::= (\"- \" item)+
+                                            item ::= [^\n]+ \"\n\""#;
 
 #[cfg(target_os = "linux")]
 lazy_static! {
@@ -76,10 +68,20 @@ fn greet(name: &str) -> String {
 }
 
 #[tauri::command]
-fn new_topic() -> () {
-    info!("New topic");
+fn reset_context(topic: &str) -> () {
+    info!("Resetting context");
+    let res = rest_context_rust(topic).unwrap_or_else(|e| {
+        error!("Failed to reset context: {}", e);
+        0
+    });
+    info!("math app init {}", res);
+}
+
+#[tauri::command]
+fn reset_model(name: &str) -> () {
+    info!("Resetting model {}", name);
     let res = init_math_app_rust(NGL).unwrap_or_else(|e| {
-        error!("Failed to initialize mathapp: {}", e);
+        error!("Failed to reset model: {}", e);
         0
     });
     info!("math app init {}", res);
@@ -95,6 +97,15 @@ fn llm_generate(prompt: &str) -> String {
     format!("{}", res)
 }
 
+#[tauri::command]
+fn add_grammar(grammar: &str) -> String {
+    let res = add_grammar_rust(grammar).unwrap_or_else(|e| {
+        error!("Failed to add grammar: {}", e);
+        1
+    });
+    format!("{}", res)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let log_target_dir: Target = Target::new(TargetKind::LogDir {
@@ -104,6 +115,7 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(
             tauri_plugin_log::Builder::default()
+                .level(log::LevelFilter::Debug)
                 .targets(vec![log_target_dir, log_target_stdout])
                 .build(),
         )
@@ -120,7 +132,13 @@ pub fn run() {
             info!("math app init {}", res);
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![new_topic, llm_generate, greet])
+        .invoke_handler(tauri::generate_handler![
+            reset_context,
+            reset_model,
+            llm_generate,
+            greet,
+            add_grammar
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
@@ -188,7 +206,8 @@ pub fn add_grammar_rust(grammar: &str) -> Result<i32, String> {
             .get(b"add_grammar\0")
             .map_err(|e| e.to_string())?;
 
-        let result = func(grammar.as_ptr() as *const c_char);
+        let c_grammar = CString::new(grammar).map_err(|e| e.to_string())?;
+        let result = func(c_grammar.as_ptr() as *const c_char);
         if result == 0 {
             return Err("Failed to add grammar".to_string());
         }
@@ -196,16 +215,16 @@ pub fn add_grammar_rust(grammar: &str) -> Result<i32, String> {
     }
 }
 
-pub fn new_topic_rust(topic: &str) -> Result<i32, String> {
+pub fn rest_context_rust(topic: &str) -> Result<i32, String> {
     unsafe {
         let func: Symbol<unsafe extern "C" fn(*const c_char) -> c_int> = MATHAPP_LIB
             .1
-            .get(b"new_topic\0")
+            .get(b"reset_context\0")
             .map_err(|e| e.to_string())?;
 
         let result = func(topic.as_ptr() as *const c_char);
         if result == 0 {
-            return Err("Failed new topic".to_string());
+            return Err("Failed to reset context".to_string());
         }
         Ok(result)
     }

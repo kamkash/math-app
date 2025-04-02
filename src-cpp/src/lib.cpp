@@ -15,6 +15,8 @@
 extern "C"
 {
     void _free_model();
+    void _free_context();
+    void _free_samplers();
     void _init_samplers();
     bool _init_model(const char *model_path, int ngl);
 
@@ -24,12 +26,10 @@ extern "C"
     static const llama_vocab *vocab = nullptr;
     static llama_sampler *smpl = nullptr;
 
-    static std::string sample_grammar_string = R"(root  ::= ((expr \"=\" ws term \"\n\")+
-                                        expr  ::= term ([-+*/] term)*
-                                        term  ::= ident | num | \"(\" ws expr \")\" ws
-                                        ident ::= [a-z] [a-z0-9_]* ws
-                                        num   ::= [0-9]+ ws
-                                        ws    ::= [ \t\n]*))";
+    static std::string SAMPLE_GRAMMAR_STRING = R"(root ::= ("-*-" ws item)+
+                                                  item ::= [^\n]+ "\n"
+                                                  ws ::= [ \t]*
+                                                  )";
 
     EXPORT const char *echo(const char *str)
     {
@@ -65,20 +65,32 @@ extern "C"
 
     EXPORT bool add_grammar(const char *grammar)
     {
-        if (grammar != nullptr && smpl != nullptr)
+        if (grammar != nullptr)
         {
-            llama_sampler_reset(smpl);
-            llama_sampler_chain_add(smpl, llama_sampler_init_grammar(vocab, grammar, "root"));
+            fprintf(stderr, "%s: Adding grammar: \n%s\n", __func__, grammar);
+            _free_samplers();
+            auto sparams = llama_sampler_chain_default_params();
+            sparams.no_perf = true;
+            smpl = llama_sampler_chain_init(sparams);
+            auto smpl_gr = llama_sampler_init_grammar(vocab, grammar, "root");
+            if (smpl_gr == nullptr)
+            {
+                fprintf(stderr, "%s: error: failed to create the grammar sampler\n", __func__);
+                return false;
+            }
+            llama_sampler_chain_add(smpl, smpl_gr);
+            llama_sampler_chain_add(smpl, llama_sampler_init_greedy());
+            // llama_sampler_chain_add(smpl, llama_sampler_init_dist(0.5));
             return true;
         }
         else
         {
-            fprintf(stderr, "%s: error: grammar is null or sampler is null\n", __func__);
+            fprintf(stderr, "%s: error: grammar is null\n", __func__);
             return false;
         }
     }
 
-    EXPORT bool new_topic()
+    EXPORT bool reset_context()
     {
         if (ctx != nullptr)
         {
@@ -159,7 +171,6 @@ extern "C"
             {
                 break;
             }
-            llama_sampler_accept(smpl, new_token_id);
             char buf[128];
             int n = llama_token_to_piece(vocab, new_token_id, buf, sizeof(buf), 0, true);
             if (n < 0)
@@ -183,8 +194,6 @@ extern "C"
         // llama_perf_context_print(ctx);
         // fprintf(stderr, "\n");
 
-        llama_free(ctx);
-        ctx = nullptr;
         return result.c_str();
     }
 
@@ -192,12 +201,7 @@ extern "C"
     // initialize the sampler
     void _init_samplers()
     {
-        if (smpl != nullptr)
-        {
-            llama_sampler_free(smpl);
-            smpl = nullptr;
-        }
-
+        _free_samplers();
         auto sparams = llama_sampler_chain_default_params();
         sparams.no_perf = true;
         smpl = llama_sampler_chain_init(sparams);
@@ -224,11 +228,21 @@ extern "C"
     {
         llama_model_free(model);
         model = nullptr;
+        _free_context();
+        _free_samplers();
+    }
+
+    void _free_context()
+    {
         if (ctx != nullptr)
         {
             llama_free(ctx);
             ctx = nullptr;
         }
+    }
+
+    void _free_samplers()
+    {
         if (smpl != nullptr)
         {
             llama_sampler_free(smpl);

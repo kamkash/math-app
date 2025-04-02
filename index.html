@@ -14,29 +14,30 @@
 <body>
   <main class="container">
     <div class="kktoolbar">
-      <button id="init_model">Init Model</button>
-      <button id="new_chat">New Thread</button>
+      <button id="reset_model">Reset Model</button>
+      <button id="reset_context">Reset context</button>
+      <button id="add_grammar">Add grammar</button>
       <button id="greet">greet</button>
     </div>
     <form class="row" id="greet-form">
-      <input id="prompt-input" placeholder="What's up..." />
+      <textarea id="prompt-input" placeholder="What's up..." rows="7"></textarea>
       <button type="submit">
         <img src="/src/assets/go.svg" alt="Go" />
         Go
       </button>
+      <p id="content-text"></p>
     </form>
-    <p id="content-text"></p>
+    <p id="raw-content-text"></p>
     <textarea id="latex-input" style="display: none;height: 200px;"></textarea>
     <div id="math-output" style="display: none;"></div>
     <script>
       const input = document.getElementById('latex-input');
       const output = document.getElementById('math-output');
-
       input.addEventListener('input', () => {
         output.innerHTML = '\\[' + input.value + '\\]';
         MathJax.typeset([output]);
       });    
-    </script> 
+    </script>
   </main>
 </body>
 

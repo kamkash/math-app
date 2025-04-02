@@ -28,18 +28,23 @@
   flex-direction: row;
   justify-content: center;
   text-align: center;
-
 }
 
 .kktoolbar button {
-  font-size: 0.75em;  
+  font-size: 0.75em;
+  align-items: center;
+  gap: 0.5em;
+}
+
+button img {
+  vertical-align: middle; /* Ensures the image aligns properly */
 }
 
 form button {
   margin: 0px;
-  font-size: 0.8em;  
-  width: 5.2em;
-  height: 2.8em;
+  font-size: 0.8em;
+  /* width: 5.2em; */
+  /* height: 2.8em; */
   background-color: #ffffff;
   color: #0f0f0f;
 }
@@ -66,8 +71,56 @@ form button {
 
 .row {
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center; /* Center-align items horizontally */
+  /* gap: 10px; /* */
 }
+
+.row textarea {
+  width: 100%; 
+  max-width: 80%; 
+  background-color: lightyellow;
+}
+
+.row button {
+  width: auto; /* Let the button size itself */
+  margin-top: 1em;;
+}
+
+#content-text {
+  width: 100%; 
+  max-width: 80%; 
+  max-height: 400px; 
+  overflow-y: auto; 
+  overflow-x: hidden; 
+  color: #333; 
+  border-radius: 5px; 
+  padding: 10px; 
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); 
+  font-family: Arial, sans-serif; 
+  font-size: 14px; 
+  /* background-color: lightyellow; */
+  /* color: white; */
+}
+
+#raw-content-text {
+  width: 100%; 
+  max-width: 80%; 
+  max-height: 400px; 
+  overflow-y: auto; 
+  overflow-x: hidden; 
+  color: #333; 
+  border-radius: 5px; 
+  padding: 10px; 
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); 
+  font-family: Arial, sans-serif; 
+  font-size: 14px; 
+  /* background-color: lightyellow; */
+  color: white;
+  border: solid 1px #ccc;
+}
+
 
 a {
   font-weight: 500;
@@ -83,6 +136,22 @@ h1 {
   text-align: center;
 }
 
+textarea {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  margin-right: 0.5em;
+  width: 24.0em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  color: #0f0f0f;
+  background-color: #ffffff;
+  transition: border-color 0.25s;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  
+}
+
 input,
 button {
   border-radius: 8px;
@@ -95,6 +164,9 @@ button {
   background-color: #ffffff;
   transition: border-color 0.25s;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+  background-color: #0f0f0f98;
+  outline: none;
 }
 
 button {
@@ -107,12 +179,6 @@ button:hover {
 button:active {
   border-color: #396cd8;
   background-color: #e8e8e8;
-}
-
-
-input,
-button {
-  outline: none;
 }
 
 #greet-input {
@@ -129,11 +195,6 @@ button {
     color: #24c8db;
   }
 
-  input,
-  button {
-    color: #ffffff;
-    background-color: #0f0f0f98;
-  }
   button:active {
     background-color: #0f0f0f69;
   }

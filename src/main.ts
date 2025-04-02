@@ -9,10 +9,26 @@ declare global {
 
 let promptInputEl: HTMLInputElement | null;
 let contentEl: HTMLElement | null;
+let rawContentEl: HTMLElement | null;
 
-async function new_topic() {
-  console.log("new topic");
-  await invoke("new_topic");
+async function reset_context(topic: string) {
+  console.log("reset context");
+  await invoke("reset_context", { topic: topic });
+}
+
+async function reset_model(name: string) {
+  console.log("reset model");
+  await invoke("reset_model", { name: name });
+}
+
+async function add_grammar() {
+  console.log("add grammar");
+  if (contentEl && promptInputEl) {
+    let res = await invoke("add_grammar", {
+      grammar: promptInputEl.value,
+    });
+    contentEl.textContent = `Grammar added: ${res}`;
+  }
 }
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -26,8 +42,8 @@ async function greet() {
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 async function llm_generate() {
-  if (promptInputEl && contentEl) {
-    let answer: String = await invoke("llm_generate", {
+  if (promptInputEl && contentEl && rawContentEl) {
+    let answer: string = await invoke("llm_generate", {
       prompt: promptInputEl.value,
     });
     answer = String.raw`${answer}`;
@@ -37,6 +53,7 @@ async function llm_generate() {
     console.log(`Answer: ${answer}`);
     const html = window.render(answer, options);
     contentEl.innerHTML = html;
+    rawContentEl.innerText = answer;
   }
 }
 
@@ -45,6 +62,7 @@ window.addEventListener("DOMContentLoaded", () => {
   load_mathpix();
   promptInputEl = document.querySelector("#prompt-input");
   contentEl = document.querySelector("#content-text");
+  rawContentEl = document.querySelector("#raw-content-text");
   document
     .querySelector("#greet-form")
     ?.addEventListener("submit", async (e) => {
@@ -53,18 +71,30 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
   document
-    .querySelector("#new_chat")
+    .querySelector("#reset_context")
     ?.addEventListener("click", async (e) => {
       e.preventDefault();
-      await new_topic();
+      await reset_context("new topic");
     });
 
   document
-    .querySelector("#greet")
+    .querySelector("#reset_model")
     ?.addEventListener("click", async (e) => {
       e.preventDefault();
-      await greet();
+      await reset_model("new model");
     });
+
+  document
+    .querySelector("#add_grammar")
+    ?.addEventListener("click", async (e) => {
+      e.preventDefault();
+      await add_grammar();
+    });
+
+  document.querySelector("#greet")?.addEventListener("click", async (e) => {
+    e.preventDefault();
+    await greet();
+  });
 });
 
 function load_mathpix() {
