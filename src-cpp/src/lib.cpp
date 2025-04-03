@@ -17,7 +17,7 @@ extern "C"
     void _free_model();
     void _free_context();
     void _free_samplers();
-    void _init_samplers();
+    bool _init_samplers();
     bool _init_model(const char *model_path, int ngl);
 
     std::mutex model_mutex;
@@ -80,7 +80,7 @@ extern "C"
             }
             llama_sampler_chain_add(smpl, smpl_gr);
             llama_sampler_chain_add(smpl, llama_sampler_init_greedy());
-            // llama_sampler_chain_add(smpl, llama_sampler_init_dist(0.5));
+            // llama_sampler_chain_add(smpl, llama_sampler_init_dist(1));
             return true;
         }
         else
@@ -199,13 +199,19 @@ extern "C"
 
     //////////////////////////////////////////////////////////////////////////////////
     // initialize the sampler
-    void _init_samplers()
+    bool _init_samplers()
     {
         _free_samplers();
         auto sparams = llama_sampler_chain_default_params();
         sparams.no_perf = true;
         smpl = llama_sampler_chain_init(sparams);
+        if (smpl == nullptr)
+        {
+            fprintf(stderr, "%s: error: failed to create the sampler chain\n", __func__);
+            return false;
+        }
         llama_sampler_chain_add(smpl, llama_sampler_init_greedy());
+        return true;
     }
 
     bool _init_model(const char *model_path, int ngl)

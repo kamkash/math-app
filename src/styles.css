@@ -55,7 +55,7 @@ form button {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  text-align: center;
+  /* text-align: center; */
 }
 
 .logo {
@@ -118,7 +118,7 @@ form button {
   font-size: 14px; 
   /* background-color: lightyellow; */
   color: white;
-  border: solid 1px #ccc;
+  /* border: solid 1px #ccc; */
 }
 
 

@@ -50,7 +50,7 @@ async function llm_generate() {
     const options = {
       htmlTags: true,
     };
-    console.log(`Answer: ${answer}`);
+    console.log(`${answer}`);
     const html = window.render(answer, options);
     contentEl.innerHTML = html;
     rawContentEl.innerText = answer;
