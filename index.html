@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="/src/styles.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tauri App</title>
-  <script type="module" src="/src/assets/tex-mml-chtml.js" defer></script>
+  <script type="module" src="/src/libs/tex-mml-chtml.js" defer></script>
   <script type="module" src="/src/main.ts" defer></script>
 
 </head>
@@ -26,15 +26,17 @@
         Go
       </button>
       <p id="content-text"></p>
-      <p id="raw-content-text"></p>
     </form>
-    <textarea id="latex-input" style="display: none;height: 200px;"></textarea>
-    <div id="math-output" style="display: none;"></div>
+
+    <form class="row">
+      <textarea id="latex-input" rows="20"></textarea>
+      <div id="math-output"></div>
+    </form>
     <script>
       const input = document.getElementById('latex-input');
       const output = document.getElementById('math-output');
       input.addEventListener('input', () => {
-        output.innerHTML = '\\[' + input.value + '\\]';
+        output.innerHTML = input.value;
         MathJax.typeset([output]);
       });    
     </script>

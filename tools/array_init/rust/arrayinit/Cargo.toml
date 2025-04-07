@@ -1,0 +1,7 @@
+[package]
+name = "arrayinit"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+antlr-rust = "0.2.2"

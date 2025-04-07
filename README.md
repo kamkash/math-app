@@ -73,6 +73,9 @@ window.onload = function () {
 
 This setup provides a customizable LaTeX editor that can be seamlessly integrated into your UI[5].
 
+## MathPix
+curl https://cdn.jsdelivr.net/npm/mathpix-markdown-it@2.0.12/es5/bundle.js > mathpix2.0.12.js
+
 ## MathJax
 
 While not a full-fledged editor, MathJax is a powerful JavaScript library for rendering mathematical notation in web browsers[2]. You can combine it with a text input to create a LaTeX editing experience:

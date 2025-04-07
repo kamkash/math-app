@@ -10,7 +10,7 @@ use std::str;
 use tauri_plugin_log::Target;
 use tauri_plugin_log::TargetKind;
 
-pub mod chain;
+pub mod parser;
 
 const LOG_FILE_NAME: &str = "mathapp";
 // pub const MODEL_FILE_NAME: &str = "DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf";

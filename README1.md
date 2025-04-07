@@ -80,3 +80,19 @@ I don't think I need to add any additional characters or anything else. So, this
 Answer: Hello, 
 
 The answer is: \( \frac{-5\pm\sqrt{5^2-4(1)(6)}}{2(1)} \)
+
+
+
+
+The one-dimensional wave equation in LaTeX can be expressed as follows:
+
+$$
+\frac{\partial^2 u(x,t)}{\partial x^2} = \frac{1}{v^2} \frac{\partial^2 u(x,t)}{\partial t^2}
+$$
+
+Here:
+- $$ u(x,t) $$ is the amplitude of the wave at position $$ x $$ and time $$ t $$,
+- $$ v $$ is the velocity of the wave.
+
+This equation describes how waves propagate in a one-dimensional medium and is a second-order linear partial differential equation.
+

@@ -188,8 +188,7 @@ extern "C"
         fprintf(stderr, "%s: decoded %d tokens in %.2f s, speed: %.2f t/s\n",
                 __func__, n_decode, (t_main_end - t_main_start) / 1000000.0f, n_decode / ((t_main_end - t_main_start) / 1000000.0f));
 
-        fprintf(stderr, "\n");
-
+        // fprintf(stderr, "\n");
         // llama_perf_sampler_print(smpl);
         // llama_perf_context_print(ctx);
         // fprintf(stderr, "\n");

@@ -9,7 +9,6 @@ declare global {
 
 let promptInputEl: HTMLInputElement | null;
 let contentEl: HTMLElement | null;
-let rawContentEl: HTMLElement | null;
 
 async function reset_context(topic: string) {
   console.log("reset context");
@@ -42,18 +41,18 @@ async function greet() {
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 async function llm_generate() {
-  if (promptInputEl && contentEl && rawContentEl) {
+  if (promptInputEl && contentEl) {
     let answer: string = await invoke("llm_generate", {
       prompt: promptInputEl.value,
     });
     answer = String.raw`${answer}`;
     const options = {
       htmlTags: true,
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
     };
     console.log(`${answer}`);
     const html = window.render(answer, options);
     contentEl.innerHTML = html;
-    rawContentEl.innerText = answer;
   }
 }
 
@@ -62,7 +61,6 @@ window.addEventListener("DOMContentLoaded", () => {
   load_mathpix();
   promptInputEl = document.querySelector("#prompt-input");
   contentEl = document.querySelector("#content-text");
-  rawContentEl = document.querySelector("#raw-content-text");
   document
     .querySelector("#greet-form")
     ?.addEventListener("submit", async (e) => {
@@ -99,7 +97,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 function load_mathpix() {
   let script = document.createElement("script");
-  script.src = "/src/assets/mathpix.js";
+  script.src = "/src/libs/mathpix2.0.12.js";
   document.head.append(script);
   script.onload = function () {
     const isLoaded = window.loadMathJax();
