@@ -96,3 +96,17 @@ Here:
 
 This equation describes how waves propagate in a one-dimensional medium and is a second-order linear partial differential equation.
 
+
+```latex
+x^2 - 5 = -1 \\
+x^2 = -1 + 5 \\
+x^2 = 4 \\
+x = \pm \sqrt{4} \\
+x = \pm 2
+```
+
+```json
+{
+  "answer": "x = 2, x = -2"
+}
+```

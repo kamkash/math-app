@@ -7,8 +7,10 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 package-lock.json
+Cargo.lock
 
 target/
+gen/
 node_modules
 models/
 libs/

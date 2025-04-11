@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "src-tauri",
+    "math-parser"
+]
+resolver = "2"

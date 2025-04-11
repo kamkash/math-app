@@ -1,0 +1,11 @@
+[package]
+name = "math-parser"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+antlr-rust = "0.3.0-beta"
+log = "0.4.26"
+
+[lib]
+crate-type = ["rlib"]  # or ["cdylib"] for Rust-specific linkage

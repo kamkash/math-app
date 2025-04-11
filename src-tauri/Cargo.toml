@@ -1,7 +1,7 @@
 [package]
 name = "math-app"
 version = "0.1.0"
-description = "A Tauri App"
+description = "Symbolic Math App"
 authors = ["you"]
 edition = "2021"
 
@@ -19,6 +19,7 @@ tauri-build = { version = "2", features = [] }
 bindgen = "0.71.1"
 
 [dependencies]
+math-parser = { path = "../math-parser" }
 tauri = { version = "2", features = ["tracing"] }
 tauri-plugin-opener = "2"
 tauri-plugin-log = "2.3.1"

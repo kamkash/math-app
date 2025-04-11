@@ -2256,6 +2256,7 @@ dependencies = [
  "libc",
  "libloading 0.8.6",
  "log",
+ "math_parser",
  "serde",
  "serde_json",
  "symbolic_math",
@@ -2264,6 +2265,13 @@ dependencies = [
  "tauri-plugin-log",
  "tauri-plugin-opener",
  "tokio",
+]
+
+[[package]]
+name = "math_parser"
+version = "0.1.0"
+dependencies = [
+ "log",
 ]
 
 [[package]]

@@ -10,7 +10,7 @@ use std::str;
 use tauri_plugin_log::Target;
 use tauri_plugin_log::TargetKind;
 
-pub mod parser;
+use math_parser;
 
 const LOG_FILE_NAME: &str = "mathapp";
 // pub const MODEL_FILE_NAME: &str = "DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf";
@@ -162,6 +162,8 @@ pub fn init_math_app_rust(ngl: i32) -> Result<i32, String> {
 }
 
 pub fn echo_rust(estr: &str) -> Result<String, String> {
+    info!("math-parser echo: {}", math_parser::echo_parser(estr));
+
     unsafe {
         let func: Symbol<unsafe extern "C" fn(*const c_char) -> *const c_char> =
             MATHAPP_LIB.1.get(b"echo\0").map_err(|e| e.to_string())?;
