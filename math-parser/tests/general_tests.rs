@@ -10,7 +10,7 @@ mod gen {
 
     use crate::gen::calculatorlexer::calculatorLexer;
     use crate::gen::calculatorparser::calculatorParser;
-    use antlr_rust::tree::ParseTreeVisitorCompat;
+    use antlr_rust::tree::{ParseTreeVisitorCompat, Tree};
     use antlr_rust::InputStream;
     use antlr_rust::{common_token_stream::CommonTokenStream, tree::ParseTree};
     use calculatorparser::{
@@ -53,13 +53,30 @@ mod gen {
             }
 
             fn visit_equation(&mut self, ctx: &EquationContext<'input>) -> Self::Return {
-                // dbg!(ctx.expression_all());
-                // if let Some(relop_ctx) = ctx.relop() {
-                //     dbg!(relop_ctx.get_text());
-                // } else {
-                //     dbg!("No relop found");
-                // }
                 dbg!(ctx.get_text());
+                for child in ctx.get_children() {
+                    if child.get_child_count() > 0 {
+                        for grand_child in child.get_children() {
+                            if grand_child.get_child_count() > 0 {
+                                for grand_grand_child in grand_child.get_children() {
+                                    if grand_grand_child.get_child_count() > 0 {
+                                        for grand_grand_grand_child in
+                                            grand_grand_child.get_children()
+                                        {
+                                            dbg!(grand_grand_grand_child.get_text());
+                                        }
+                                    } else {
+                                        dbg!(grand_grand_child.get_text());
+                                    }
+                                }
+                            } else {
+                                dbg!(grand_child.get_text());
+                            }
+                        }
+                    } else {
+                        dbg!(child.get_text());
+                    }
+                }
                 self.visit_children(ctx)
             }
 
@@ -110,12 +127,15 @@ mod gen {
             }
         }
 
-        let input = r#"
-                            a=cos(3), 
+        let input = r#"a=cos(y)^2 + sin(x)^2 , 
                             b=5000.0, 
                             c=2,
                             d=$1000.00,
-                            p=3.1415926"#;
+                            d1=$100,000.00,
+                            e = c*x^3 - 1/y + k*exp(-1/t),
+                            p=3.1415926,
+                            f = $30,000 * (1.0 + 0.05)^n
+                            "#;
         let mut visitor = CalcVisitor(0);
 
         info!("Input: {}", input);

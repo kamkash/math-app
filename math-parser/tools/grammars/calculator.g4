@@ -74,6 +74,13 @@ scientific
     : SCIENTIFIC_NUMBER
     ;
 
+//currency : CURRENCY_SYMBOL SCIENTIFIC_NUMBER
+//    ;
+
+currency : CURRENCY_SYMBOL (NUMBER_WITH_COMMAS | SCIENTIFIC_NUMBER)
+    ;
+
+
 constant
     : PI
     | EULER
@@ -97,6 +104,7 @@ funcname
     | ASIN
     | LOG
     | LN
+    | EXP
     | SQRT
     ;
 
@@ -137,6 +145,10 @@ LN
 LOG
     : 'log'
     ;
+
+EXP
+    : 'exp'
+    ;    
 
 SQRT
     : 'sqrt'
@@ -226,13 +238,17 @@ SCIENTIFIC_NUMBER
     : NUMBER ((E1 | E2) SIGN? NUMBER)?
     ;
 
-currency : CURRENCY_SYMBOL SCIENTIFIC_NUMBER
-    ;
-
+fragment DIGIT : [0-9];
 
 fragment NUMBER
     : '0' ..'9'+ ('.' '0' ..'9'+)?
     ;
+
+NUMBER_WITH_COMMAS
+    : DIGIT+ (',' DIGIT_THREE)* ('.' DIGIT+)?
+    ;
+
+fragment DIGIT_THREE : DIGIT DIGIT DIGIT;    
 
 fragment E1
     : 'E'
