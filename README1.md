@@ -97,16 +97,33 @@ Here:
 This equation describes how waves propagate in a one-dimensional medium and is a second-order linear partial differential equation.
 
 
-```latex
 x^2 - 5 = -1 \\
 x^2 = -1 + 5 \\
 x^2 = 4 \\
 x = \pm \sqrt{4} \\
 x = \pm 2
-```
 
 ```json
 {
   "answer": "x = 2, x = -2"
 }
 ```
+
+
+\documentclass{article}
+\usepackage{amsmath}
+\begin{document}
+
+$f = p \cdot (1 + i)^n$
+
+$f = \$100,000 \cdot (1 + \frac{5}{100})^{10}$
+
+$f = \$100,000 \cdot (1 + 0.05)^{10}$
+
+$f = \$100,000 \cdot (1.05)^{10}$
+
+$f = \$100,000 \cdot 1.62889462678$
+
+$f = \$162,889.46$
+
+\end{document}

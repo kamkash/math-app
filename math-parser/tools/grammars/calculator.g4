@@ -35,8 +35,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 grammar calculator;
 
+block 
+    : equation (SEPARATOR equation)* EOF
+    ;
+
 equation
-    : expression relop expression EOF
+    : expression relop expression 
     ;
 
 expression
@@ -173,6 +177,8 @@ EQ
     : '='
     ;
 
+SEPARATOR : ',' | ';';
+
 COMMA
     : ','
     ;
@@ -233,6 +239,9 @@ fragment SIGN
     | '-'
     ;
 
-WS
-    : [ \r\n\t]+ -> skip
-    ;
+NEWLINE 
+    : '\r'? '\n' | '\r'
+    ;    
+
+
+WS : [ \t]+ -> skip;
