@@ -63,7 +63,8 @@ signedAtom
     ;
 
 atom
-    : scientific
+    : currency
+    | scientific
     | variable
     | constant
     | LPAREN expression RPAREN
@@ -203,6 +204,8 @@ I
     : 'i'
     ;
 
+CURRENCY_SYMBOL : '$' | '€' | '£' | '¥'; // Add more symbols as needed
+
 VARIABLE
     : VALID_ID_START VALID_ID_CHAR*
     ;
@@ -218,9 +221,14 @@ fragment VALID_ID_CHAR
     | '0' .. '9'
     ;
 
+
 SCIENTIFIC_NUMBER
     : NUMBER ((E1 | E2) SIGN? NUMBER)?
     ;
+
+currency : CURRENCY_SYMBOL SCIENTIFIC_NUMBER
+    ;
+
 
 fragment NUMBER
     : '0' ..'9'+ ('.' '0' ..'9'+)?
@@ -244,4 +252,8 @@ NEWLINE
     ;    
 
 
-WS : [ \t]+ -> skip;
+// WS : [ \t]+ -> skip;
+
+WS
+    : [ \r\n\t]+ -> skip
+    ;

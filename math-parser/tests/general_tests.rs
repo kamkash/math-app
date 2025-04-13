@@ -110,7 +110,12 @@ mod gen {
             }
         }
 
-        let input = r#"b=5, a=3, c=2"#;
+        let input = r#"
+                            a=cos(3), 
+                            b=5000.0, 
+                            c=2,
+                            d=$1000.00,
+                            p=3.1415926"#;
         let mut visitor = CalcVisitor(0);
 
         info!("Input: {}", input);
