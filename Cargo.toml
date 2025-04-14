@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "src-tauri",
-    "math-parser"
+    "math-parser",
+    "symengine-rs"
 ]
 resolver = "2"

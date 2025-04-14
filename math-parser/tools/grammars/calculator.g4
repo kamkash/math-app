@@ -62,20 +62,17 @@ signedAtom
     | atom
     ;
 
-atom
-    : currency
+atom :
     | scientific
     | variable
     | constant
+    | currency
     | LPAREN expression RPAREN
     ;
 
 scientific
     : SCIENTIFIC_NUMBER
     ;
-
-//currency : CURRENCY_SYMBOL SCIENTIFIC_NUMBER
-//    ;
 
 currency : CURRENCY_SYMBOL (NUMBER_WITH_COMMAS | SCIENTIFIC_NUMBER)
     ;

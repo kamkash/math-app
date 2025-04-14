@@ -18,6 +18,14 @@ This template should help get you started developing with Tauri in vanilla HTML,
 - https://github.com/deepseek-ai/DeepSeek-Math
 
 
+## ollama
+To start ollama now and restart at login:
+  brew services start ollama
+
+if you don't want/need a background service you can just run:
+  /opt/homebrew/opt/ollama/bin/ollama serve
+
+
 ## llama.cpp
 ./run.sh -n 2048 "what is 25% of 256.00. IMP: give the output in a valid JSON string"
 ./run.sh -n 2048 "solve x^2 - 2x + 9. IMP: give the output in a valid JSON string" 

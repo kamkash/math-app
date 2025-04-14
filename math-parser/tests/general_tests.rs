@@ -54,29 +54,29 @@ mod gen {
 
             fn visit_equation(&mut self, ctx: &EquationContext<'input>) -> Self::Return {
                 dbg!(ctx.get_text());
-                // for child in ctx.get_children() {
-                //     if child.get_child_count() > 0 {
-                //         for grand_child in child.get_children() {
-                //             if grand_child.get_child_count() > 0 {
-                //                 for grand_grand_child in grand_child.get_children() {
-                //                     if grand_grand_child.get_child_count() > 0 {
-                //                         for grand_grand_grand_child in
-                //                             grand_grand_child.get_children()
-                //                         {
-                //                             dbg!(grand_grand_grand_child.get_text());
-                //                         }
-                //                     } else {
-                //                         dbg!(grand_grand_child.get_text());
-                //                     }
-                //                 }
-                //             } else {
-                //                 dbg!(grand_child.get_text());
-                //             }
-                //         }
-                //     } else {
-                //         dbg!(child.get_text());
-                //     }
-                // }
+                for child in ctx.get_children() {
+                    if child.get_child_count() > 0 {
+                        for grand_child in child.get_children() {
+                            if grand_child.get_child_count() > 0 {
+                                for grand_grand_child in grand_child.get_children() {
+                                    if grand_grand_child.get_child_count() > 0 {
+                                        for grand_grand_grand_child in
+                                            grand_grand_child.get_children()
+                                        {
+                                            dbg!(grand_grand_grand_child.get_text());
+                                        }
+                                    } else {
+                                        dbg!(grand_grand_child.get_text());
+                                    }
+                                }
+                            } else {
+                                dbg!(grand_child.get_text());
+                            }
+                        }
+                    } else {
+                        dbg!(child.get_text());
+                    }
+                }
                 self.visit_children(ctx)
             }
 
