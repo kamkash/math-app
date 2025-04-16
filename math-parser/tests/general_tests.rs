@@ -52,31 +52,39 @@ mod gen {
                 self.visit_children(ctx)
             }
 
+            fn visit_functionDefinition(
+                &mut self,
+                ctx: &calculatorparser::FunctionDefinitionContext<'input>,
+            ) -> Self::Return {
+                dbg!(ctx.get_text());
+                self.visit_children(ctx)
+            }
+            
             fn visit_equation(&mut self, ctx: &EquationContext<'input>) -> Self::Return {
                 dbg!(ctx.get_text());
-                for child in ctx.get_children() {
-                    if child.get_child_count() > 0 {
-                        for grand_child in child.get_children() {
-                            if grand_child.get_child_count() > 0 {
-                                for grand_grand_child in grand_child.get_children() {
-                                    if grand_grand_child.get_child_count() > 0 {
-                                        for grand_grand_grand_child in
-                                            grand_grand_child.get_children()
-                                        {
-                                            dbg!(grand_grand_grand_child.get_text());
-                                        }
-                                    } else {
-                                        dbg!(grand_grand_child.get_text());
-                                    }
-                                }
-                            } else {
-                                dbg!(grand_child.get_text());
-                            }
-                        }
-                    } else {
-                        dbg!(child.get_text());
-                    }
-                }
+                // for child in ctx.get_children() {
+                //     if child.get_child_count() > 0 {
+                //         for grand_child in child.get_children() {
+                //             if grand_child.get_child_count() > 0 {
+                //                 for grand_grand_child in grand_child.get_children() {
+                //                     if grand_grand_child.get_child_count() > 0 {
+                //                         for grand_grand_grand_child in
+                //                             grand_grand_child.get_children()
+                //                         {
+                //                             dbg!(grand_grand_grand_child.get_text());
+                //                         }
+                //                     } else {
+                //                         dbg!(grand_grand_child.get_text());
+                //                     }
+                //                 }
+                //             } else {
+                //                 dbg!(grand_child.get_text());
+                //             }
+                //         }
+                //     } else {
+                //         dbg!(child.get_text());
+                //     }
+                // }
                 self.visit_children(ctx)
             }
 
@@ -129,13 +137,18 @@ mod gen {
 
         let input = r#"10 + 21 = ans,
                             a=cos(y)^2 + sin(x)^2 , 
-                            b=5000.0, 
-                            c=2,
+                            b=5000.0 , c=2 ,
                             d=$1000.00,
                             d1=$100,000.00,
                             e = c*x^3 - 1/y + k*exp(-1/t),
                             p=3.1415926,
-                            f = $30,000 * (1.0 + 0.05)^n
+                            f = $30,000 * (1.0 + 0.05)^n,
+                            g=$100,000,
+                            f(x)=x^2+2*x-1,
+                            g(x)=a*exp(-t/(k*x)),
+                            f(x,y)=__ans__,
+                            f(3,4,9) = 3.1415;
+                            f(2.86) = _a_
                             "#;
         let mut visitor = CalcVisitor(0);
 

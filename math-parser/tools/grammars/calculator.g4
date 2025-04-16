@@ -1,46 +1,43 @@
 /*
-BSD License
-
-Copyright (c) 2013, Tom Everett
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-
-1. Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
-2. Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
-3. Neither the name of Tom Everett nor the names of its contributors
-   may be used to endorse or promote products derived from this software
-   without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ BSD License
+ 
+ Copyright (c) 2013, Tom Everett All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without modification, are permitted
+ provided that the following conditions are met:
+ 
+ 1. Redistributions of source code must retain the above copyright notice, this list of conditions
+ and the following disclaimer. 2. Redistributions in binary form must reproduce the above copyright
+ notice, this list of conditions and the following disclaimer in the documentation and/or other
+ materials provided with the distribution. 3. Neither the name of Tom Everett nor the names of its
+ contributors may be used to endorse or promote products derived from this software without specific
+ prior written permission.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+ IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
 // $antlr-format alignTrailingComments true, columnLimit 150, minEmptyLines 1, maxEmptyLinesToKeep 1, reflowComments false, useTab false
 // $antlr-format allowShortRulesOnASingleLine false, allowShortBlocksOnASingleLine true, alignSemicolons hanging, alignColons hanging
 
 grammar calculator;
 
-block 
-    : equation (SEPARATOR equation)* EOF
+block
+    : (functionDefinition | equation) (SEPARATOR (functionDefinition | equation))* WS* EOF
+    ;
+
+functionDefinition
+    : VARIABLE LPAREN signedAtom (SEPARATOR signedAtom)* RPAREN EQ expression
     ;
 
 equation
-    : expression relop expression 
+    : expression relop expression
     ;
 
 expression
@@ -62,7 +59,8 @@ signedAtom
     | atom
     ;
 
-atom :
+atom
+    :
     | scientific
     | variable
     | constant
@@ -74,9 +72,9 @@ scientific
     : SCIENTIFIC_NUMBER
     ;
 
-currency : CURRENCY_SYMBOL (NUMBER_WITH_COMMAS | SCIENTIFIC_NUMBER)
+currency
+    : CURRENCY_NUMBER
     ;
-
 
 constant
     : PI
@@ -145,7 +143,7 @@ LOG
 
 EXP
     : 'exp'
-    ;    
+    ;
 
 SQRT
     : 'sqrt'
@@ -187,7 +185,10 @@ EQ
     : '='
     ;
 
-SEPARATOR : ',' | ';';
+SEPARATOR
+    : ','
+    | ';'
+    ;
 
 COMMA
     : ','
@@ -213,7 +214,12 @@ I
     : 'i'
     ;
 
-CURRENCY_SYMBOL : '$' | '€' | '£' | '¥'; // Add more symbols as needed
+fragment CURRENCY_SYMBOL
+    : '$'
+    | '€'
+    | '£'
+    | '¥'
+    ; // Add more symbols as needed
 
 VARIABLE
     : VALID_ID_START VALID_ID_CHAR*
@@ -230,22 +236,29 @@ fragment VALID_ID_CHAR
     | '0' .. '9'
     ;
 
-
 SCIENTIFIC_NUMBER
     : NUMBER ((E1 | E2) SIGN? NUMBER)?
     ;
 
-fragment DIGIT : [0-9];
+fragment DIGIT
+    : [0-9]
+    ;
 
 fragment NUMBER
     : '0' ..'9'+ ('.' '0' ..'9'+)?
     ;
 
-NUMBER_WITH_COMMAS
+fragment NUMBER_WITH_COMMAS
     : DIGIT+ (',' DIGIT_THREE)* ('.' DIGIT+)?
     ;
 
-fragment DIGIT_THREE : DIGIT DIGIT DIGIT;    
+CURRENCY_NUMBER
+    : CURRENCY_SYMBOL (NUMBER_WITH_COMMAS | SCIENTIFIC_NUMBER)
+    ;
+
+fragment DIGIT_THREE
+    : DIGIT DIGIT DIGIT
+    ;
 
 fragment E1
     : 'E'
@@ -260,10 +273,10 @@ fragment SIGN
     | '-'
     ;
 
-NEWLINE 
-    : '\r'? '\n' | '\r'
-    ;    
-
+fragment NEWLINE
+    : '\r'? '\n'
+    | '\r'
+    ;
 
 // WS : [ \t]+ -> skip;
 
