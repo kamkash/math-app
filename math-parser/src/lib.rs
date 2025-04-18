@@ -1,5 +1,8 @@
 use log::info;
 
+pub mod gen_calc_parser;
+pub mod calc_evaluator;
+
 pub fn echo_parser(name: &str) -> String {
     info!("parser echo {}", name);
     format!("{}", name)

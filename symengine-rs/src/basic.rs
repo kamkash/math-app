@@ -1,6 +1,6 @@
+use crate::symengine_ffi::*;
 use std::ffi::{CStr, CString};
 use std::fmt;
-use crate::symengine_ffi::*;
 
 pub struct Basic {
     inner: *mut basic,
@@ -48,6 +48,36 @@ impl Basic {
         let b: *mut basic_struct = Self::heap_alloc() as *mut basic_struct;
         unsafe {
             real_double_set_d(b, val);
+        }
+        Self {
+            inner: b as *mut basic,
+        }
+    }
+
+    pub fn sin(symbol: &Basic) -> Self {
+        let b = Self::heap_alloc() as *mut basic_struct;
+        unsafe {
+            basic_sin(b, symbol.inner as *mut basic_struct);
+        }
+        Self {
+            inner: b as *mut basic,
+        }
+    }
+
+    pub fn cos(symbol: &Basic) -> Self {
+        let b = Self::heap_alloc() as *mut basic_struct;
+        unsafe {
+            basic_cos(b, symbol.inner as *mut basic_struct);
+        }
+        Self {
+            inner: b as *mut basic,
+        }
+    }
+    
+    pub fn tan(symbol: &Basic) -> Self {
+        let b = Self::heap_alloc() as *mut basic_struct;
+        unsafe {
+            basic_tan(b, symbol.inner as *mut basic_struct);
         }
         Self {
             inner: b as *mut basic,

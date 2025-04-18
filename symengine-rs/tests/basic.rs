@@ -1,3 +1,4 @@
+use log::info;
 use symengine_rs::basic::Basic;
 
 #[test]
@@ -26,4 +27,27 @@ fn test_basic_mul_pow_eq() {
     assert_eq!(power.to_string(), "x**2");
     assert!(x.equals(&Basic::symbol("x")));
     assert!(!x.equals(&y));
+}
+
+#[test]
+fn test_trig_functions() {
+
+    let x = Basic::symbol("x");
+    let y = Basic::symbol("y");
+    let z = Basic::symbol("z");
+
+    let im1 = Basic::integer(-1);    
+    let i2 = Basic::integer(2);    
+    let i3 = Basic::integer(3);    
+    let i6 = Basic::integer(6);    
+    let i12 = Basic::integer(12);    
+
+    let r1 = Basic::sin(&x);
+    let r2 = Basic::sin(&x);
+
+    assert!(r1.equals(&r2));
+    assert_eq!(r1.to_string(), "sin(x)");
+    assert_eq!(r2.to_string(), "sin(x)");
+
+
 }
