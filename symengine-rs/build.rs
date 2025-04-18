@@ -24,4 +24,3 @@ fn main() {
     println!("cargo:rustc-link-lib=gmp");
     println!("cargo:rustc-link-lib=c++");
 }
-
