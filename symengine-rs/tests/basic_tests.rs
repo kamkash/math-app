@@ -138,7 +138,7 @@ fn test_evaluation_addition() {
 }
 
 #[test]
-fn test_evaluation_compund_integer() {
+fn test_evaluation_compound_interest() {
     let p = Basic::symbol("p"); // principal
     let i = Basic::symbol("i"); // interest
     let n = Basic::symbol("n"); // years
