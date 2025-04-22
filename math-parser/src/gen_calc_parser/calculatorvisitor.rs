@@ -98,6 +98,18 @@ pub trait calculatorVisitor<'input>: ParseTreeVisitor<'input,calculatorParserCon
 	 */
 	fn visit_relop(&mut self, ctx: &RelopContext<'input>) { self.visit_children(ctx) }
 
+	/**
+	 * Visit a parse tree produced by {@link calculatorParser#sumop}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_sumop(&mut self, ctx: &SumopContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link calculatorParser#multop}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_multop(&mut self, ctx: &MultopContext<'input>) { self.visit_children(ctx) }
+
 }
 
 pub trait calculatorVisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= calculatorParserContextType>{
@@ -221,6 +233,22 @@ pub trait calculatorVisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= c
 			self.visit_children(ctx)
 		}
 
+	/**
+	 * Visit a parse tree produced by {@link calculatorParser#sumop}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_sumop(&mut self, ctx: &SumopContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link calculatorParser#multop}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_multop(&mut self, ctx: &MultopContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
 }
 
 impl<'input,T> calculatorVisitor<'input> for T
@@ -299,6 +327,16 @@ where
 
 	fn visit_relop(&mut self, ctx: &RelopContext<'input>){
 		let result = <Self as calculatorVisitorCompat>::visit_relop(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_sumop(&mut self, ctx: &SumopContext<'input>){
+		let result = <Self as calculatorVisitorCompat>::visit_sumop(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_multop(&mut self, ctx: &MultopContext<'input>){
+		let result = <Self as calculatorVisitorCompat>::visit_multop(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 

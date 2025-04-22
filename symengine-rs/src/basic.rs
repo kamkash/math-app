@@ -345,11 +345,15 @@ impl Basic {
     }
 
     pub fn to_string(&self) -> String {
-        unsafe {
-            let c_str = basic_str(self.inner as *mut basic_struct);
-            let s = CStr::from_ptr(c_str).to_string_lossy().into_owned();
-            basic_str_free(c_str);
-            s
+        if self.is_null() {
+            String::new()
+        } else {
+            unsafe {
+                let c_str = basic_str(self.inner as *mut basic_struct);
+                let s = CStr::from_ptr(c_str).to_string_lossy().into_owned();
+                basic_str_free(c_str);
+                s
+            }
         }
     }
 
@@ -369,6 +373,16 @@ impl Basic {
     pub fn to_u64(&self) -> u64 {
         let result = unsafe { integer_get_ui(self.inner as *const basic_struct) };
         result
+    }
+
+    pub fn neg(&self) -> Self {
+        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        unsafe {
+            basic_neg(b, self.inner as *mut basic_struct);
+        }
+        Self {
+            inner: b as *mut basic,
+        }
     }
 
     pub fn integer(val: i64) -> Self {
@@ -401,6 +415,11 @@ impl Basic {
             inner: b as *mut basic,
         }
     }
+
+    /// Checks if the `inner` pointer is null.
+    pub fn is_null(&self) -> bool {
+        self.inner.is_null()
+    }
 }
 
 impl Drop for Basic {
@@ -425,7 +444,9 @@ impl Clone for Basic {
 
 impl Default for Basic {
     fn default() -> Self {
-        Self::integer(0)
+        Self {
+            inner: std::ptr::null_mut(),
+        }
     }
 }
 

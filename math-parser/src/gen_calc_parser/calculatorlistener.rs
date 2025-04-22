@@ -154,6 +154,26 @@ fn enter_relop(&mut self, _ctx: &RelopContext<'input>) { }
  * @param ctx the parse tree
  */
 fn exit_relop(&mut self, _ctx: &RelopContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link calculatorParser#sumop}.
+ * @param ctx the parse tree
+ */
+fn enter_sumop(&mut self, _ctx: &SumopContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link calculatorParser#sumop}.
+ * @param ctx the parse tree
+ */
+fn exit_sumop(&mut self, _ctx: &SumopContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link calculatorParser#multop}.
+ * @param ctx the parse tree
+ */
+fn enter_multop(&mut self, _ctx: &MultopContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link calculatorParser#multop}.
+ * @param ctx the parse tree
+ */
+fn exit_multop(&mut self, _ctx: &MultopContext<'input>) { }
 
 }
 

@@ -31,7 +31,7 @@ fn test_basic_mul_pow_eq() {
 
 #[allow(unused_variables)]
 #[test]
-fn test_trig_functions() {
+fn test_basic_operations() {
     let x = Basic::symbol("x");
     let y = Basic::symbol("y");
     let z = Basic::symbol("z");
@@ -42,11 +42,20 @@ fn test_trig_functions() {
     let i6 = Basic::integer(6);
     let i12 = Basic::integer(12);
     let r1 = Basic::sin(&x);
-    let r2 = Basic::sin(&x);
+    let r2 = Basic::cos(&x);
+    let r3 = z.neg();
 
-    assert!(r1.equals(&r2));
+    assert!(r1.equals(&r1));
+    assert!(!r1.equals(&r2));
+
     assert_eq!(r1.to_string(), "sin(x)");
-    assert_eq!(r2.to_string(), "sin(x)");
+    assert_eq!(r2.to_string(), "cos(x)");
+    assert_eq!(r3.to_string(), "-z");
+
+    info!("r1: {}", r1);
+    info!("r2: {}", r2);
+    info!("r3 z.neg(): {}", r3);
+    info!("z {}", z);
 }
 
 #[test]

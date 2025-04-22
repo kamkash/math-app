@@ -16,9 +16,9 @@ use math_parser::gen_calc_parser::calculatorvisitor::calculatorVisitorCompat;
 
 #[test]
 fn test_calculator_parser() {
-    struct CalcVisitor(isize);
+    struct IntCalcVisitor(isize);
 
-    impl ParseTreeVisitorCompat<'_> for CalcVisitor {
+    impl ParseTreeVisitorCompat<'_> for IntCalcVisitor {
         type Node = calculatorParserContextType;
         type Return = isize;
 
@@ -32,7 +32,7 @@ fn test_calculator_parser() {
         }
     }
 
-    impl<'input> calculatorVisitorCompat<'input> for CalcVisitor {
+    impl<'input> calculatorVisitorCompat<'input> for IntCalcVisitor {
         fn visit_block(&mut self, ctx: &BlockContext<'input>) -> Self::Return {
             dbg!(ctx.get_text());
             self.visit_children(ctx)
@@ -135,7 +135,7 @@ fn test_calculator_parser() {
                             f(3,4,9) = 3.1415;
                             f(2.86) = _a_
                             "#;
-    let mut visitor = CalcVisitor(0);
+    let mut visitor = IntCalcVisitor(0);
 
     info!("Input: {}", input);
     let lexer = calculatorLexer::new(InputStream::new(input));

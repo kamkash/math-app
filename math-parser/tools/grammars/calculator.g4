@@ -109,6 +109,16 @@ relop
     | LT
     ;
 
+sumop
+    : PLUS
+    | MINUS
+    ;
+
+multop
+    : TIMES
+    | DIV
+    ;
+
 COS
     : 'cos'
     ;
