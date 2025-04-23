@@ -357,6 +357,31 @@ impl Basic {
         }
     }
 
+    /// Returns true if this Basic is a Number.
+    pub fn is_number(&self) -> bool {
+        unsafe { is_a_Number(self.inner as *const basic_struct) != 0 }
+    }
+
+    /// Returns true if this Basic is an Integer.
+    pub fn is_integer(&self) -> bool {
+        unsafe { is_a_Integer(self.inner as *const basic_struct) != 0 }
+    }
+
+    /// Returns true if this Basic is a Rational.
+    pub fn is_rational(&self) -> bool {
+        unsafe { is_a_Rational(self.inner as *const basic_struct) != 0 }
+    }
+
+    /// Returns true if this Basic is a Symbol.
+    pub fn is_symbol(&self) -> bool {
+        unsafe { is_a_Symbol(self.inner as *const basic_struct) != 0 }
+    }
+
+    /// Returns true if this Basic is a Complex.
+    pub fn is_complex(&self) -> bool {
+        unsafe { is_a_Complex(self.inner as *const basic_struct) != 0 }
+    }
+
     // ===========================
     // Conversion Functions
     // ===========================
@@ -419,6 +444,24 @@ impl Basic {
     /// Checks if the `inner` pointer is null.
     pub fn is_null(&self) -> bool {
         self.inner.is_null()
+    }
+
+    pub fn get_type(&self) -> u32 {
+        unsafe { basic_get_type(self.inner as *const basic_struct) }
+    }
+
+    #[allow(non_upper_case_globals)]
+    pub fn get_type_str(&self) -> &'static str {
+        match self.get_type() {
+            TypeID_SYMENGINE_INTEGER => "Integer",
+            TypeID_SYMENGINE_RATIONAL => "Rational",
+            TypeID_SYMENGINE_REAL_DOUBLE => "Real",
+            TypeID_SYMENGINE_COMPLEX_MPC => "Complex",
+            TypeID_SYMENGINE_SYMBOL => "Symbol",
+            TypeID_SYMENGINE_FUNCTIONSYMBOL => "Function",
+            TypeID_SYMENGINE_ADD => "Add",
+            _ => "Unknown",
+        }
     }
 }
 

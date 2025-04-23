@@ -107,6 +107,7 @@ relop
     : EQ
     | GT
     | LT
+    | NE
     ;
 
 sumop
@@ -193,6 +194,10 @@ LT
 
 EQ
     : '='
+    ;
+
+NE
+    : '!='
     ;
 
 SEPARATOR

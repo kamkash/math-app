@@ -1,5 +1,6 @@
 #![allow(unused)]
 use core::num;
+use std::fmt;
 use std::result;
 
 use antlr_rust::tree::ParseTree;
@@ -8,18 +9,79 @@ use log::info;
 
 use crate::gen_calc_parser::calculatorparser::{
     calculatorParserContextType, AtomContext, BlockContext, ConstantContext, CurrencyContext,
-    EquationContext, ExpressionContext, Func_Context, FuncnameContext, FunctionDefinitionContext,
-    MultiplyingExpressionContext, PowExpressionContext, RelopContext, ScientificContext,
-    SignedAtomContext, VariableContext,
+    EquationContext, EquationContextAttrs, ExpressionContext, ExpressionContextAttrs, Func_Context,
+    FuncnameContext, FunctionDefinitionContext, MultiplyingExpressionContext, PowExpressionContext,
+    RelopContext, ScientificContext, SignedAtomContext, VariableContext,
 };
 use crate::gen_calc_parser::calculatorvisitor::calculatorVisitorCompat;
 use symengine_rs::basic::Basic;
 
+pub enum Relop {
+    Equal,
+    NotEqual,
+    LessThan,
+    GreaterThan,
+    LessThanOrEqual,
+    GreaterThanOrEqual,
+}
+
+impl fmt::Debug for Relop {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let s = match self {
+            Relop::Equal => "==",
+            Relop::NotEqual => "!=",
+            Relop::LessThan => "<",
+            Relop::GreaterThan => ">",
+            Relop::LessThanOrEqual => "<=",
+            Relop::GreaterThanOrEqual => ">=",
+        };
+        write!(f, "{}", s)
+    }
+}
+
+impl fmt::Display for Relop {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let s = match self {
+            Relop::Equal => "==",
+            Relop::NotEqual => "!=",
+            Relop::LessThan => "<",
+            Relop::GreaterThan => ">",
+            Relop::LessThanOrEqual => "<=",
+            Relop::GreaterThanOrEqual => ">=",
+        };
+        write!(f, "{}", s)
+    }
+}
+
+pub struct SymEquation {
+    pub left: Basic,
+    pub right: Basic,
+    pub relop: Relop,
+}
+
+impl SymEquation {
+    pub fn new(left: Basic, right: Basic, relop: Relop) -> Self {
+        SymEquation { left, right, relop }
+    }
+}
+
+impl std::fmt::Debug for SymEquation {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?} {:?} {:?}", self.left, self.relop, self.right)
+    }
+}
+
+impl std::fmt::Display for SymEquation {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{} {} {}", self.left, self.relop, self.right)
+    }
+}
+
 pub struct SymBasicCalcVisitor {
     pub tmp_result: Basic,
     pub result_stack: Vec<Basic>,
-    pub block_result: Vec<Basic>,
-    pub symbol_table: std::collections::HashMap<String, Basic>,
+    pub block_result: Vec<SymEquation>,
+    pub symbol_table: std::collections::HashMap<Basic, Basic>,
 }
 
 impl SymBasicCalcVisitor {
@@ -49,7 +111,23 @@ impl ParseTreeVisitorCompat<'_> for SymBasicCalcVisitor {
 impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
     fn visit_block(&mut self, ctx: &BlockContext<'input>) -> Self::Return {
         // info!("Visiting Block: {}", ctx.get_text());
-        self.visit_children(ctx)
+        self.visit_children(ctx);
+        let mut iter = self.result_stack.iter();
+        loop {
+            let left = iter.next();
+            if left.is_none() {
+                break;
+            }
+            let right = iter.next();
+            info!(
+                "Result stack: {:?} {:?} relop {:?} {:?}",
+                left,
+                left.map(|l| l.get_type_str()).unwrap_or("none"),
+                right,
+                right.map(|r| r.get_type_str()).unwrap_or("none"),
+            );
+        }
+        Basic::default()
     }
 
     fn visit_functionDefinition(
@@ -62,29 +140,52 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
 
     fn visit_equation(&mut self, ctx: &EquationContext<'input>) -> Self::Return {
         // info!("Visiting Equation: {}", ctx.get_text());
-        self.visit_children(ctx)
+        self.visit_children(ctx);
+        // info!("equation relop {:?}", ctx.relop().unwrap().get_text());
+        // info!("stack: {:?} {}", self.result_stack, self.result_stack.len());
+        // let left = self.result_stack.pop().unwrap();
+        // let right = self.result_stack.pop().unwrap();
+
+        let len = self.result_stack.len();
+        if len >= 2 {
+            let right = &self.result_stack[len - 1];
+            let left = &self.result_stack[len - 2];
+            let relop = ctx.relop().unwrap().get_text();
+            info!("relop of equation: {}", relop);
+            let relop = match relop.as_str() {
+                "=" => Relop::Equal,
+                "!=" => Relop::NotEqual,
+                ">" => Relop::LessThan,
+                "<" => Relop::GreaterThan,
+                _ => panic!("Unknown relop: {}", relop),
+            };
+            let equation = SymEquation::new(
+                left.clone(), right.clone(), relop
+            );
+            info!("Equation: {:?}", &equation);
+            self.block_result.push(equation);
+        }
+
+        // self.result_stack.push(left);
+        // self.result_stack.push(right);
+        Basic::default()
     }
 
     fn visit_expression(&mut self, ctx: &ExpressionContext<'input>) -> Self::Return {
         self.visit_children(ctx);
-        info!("Visiting Expression: {}", ctx.get_text());
-        ctx.get_children()
-            .for_each(|child| info!("Child: {}", child.get_text()));
-        info!("Result stack: {:?}", self.result_stack);
-        Basic::default()
-    }
-
-    fn visit_multop(
-        &mut self,
-        ctx: &crate::gen_calc_parser::calculatorparser::MultopContext<'input>,
-    ) -> Self::Return {
-        Basic::default()
-    }
-
-    fn visit_sumop(
-        &mut self,
-        ctx: &crate::gen_calc_parser::calculatorparser::SumopContext<'input>,
-    ) -> Self::Return {
+        // info!("Visiting Expression: {}", ctx.get_text());
+        let is_add = ctx.PLUS(0).is_some();
+        let is_sub = ctx.MINUS(0).is_some();
+        if is_add || is_sub {
+            let left = self.result_stack.pop().unwrap();
+            let right = self.result_stack.pop().unwrap();
+            let result = if is_add {
+                left.add(&right)
+            } else {
+                left.sub(&right)
+            };
+            self.result_stack.push(result);
+        }
         Basic::default()
     }
 
@@ -121,7 +222,7 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
         self.visit_children(ctx);
         let number: f64 = ctx.get_text().parse().unwrap_or(0.0);
         let result = Basic::real(number);
-        info!("Visited Scientific returning: {}", result);
+        // info!("Visited Scientific returning: {}", result);
         self.result_stack.push(result);
         Basic::default()
     }

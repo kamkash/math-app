@@ -8,17 +8,24 @@ use math_parser::calc_evaluator::SymBasicCalcVisitor;
 // use symengine_rs::basic::Basic;
 
 #[test]
-fn test_simple_addition() {
-    let input = "-1 + 2 = __ans__";
+fn test_evaluator_results() {
+    let input = "-1 + 2 = __ans__,
+                        p = x + y,
+                        i = 1 + x,
+                        z * 7 = t + 3.14";
     let mut visitor = SymBasicCalcVisitor::new();
     let lexer = calculatorLexer::new(InputStream::new(input));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = calculatorParser::new(token_stream);
     let parse_tree = parser.block().unwrap();
-    let result = visitor.visit(parse_tree.as_ref());
-    info!("Result: {}", result);
-    info!("visitor stack: {:?}", visitor.result_stack);
+    let _result = visitor.visit(parse_tree.as_ref());
+    info!("input: {}", input);
+    // info!("Result: {}", result);
+    // info!("visitor stack: {:?}", visitor.result_stack);
     info!("visitor block result: {:?}", visitor.block_result);
-    info!("visitor symbol table: {:?}", visitor.symbol_table);
+    // info!("visitor symbol table: {:?}", visitor.symbol_table);
     // info!("Parsed result: {:?}", parse_tree);
+
+    let line_count = input.split(",").count();
+    assert!(line_count * 2 == visitor.result_stack.len());
 }

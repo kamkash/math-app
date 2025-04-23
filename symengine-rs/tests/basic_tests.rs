@@ -97,7 +97,6 @@ fn test_basic_min() {
     info!("Result of min f64: {:?}", f);
 }
 
-
 #[test]
 fn test_basic_max() {
     let x = Basic::symbol("x");
@@ -117,11 +116,7 @@ fn test_basic_max() {
     // Evaluate
     let result = Basic::subs(
         &maximum_two,
-        vec![
-            (&x, &Basic::real(10f64)),
-            (&y, &Basic::real(30f64)),
-        ]
-        .into_iter(),
+        vec![(&x, &Basic::real(10f64)), (&y, &Basic::real(30f64))].into_iter(),
     );
     info!("Eval result of max: {}", result);
     assert_eq!(result.to_string(), "30.0");
@@ -174,4 +169,23 @@ fn test_evaluation_compound_interest() {
     );
     info!("Eval result of compound interest: {:.2}", result);
     assert_eq!(result.to_f64(), (num_p * (1.0 + num_i).powf(num_n)));
+}
+
+#[test]
+fn test_basic_type() {
+    let x = Basic::symbol("x");
+    let basic_int = Basic::integer(42);
+    let basic_real = Basic::real(3.14);
+    let x_plus_int = Basic::add(&basic_int, &x);
+    info!(
+        "Type of x, basic_int, basic_real, x_plus_int: {} {} {} {}",
+        x.get_type(),
+        basic_int.get_type(),
+        basic_real.get_type(),
+        x_plus_int.get_type()
+    );
+    assert_eq!(x.get_type_str(), "Symbol");
+    assert_eq!(basic_int.get_type_str(), "Integer");
+    assert_eq!(basic_real.get_type_str(), "Real");
+    assert_eq!(x_plus_int.get_type_str(), "Add");
 }
