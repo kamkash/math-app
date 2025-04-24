@@ -120,24 +120,23 @@ fn test_calculator_parser() {
         }
     }
 
-    let input = r#"10 + 21 = ans,
-                            a=cos(y)^2 + sin(x)^2 , 
-                            b=5000.0 , c=2 ,
-                            d=$1000.00,
-                            d1=$100,000.00,
-                            e = c*x^3 - 1/y + k*exp(-1/t),
-                            p=3.1415926,
-                            f = $30,000 * (1.0 + 0.05)^n,
-                            g=$100,000,
-                            f(x)=x^2+2*x-1,
-                            g(x)=a*exp(-t/(k*x)),
-                            f(x,y)=__ans__,
-                            f(3,4,9) = 3.1415;
+    let input = r#"10 + 21 = ans
+                            a=cos(y)^2 + sin(x)^2  
+                            b=5000.0 ; c=2 
+                            d=$1000.00
+                            d1=$100,000.00
+                            e = c*x^3 - 1/y + k*exp(-1/t)
+                            p=3.1415926
+                            f = $30,000 * (1.0 + 0.05)
+                            g=$100,000
+                            f(x)=x^2+2*x-1
+                            g(x)=a*exp(-t/(k*x))
+                            f(x,y) =__ans__
+                            f(3,4,9) = 3.1415
                             f(2.86) = _a_
                             "#;
     let mut visitor = IntCalcVisitor(0);
 
-    info!("Input: {}", input);
     let lexer = calculatorLexer::new(InputStream::new(input));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = calculatorParser::new(token_stream);
@@ -145,4 +144,5 @@ fn test_calculator_parser() {
     let result = visitor.visit(parse_tree.as_ref());
     info!("Result: {}", result);
     info!("Parsed result: {:?}", parse_tree);
+    info!("Input: {}", input);
 }

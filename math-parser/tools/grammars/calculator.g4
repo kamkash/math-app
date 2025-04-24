@@ -35,7 +35,7 @@ block
     ;
 
 functionDefinition
-    : VARIABLE LPAREN signedAtom (SEPARATOR signedAtom)* RPAREN EQ expression
+    : VARIABLE LPAREN signedAtom (COMMA signedAtom)* RPAREN EQ expression
     ;
 
 equation

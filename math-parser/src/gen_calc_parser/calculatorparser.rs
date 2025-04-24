@@ -594,14 +594,14 @@ fn EQ(&self) -> Option<Rc<TerminalNode<'input,calculatorParserContextType>>> whe
 fn expression(&self) -> Option<Rc<ExpressionContextAll<'input>>> where Self:Sized{
 	self.child_of_type(0)
 }
-/// Retrieves all `TerminalNode`s corresponding to token SEPARATOR in current rule
-fn SEPARATOR_all(&self) -> Vec<Rc<TerminalNode<'input,calculatorParserContextType>>>  where Self:Sized{
+/// Retrieves all `TerminalNode`s corresponding to token COMMA in current rule
+fn COMMA_all(&self) -> Vec<Rc<TerminalNode<'input,calculatorParserContextType>>>  where Self:Sized{
 	self.children_of_type()
 }
-/// Retrieves 'i's TerminalNode corresponding to token SEPARATOR, starting from 0.
-/// Returns `None` if number of children corresponding to token SEPARATOR is less or equal than `i`.
-fn SEPARATOR(&self, i: usize) -> Option<Rc<TerminalNode<'input,calculatorParserContextType>>> where Self:Sized{
-	self.get_token(SEPARATOR, i)
+/// Retrieves 'i's TerminalNode corresponding to token COMMA, starting from 0.
+/// Returns `None` if number of children corresponding to token COMMA is less or equal than `i`.
+fn COMMA(&self, i: usize) -> Option<Rc<TerminalNode<'input,calculatorParserContextType>>> where Self:Sized{
+	self.get_token(COMMA, i)
 }
 
 }
@@ -639,11 +639,11 @@ where
 			recog.base.set_state(73);
 			recog.err_handler.sync(&mut recog.base)?;
 			_la = recog.base.input.la(1);
-			while _la==SEPARATOR {
+			while _la==COMMA {
 				{
 				{
 				recog.base.set_state(69);
-				recog.base.match_token(SEPARATOR,&mut recog.err_handler)?;
+				recog.base.match_token(COMMA,&mut recog.err_handler)?;
 
 				/*InvokeRule signedAtom*/
 				recog.base.set_state(70);
@@ -2780,7 +2780,7 @@ const _serializedATN:&'static str =
 	\x03\x02\x02\x02\x3f\x3d\x03\x02\x02\x02\x3f\x40\x03\x02\x02\x02\x40\x42\
 	\x03\x02\x02\x02\x41\x3f\x03\x02\x02\x02\x42\x43\x07\x02\x02\x03\x43\x03\
 	\x03\x02\x02\x02\x44\x45\x07\x1e\x02\x02\x45\x46\x07\x0d\x02\x02\x46\x4b\
-	\x05\x10\x09\x02\x47\x48\x07\x18\x02\x02\x48\x4a\x05\x10\x09\x02\x49\x47\
+	\x05\x10\x09\x02\x47\x48\x07\x19\x02\x02\x48\x4a\x05\x10\x09\x02\x49\x47\
 	\x03\x02\x02\x02\x4a\x4d\x03\x02\x02\x02\x4b\x49\x03\x02\x02\x02\x4b\x4c\
 	\x03\x02\x02\x02\x4c\x4e\x03\x02\x02\x02\x4d\x4b\x03\x02\x02\x02\x4e\x4f\
 	\x07\x0e\x02\x02\x4f\x50\x07\x15\x02\x02\x50\x51\x05\x0a\x06\x02\x51\x05\

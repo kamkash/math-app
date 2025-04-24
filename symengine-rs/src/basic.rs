@@ -1,6 +1,7 @@
 use crate::symengine_ffi::*;
 use std::ffi::{CStr, CString};
 use std::fmt;
+use std::rc::Rc;
 
 pub struct Basic {
     inner: *mut basic,
@@ -337,7 +338,25 @@ impl Basic {
     where
         I: IntoIterator<Item = (&'a Basic, &'a Basic)>,
     {
-        let mb = BasicMap::from_tuples(pairs).unwrap();
+        let mb = BasicMap::from_pairs(pairs).unwrap();
+        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        unsafe {
+            basic_subs(
+                b,
+                exp.inner as *mut basic_struct,
+                mb.inner as *const CMapBasicBasic,
+            );
+        }
+        Self {
+            inner: b as *mut basic,
+        }
+    }
+
+    pub fn rc_subs<I>(exp: &Basic, rcpairs: I) -> Self
+    where
+        I: IntoIterator<Item = (Rc<Basic>, Rc<Basic>)>,
+    {
+        let mb = BasicMap::from_rc_pairs(rcpairs).unwrap();
         let b = Self::heap_alloc().unwrap() as *mut basic_struct;
         unsafe {
             basic_subs(
@@ -599,9 +618,31 @@ pub struct BasicMap {
 }
 
 impl BasicMap {
-    pub fn from_tuples<'a, I>(iter: I) -> Result<Self, &'static str>
+    pub fn from_pairs<'a, I>(iter: I) -> Result<Self, &'static str>
     where
         I: IntoIterator<Item = (&'a Basic, &'a Basic)>,
+    {
+        unsafe {
+            let ptr = mapbasicbasic_new();
+            if ptr.is_null() {
+                return Err("Failed to allocate memory for BasicMap");
+            }
+            for (basic_key, basic_value) in iter {
+                mapbasicbasic_insert(
+                    ptr,
+                    basic_key.inner as *mut basic_struct,
+                    basic_value.inner as *mut basic_struct,
+                );
+            }
+            Ok(Self {
+                inner: ptr as *mut CMapBasicBasic,
+            })
+        }
+    }
+
+    pub fn from_rc_pairs<I>(iter: I) -> Result<Self, &'static str>
+    where
+        I: IntoIterator<Item = (Rc<Basic>, Rc<Basic>)>,
     {
         unsafe {
             let ptr = mapbasicbasic_new();

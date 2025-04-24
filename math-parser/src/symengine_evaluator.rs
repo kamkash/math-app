@@ -9,12 +9,14 @@ use antlr_rust::tree::ParseTree;
 use antlr_rust::tree::{ParseTreeVisitorCompat, Tree};
 use log::info;
 
-use crate::gen_calc_parser::calculatorparser::MultiplyingExpressionContextAttrs;
 use crate::gen_calc_parser::calculatorparser::{
     calculatorParserContextType, AtomContext, BlockContext, ConstantContext, CurrencyContext,
     EquationContext, EquationContextAttrs, ExpressionContext, ExpressionContextAttrs, Func_Context,
     FuncnameContext, FunctionDefinitionContext, MultiplyingExpressionContext, PowExpressionContext,
     RelopContext, ScientificContext, SignedAtomContext, VariableContext,
+};
+use crate::gen_calc_parser::calculatorparser::{
+    MultiplyingExpressionContextAttrs, PowExpressionContextAttrs,
 };
 use crate::gen_calc_parser::calculatorvisitor::calculatorVisitorCompat;
 use symengine_rs::basic::Basic;
@@ -114,6 +116,20 @@ impl SymBasicCalcVisitor {
             symbol_table: std::collections::HashMap::new(),
         }
     }
+
+    fn build_symbol_table(&mut self) {
+        // build symbol table
+        for sym_eq in &self.block_result {
+            let left = &sym_eq.left;
+            let right = &sym_eq.right;
+            let relop = &sym_eq.relop;
+            if left.is_symbol() {
+                self.symbol_table.insert(Rc::clone(left), Rc::clone(right));
+            } else if right.is_symbol() {
+                self.symbol_table.insert(Rc::clone(right), Rc::clone(left));
+            }
+        }
+    }
 }
 
 impl ParseTreeVisitorCompat<'_> for SymBasicCalcVisitor {
@@ -132,18 +148,7 @@ impl ParseTreeVisitorCompat<'_> for SymBasicCalcVisitor {
 impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
     fn visit_block(&mut self, ctx: &BlockContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
-
-        // build symbol table
-        for sym_eq in &self.block_result {
-            let left = &sym_eq.left;
-            let right = &sym_eq.right;
-            let relop = &sym_eq.relop;
-            if left.is_symbol() {
-                self.symbol_table.insert(Rc::clone(left), Rc::clone(right));
-            } else if right.is_symbol() {
-                self.symbol_table.insert(Rc::clone(right), Rc::clone(left));
-            }
-        }
+        self.build_symbol_table();
         res
     }
 
@@ -217,7 +222,15 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
     }
 
     fn visit_powExpression(&mut self, ctx: &PowExpressionContext<'input>) -> Self::Return {
-        self.visit_children(ctx)
+        let res = self.visit_children(ctx);
+        let is_pow = ctx.POW(0).is_some();
+        if is_pow {
+            let left = self.result_stack.pop().unwrap();
+            let right = self.result_stack.pop().unwrap();
+            let result = Rc::new(right.pow(&left));
+            self.result_stack.push(result);
+        }
+        res
     }
 
     fn visit_signedAtom(&mut self, ctx: &SignedAtomContext<'input>) -> Self::Return {
