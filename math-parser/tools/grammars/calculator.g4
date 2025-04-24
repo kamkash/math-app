@@ -31,7 +31,7 @@ grammar calculator;
 block
     : (functionDefinition | equation | relational_expression) (
         SEPARATOR (functionDefinition | equation | relational_expression)
-    )* WS* EOF
+    )* SEPARATOR*  WS* EOF
     ;
 
 functionDefinition
