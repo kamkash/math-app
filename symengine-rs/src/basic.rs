@@ -6,6 +6,22 @@ pub struct Basic {
     inner: *mut basic,
 }
 
+impl std::hash::Hash for Basic {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        // Convert the Basic to a string and hash the string.
+        // This is a simple way to generate a hash code.
+        self.to_string().hash(state);
+    }
+}
+
+impl PartialEq for Basic {
+    fn eq(&self, other: &Self) -> bool {
+        self.equals(other)
+    }
+}
+
+impl Eq for Basic {}
+
 impl Basic {
     fn heap_alloc() -> Result<*mut basic_struct, &'static str> {
         unsafe {

@@ -210,9 +210,15 @@ NE
     ;
 
 SEPARATOR
-    : ','
-    | ';'
+    : ';'
+    | NEWLINE
     ;
+
+//SEPARATOR
+//    : ','
+//    | ';'
+//    | NEWLINE
+//    ;
 
 COMMA
     : ','
@@ -266,7 +272,7 @@ fragment DIGIT
 
 fragment NUMBER
     : '0' ..'9'+ ('.' '0' ..'9'+)?
-    | NUMBER_WITH_COMMAS
+		| NUMBER_WITH_COMMAS
     ;
 
 fragment NUMBER_WITH_COMMAS
@@ -299,8 +305,8 @@ fragment NEWLINE
     | '\r'
     ;
 
-// WS : [ \t]+ -> skip;
+WS : [ \t]+ -> skip;
 
-WS
-    : [ \r\n\t]+ -> skip
-    ;
+// WS
+//     : [ \r\n\t]+ -> skip
+//     ;
