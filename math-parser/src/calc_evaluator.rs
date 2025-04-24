@@ -28,6 +28,21 @@ pub enum Relop {
     GreaterThanOrEqual,
 }
 
+impl From<&str> for Relop {
+    fn from(s: &str) -> Self {
+        match s {
+            "=" => Relop::Equal,
+            "==" => Relop::DoubleEqual,
+            "!=" => Relop::NotEqual,
+            "<" => Relop::LessThan,
+            ">" => Relop::GreaterThan,
+            "<=" => Relop::LessThanOrEqual,
+            ">=" => Relop::GreaterThanOrEqual,
+            _ => panic!("Unknown relational operator: {}", s),
+        }
+    }
+}
+
 impl fmt::Debug for Relop {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let s = match self {
@@ -162,11 +177,9 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
         let len = self.result_stack.len();
         let right = &self.result_stack[len - 1];
         let left = &self.result_stack[len - 2];
-
-        ctx.get_children()
-            .for_each(|child| info!("---- Relation Expression Child: {}", child.get_text()));
-
-        let equation = SymEquation::new(left.clone(), right.clone(), Relop::Equal);
+        let relop_text = ctx.get_child(1).unwrap().get_text();
+        let relop = Relop::from(relop_text.as_str());
+        let equation = SymEquation::new(left.clone(), right.clone(), relop);
         self.block_result.push(equation);
         Basic::default()
     }
