@@ -35,6 +35,16 @@ fn enter_equation(&mut self, _ctx: &EquationContext<'input>) { }
  */
 fn exit_equation(&mut self, _ctx: &EquationContext<'input>) { }
 /**
+ * Enter a parse tree produced by {@link calculatorParser#relational_expression}.
+ * @param ctx the parse tree
+ */
+fn enter_relational_expression(&mut self, _ctx: &Relational_expressionContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link calculatorParser#relational_expression}.
+ * @param ctx the parse tree
+ */
+fn exit_relational_expression(&mut self, _ctx: &Relational_expressionContext<'input>) { }
+/**
  * Enter a parse tree produced by {@link calculatorParser#expression}.
  * @param ctx the parse tree
  */

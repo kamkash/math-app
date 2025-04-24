@@ -58,14 +58,14 @@ use std::any::{Any,TypeId};
 		pub const GT:isize=17; 
 		pub const LT:isize=18; 
 		pub const EQ:isize=19; 
-		pub const NE:isize=20; 
-		pub const SEPARATOR:isize=21; 
-		pub const COMMA:isize=22; 
-		pub const POINT:isize=23; 
-		pub const POW:isize=24; 
-		pub const PI:isize=25; 
-		pub const EULER:isize=26; 
-		pub const I:isize=27; 
+		pub const DOUBLE_EQ:isize=20; 
+		pub const NE:isize=21; 
+		pub const SEPARATOR:isize=22; 
+		pub const COMMA:isize=23; 
+		pub const POINT:isize=24; 
+		pub const POW:isize=25; 
+		pub const PI:isize=26; 
+		pub const EULER:isize=27; 
 		pub const VARIABLE:isize=28; 
 		pub const SCIENTIFIC_NUMBER:isize=29; 
 		pub const CURRENCY_NUMBER:isize=30; 
@@ -73,41 +73,44 @@ use std::any::{Any,TypeId};
 	pub const RULE_block:usize = 0; 
 	pub const RULE_functionDefinition:usize = 1; 
 	pub const RULE_equation:usize = 2; 
-	pub const RULE_expression:usize = 3; 
-	pub const RULE_multiplyingExpression:usize = 4; 
-	pub const RULE_powExpression:usize = 5; 
-	pub const RULE_signedAtom:usize = 6; 
-	pub const RULE_atom:usize = 7; 
-	pub const RULE_scientific:usize = 8; 
-	pub const RULE_currency:usize = 9; 
-	pub const RULE_constant:usize = 10; 
-	pub const RULE_variable:usize = 11; 
-	pub const RULE_func_:usize = 12; 
-	pub const RULE_funcname:usize = 13; 
-	pub const RULE_relop:usize = 14; 
-	pub const RULE_sumop:usize = 15; 
-	pub const RULE_multop:usize = 16;
-	pub const ruleNames: [&'static str; 17] =  [
-		"block", "functionDefinition", "equation", "expression", "multiplyingExpression", 
-		"powExpression", "signedAtom", "atom", "scientific", "currency", "constant", 
-		"variable", "func_", "funcname", "relop", "sumop", "multop"
+	pub const RULE_relational_expression:usize = 3; 
+	pub const RULE_expression:usize = 4; 
+	pub const RULE_multiplyingExpression:usize = 5; 
+	pub const RULE_powExpression:usize = 6; 
+	pub const RULE_signedAtom:usize = 7; 
+	pub const RULE_atom:usize = 8; 
+	pub const RULE_scientific:usize = 9; 
+	pub const RULE_currency:usize = 10; 
+	pub const RULE_constant:usize = 11; 
+	pub const RULE_variable:usize = 12; 
+	pub const RULE_func_:usize = 13; 
+	pub const RULE_funcname:usize = 14; 
+	pub const RULE_relop:usize = 15; 
+	pub const RULE_sumop:usize = 16; 
+	pub const RULE_multop:usize = 17;
+	pub const ruleNames: [&'static str; 18] =  [
+		"block", "functionDefinition", "equation", "relational_expression", "expression", 
+		"multiplyingExpression", "powExpression", "signedAtom", "atom", "scientific", 
+		"currency", "constant", "variable", "func_", "funcname", "relop", "sumop", 
+		"multop"
 	];
 
 
-	pub const _LITERAL_NAMES: [Option<&'static str>;28] = [
+	pub const _LITERAL_NAMES: [Option<&'static str>;27] = [
 		None, Some("'cos'"), Some("'sin'"), Some("'tan'"), Some("'acos'"), Some("'asin'"), 
 		Some("'atan'"), Some("'ln'"), Some("'log'"), Some("'exp'"), Some("'sqrt'"), 
 		Some("'('"), Some("')'"), Some("'+'"), Some("'-'"), Some("'*'"), Some("'/'"), 
-		Some("'>'"), Some("'<'"), Some("'='"), Some("'!='"), None, Some("','"), 
-		Some("'.'"), Some("'^'"), Some("'pi'"), None, Some("'i'")
+		Some("'>'"), Some("'<'"), Some("'='"), Some("'=='"), Some("'!='"), None, 
+		Some("','"), Some("'.'"), Some("'^'"), Some("'pi'")
 	];
 	pub const _SYMBOLIC_NAMES: [Option<&'static str>;32]  = [
 		None, Some("COS"), Some("SIN"), Some("TAN"), Some("ACOS"), Some("ASIN"), 
 		Some("ATAN"), Some("LN"), Some("LOG"), Some("EXP"), Some("SQRT"), Some("LPAREN"), 
 		Some("RPAREN"), Some("PLUS"), Some("MINUS"), Some("TIMES"), Some("DIV"), 
-		Some("GT"), Some("LT"), Some("EQ"), Some("NE"), Some("SEPARATOR"), Some("COMMA"), 
-		Some("POINT"), Some("POW"), Some("PI"), Some("EULER"), Some("I"), Some("VARIABLE"), 
-		Some("SCIENTIFIC_NUMBER"), Some("CURRENCY_NUMBER"), Some("WS")
+		Some("GT"), Some("LT"), Some("EQ"), Some("DOUBLE_EQ"), Some("NE"), Some("SEPARATOR"), 
+		Some("COMMA"), Some("POINT"), Some("POW"), Some("PI"), Some("EULER"), 
+		Some("VARIABLE"), Some("SCIENTIFIC_NUMBER"), Some("CURRENCY_NUMBER"), 
+		Some("WS")
 	];
 	lazy_static!{
 	    static ref _shared_context_cache: Arc<PredictionContextCache> = Arc::new(PredictionContextCache::new());
@@ -333,6 +336,12 @@ fn equation_all(&self) ->  Vec<Rc<EquationContextAll<'input>>> where Self:Sized{
 fn equation(&self, i: usize) -> Option<Rc<EquationContextAll<'input>>> where Self:Sized{
 	self.child_of_type(i)
 }
+fn relational_expression_all(&self) ->  Vec<Rc<Relational_expressionContextAll<'input>>> where Self:Sized{
+	self.children_of_type()
+}
+fn relational_expression(&self, i: usize) -> Option<Rc<Relational_expressionContextAll<'input>>> where Self:Sized{
+	self.child_of_type(i)
+}
 /// Retrieves all `TerminalNode`s corresponding to token SEPARATOR in current rule
 fn SEPARATOR_all(&self) -> Vec<Rc<TerminalNode<'input,calculatorParserContextType>>>  where Self:Sized{
 	self.children_of_type()
@@ -374,13 +383,13 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(36);
+			recog.base.set_state(39);
 			recog.err_handler.sync(&mut recog.base)?;
 			match  recog.interpreter.adaptive_predict(0,&mut recog.base)? {
 				1 =>{
 					{
 					/*InvokeRule functionDefinition*/
-					recog.base.set_state(34);
+					recog.base.set_state(36);
 					recog.functionDefinition()?;
 
 					}
@@ -389,30 +398,39 @@ where
 				2 =>{
 					{
 					/*InvokeRule equation*/
-					recog.base.set_state(35);
+					recog.base.set_state(37);
 					recog.equation()?;
+
+					}
+				}
+			,
+				3 =>{
+					{
+					/*InvokeRule relational_expression*/
+					recog.base.set_state(38);
+					recog.relational_expression()?;
 
 					}
 				}
 
 				_ => {}
 			}
-			recog.base.set_state(45);
+			recog.base.set_state(49);
 			recog.err_handler.sync(&mut recog.base)?;
 			_la = recog.base.input.la(1);
 			while _la==SEPARATOR {
 				{
 				{
-				recog.base.set_state(38);
+				recog.base.set_state(41);
 				recog.base.match_token(SEPARATOR,&mut recog.err_handler)?;
 
-				recog.base.set_state(41);
+				recog.base.set_state(45);
 				recog.err_handler.sync(&mut recog.base)?;
 				match  recog.interpreter.adaptive_predict(1,&mut recog.base)? {
 					1 =>{
 						{
 						/*InvokeRule functionDefinition*/
-						recog.base.set_state(39);
+						recog.base.set_state(42);
 						recog.functionDefinition()?;
 
 						}
@@ -421,8 +439,17 @@ where
 					2 =>{
 						{
 						/*InvokeRule equation*/
-						recog.base.set_state(40);
+						recog.base.set_state(43);
 						recog.equation()?;
+
+						}
+					}
+				,
+					3 =>{
+						{
+						/*InvokeRule relational_expression*/
+						recog.base.set_state(44);
+						recog.relational_expression()?;
 
 						}
 					}
@@ -431,26 +458,26 @@ where
 				}
 				}
 				}
-				recog.base.set_state(47);
+				recog.base.set_state(51);
 				recog.err_handler.sync(&mut recog.base)?;
 				_la = recog.base.input.la(1);
 			}
-			recog.base.set_state(51);
+			recog.base.set_state(55);
 			recog.err_handler.sync(&mut recog.base)?;
 			_la = recog.base.input.la(1);
 			while _la==WS {
 				{
 				{
-				recog.base.set_state(48);
+				recog.base.set_state(52);
 				recog.base.match_token(WS,&mut recog.err_handler)?;
 
 				}
 				}
-				recog.base.set_state(53);
+				recog.base.set_state(57);
 				recog.err_handler.sync(&mut recog.base)?;
 				_la = recog.base.input.la(1);
 			}
-			recog.base.set_state(54);
+			recog.base.set_state(58);
 			recog.base.match_token(EOF,&mut recog.err_handler)?;
 
 			}
@@ -581,43 +608,43 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(56);
+			recog.base.set_state(60);
 			recog.base.match_token(VARIABLE,&mut recog.err_handler)?;
 
-			recog.base.set_state(57);
+			recog.base.set_state(61);
 			recog.base.match_token(LPAREN,&mut recog.err_handler)?;
 
 			/*InvokeRule signedAtom*/
-			recog.base.set_state(58);
+			recog.base.set_state(62);
 			recog.signedAtom()?;
 
-			recog.base.set_state(63);
+			recog.base.set_state(67);
 			recog.err_handler.sync(&mut recog.base)?;
 			_la = recog.base.input.la(1);
 			while _la==SEPARATOR {
 				{
 				{
-				recog.base.set_state(59);
+				recog.base.set_state(63);
 				recog.base.match_token(SEPARATOR,&mut recog.err_handler)?;
 
 				/*InvokeRule signedAtom*/
-				recog.base.set_state(60);
+				recog.base.set_state(64);
 				recog.signedAtom()?;
 
 				}
 				}
-				recog.base.set_state(65);
+				recog.base.set_state(69);
 				recog.err_handler.sync(&mut recog.base)?;
 				_la = recog.base.input.la(1);
 			}
-			recog.base.set_state(66);
+			recog.base.set_state(70);
 			recog.base.match_token(RPAREN,&mut recog.err_handler)?;
 
-			recog.base.set_state(67);
+			recog.base.set_state(71);
 			recog.base.match_token(EQ,&mut recog.err_handler)?;
 
 			/*InvokeRule expression*/
-			recog.base.set_state(68);
+			recog.base.set_state(72);
 			recog.expression()?;
 
 			}
@@ -693,8 +720,10 @@ fn expression_all(&self) ->  Vec<Rc<ExpressionContextAll<'input>>> where Self:Si
 fn expression(&self, i: usize) -> Option<Rc<ExpressionContextAll<'input>>> where Self:Sized{
 	self.child_of_type(i)
 }
-fn relop(&self) -> Option<Rc<RelopContextAll<'input>>> where Self:Sized{
-	self.child_of_type(0)
+/// Retrieves first TerminalNode corresponding to token EQ
+/// Returns `None` if there is no child corresponding to token EQ
+fn EQ(&self) -> Option<Rc<TerminalNode<'input,calculatorParserContextType>>> where Self:Sized{
+	self.get_token(EQ, 0)
 }
 
 }
@@ -719,15 +748,124 @@ where
 			recog.base.enter_outer_alt(None, 1);
 			{
 			/*InvokeRule expression*/
-			recog.base.set_state(70);
+			recog.base.set_state(74);
+			recog.expression()?;
+
+			recog.base.set_state(75);
+			recog.base.match_token(EQ,&mut recog.err_handler)?;
+
+			/*InvokeRule expression*/
+			recog.base.set_state(76);
+			recog.expression()?;
+
+			}
+			Ok(())
+		})();
+		match result {
+		Ok(_)=>{},
+        Err(e @ ANTLRError::FallThrough(_)) => return Err(e),
+		Err(ref re) => {
+				//_localctx.exception = re;
+				recog.err_handler.report_error(&mut recog.base, re);
+				recog.err_handler.recover(&mut recog.base, re)?;
+			}
+		}
+		recog.base.exit_rule();
+
+		Ok(_localctx)
+	}
+}
+//------------------- relational_expression ----------------
+pub type Relational_expressionContextAll<'input> = Relational_expressionContext<'input>;
+
+
+pub type Relational_expressionContext<'input> = BaseParserRuleContext<'input,Relational_expressionContextExt<'input>>;
+
+#[derive(Clone)]
+pub struct Relational_expressionContextExt<'input>{
+ph:PhantomData<&'input str>
+}
+
+impl<'input> calculatorParserContext<'input> for Relational_expressionContext<'input>{}
+
+impl<'input,'a> Listenable<dyn calculatorListener<'input> + 'a> for Relational_expressionContext<'input>{
+		fn enter(&self,listener: &mut (dyn calculatorListener<'input> + 'a)) {
+			listener.enter_every_rule(self);
+			listener.enter_relational_expression(self);
+		}
+		fn exit(&self,listener: &mut (dyn calculatorListener<'input> + 'a)) {
+			listener.exit_relational_expression(self);
+			listener.exit_every_rule(self);
+		}
+}
+
+impl<'input,'a> Visitable<dyn calculatorVisitor<'input> + 'a> for Relational_expressionContext<'input>{
+	fn accept(&self,visitor: &mut (dyn calculatorVisitor<'input> + 'a)) {
+		visitor.visit_relational_expression(self);
+	}
+}
+
+impl<'input> CustomRuleContext<'input> for Relational_expressionContextExt<'input>{
+	type TF = LocalTokenFactory<'input>;
+	type Ctx = calculatorParserContextType;
+	fn get_rule_index(&self) -> usize { RULE_relational_expression }
+	//fn type_rule_index() -> usize where Self: Sized { RULE_relational_expression }
+}
+antlr_rust::tid!{Relational_expressionContextExt<'a>}
+
+impl<'input> Relational_expressionContextExt<'input>{
+	fn new(parent: Option<Rc<dyn calculatorParserContext<'input> + 'input > >, invoking_state: isize) -> Rc<Relational_expressionContextAll<'input>> {
+		Rc::new(
+			BaseParserRuleContext::new_parser_ctx(parent, invoking_state,Relational_expressionContextExt{
+				ph:PhantomData
+			}),
+		)
+	}
+}
+
+pub trait Relational_expressionContextAttrs<'input>: calculatorParserContext<'input> + BorrowMut<Relational_expressionContextExt<'input>>{
+
+fn expression_all(&self) ->  Vec<Rc<ExpressionContextAll<'input>>> where Self:Sized{
+	self.children_of_type()
+}
+fn expression(&self, i: usize) -> Option<Rc<ExpressionContextAll<'input>>> where Self:Sized{
+	self.child_of_type(i)
+}
+fn relop(&self) -> Option<Rc<RelopContextAll<'input>>> where Self:Sized{
+	self.child_of_type(0)
+}
+
+}
+
+impl<'input> Relational_expressionContextAttrs<'input> for Relational_expressionContext<'input>{}
+
+impl<'input, I, H> calculatorParser<'input, I, H>
+where
+    I: TokenStream<'input, TF = LocalTokenFactory<'input> > + TidAble<'input>,
+    H: ErrorStrategy<'input,BaseParserType<'input,I>>
+{
+	pub fn relational_expression(&mut self,)
+	-> Result<Rc<Relational_expressionContextAll<'input>>,ANTLRError> {
+		let mut recog = self;
+		let _parentctx = recog.ctx.take();
+		let mut _localctx = Relational_expressionContextExt::new(_parentctx.clone(), recog.base.get_state());
+        recog.base.enter_rule(_localctx.clone(), 6, RULE_relational_expression);
+        let mut _localctx: Rc<Relational_expressionContextAll> = _localctx;
+		let result: Result<(), ANTLRError> = (|| {
+
+			//recog.base.enter_outer_alt(_localctx.clone(), 1);
+			recog.base.enter_outer_alt(None, 1);
+			{
+			/*InvokeRule expression*/
+			recog.base.set_state(78);
 			recog.expression()?;
 
 			/*InvokeRule relop*/
-			recog.base.set_state(71);
+			recog.base.set_state(79);
 			recog.relop()?;
 
 			/*InvokeRule expression*/
-			recog.base.set_state(72);
+			recog.base.set_state(80);
 			recog.expression()?;
 
 			}
@@ -836,7 +974,7 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = ExpressionContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 6, RULE_expression);
+        recog.base.enter_rule(_localctx.clone(), 8, RULE_expression);
         let mut _localctx: Rc<ExpressionContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
@@ -845,16 +983,16 @@ where
 			recog.base.enter_outer_alt(None, 1);
 			{
 			/*InvokeRule multiplyingExpression*/
-			recog.base.set_state(74);
+			recog.base.set_state(82);
 			recog.multiplyingExpression()?;
 
-			recog.base.set_state(79);
+			recog.base.set_state(87);
 			recog.err_handler.sync(&mut recog.base)?;
 			_la = recog.base.input.la(1);
 			while _la==PLUS || _la==MINUS {
 				{
 				{
-				recog.base.set_state(75);
+				recog.base.set_state(83);
 				_la = recog.base.input.la(1);
 				if { !(_la==PLUS || _la==MINUS) } {
 					recog.err_handler.recover_inline(&mut recog.base)?;
@@ -866,12 +1004,12 @@ where
 					recog.base.consume(&mut recog.err_handler);
 				}
 				/*InvokeRule multiplyingExpression*/
-				recog.base.set_state(76);
+				recog.base.set_state(84);
 				recog.multiplyingExpression()?;
 
 				}
 				}
-				recog.base.set_state(81);
+				recog.base.set_state(89);
 				recog.err_handler.sync(&mut recog.base)?;
 				_la = recog.base.input.la(1);
 			}
@@ -981,7 +1119,7 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = MultiplyingExpressionContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 8, RULE_multiplyingExpression);
+        recog.base.enter_rule(_localctx.clone(), 10, RULE_multiplyingExpression);
         let mut _localctx: Rc<MultiplyingExpressionContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
@@ -990,16 +1128,16 @@ where
 			recog.base.enter_outer_alt(None, 1);
 			{
 			/*InvokeRule powExpression*/
-			recog.base.set_state(82);
+			recog.base.set_state(90);
 			recog.powExpression()?;
 
-			recog.base.set_state(87);
+			recog.base.set_state(95);
 			recog.err_handler.sync(&mut recog.base)?;
 			_la = recog.base.input.la(1);
 			while _la==TIMES || _la==DIV {
 				{
 				{
-				recog.base.set_state(83);
+				recog.base.set_state(91);
 				_la = recog.base.input.la(1);
 				if { !(_la==TIMES || _la==DIV) } {
 					recog.err_handler.recover_inline(&mut recog.base)?;
@@ -1011,12 +1149,12 @@ where
 					recog.base.consume(&mut recog.err_handler);
 				}
 				/*InvokeRule powExpression*/
-				recog.base.set_state(84);
+				recog.base.set_state(92);
 				recog.powExpression()?;
 
 				}
 				}
-				recog.base.set_state(89);
+				recog.base.set_state(97);
 				recog.err_handler.sync(&mut recog.base)?;
 				_la = recog.base.input.la(1);
 			}
@@ -1117,7 +1255,7 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = PowExpressionContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 10, RULE_powExpression);
+        recog.base.enter_rule(_localctx.clone(), 12, RULE_powExpression);
         let mut _localctx: Rc<PowExpressionContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
@@ -1126,25 +1264,25 @@ where
 			recog.base.enter_outer_alt(None, 1);
 			{
 			/*InvokeRule signedAtom*/
-			recog.base.set_state(90);
+			recog.base.set_state(98);
 			recog.signedAtom()?;
 
-			recog.base.set_state(95);
+			recog.base.set_state(103);
 			recog.err_handler.sync(&mut recog.base)?;
 			_la = recog.base.input.la(1);
 			while _la==POW {
 				{
 				{
-				recog.base.set_state(91);
+				recog.base.set_state(99);
 				recog.base.match_token(POW,&mut recog.err_handler)?;
 
 				/*InvokeRule signedAtom*/
-				recog.base.set_state(92);
+				recog.base.set_state(100);
 				recog.signedAtom()?;
 
 				}
 				}
-				recog.base.set_state(97);
+				recog.base.set_state(105);
 				recog.err_handler.sync(&mut recog.base)?;
 				_la = recog.base.input.la(1);
 			}
@@ -1249,22 +1387,22 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = SignedAtomContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 12, RULE_signedAtom);
+        recog.base.enter_rule(_localctx.clone(), 14, RULE_signedAtom);
         let mut _localctx: Rc<SignedAtomContextAll> = _localctx;
 		let result: Result<(), ANTLRError> = (|| {
 
-			recog.base.set_state(104);
+			recog.base.set_state(112);
 			recog.err_handler.sync(&mut recog.base)?;
 			match  recog.interpreter.adaptive_predict(8,&mut recog.base)? {
 				1 =>{
 					//recog.base.enter_outer_alt(_localctx.clone(), 1);
 					recog.base.enter_outer_alt(None, 1);
 					{
-					recog.base.set_state(98);
+					recog.base.set_state(106);
 					recog.base.match_token(PLUS,&mut recog.err_handler)?;
 
 					/*InvokeRule signedAtom*/
-					recog.base.set_state(99);
+					recog.base.set_state(107);
 					recog.signedAtom()?;
 
 					}
@@ -1274,11 +1412,11 @@ where
 					//recog.base.enter_outer_alt(_localctx.clone(), 2);
 					recog.base.enter_outer_alt(None, 2);
 					{
-					recog.base.set_state(100);
+					recog.base.set_state(108);
 					recog.base.match_token(MINUS,&mut recog.err_handler)?;
 
 					/*InvokeRule signedAtom*/
-					recog.base.set_state(101);
+					recog.base.set_state(109);
 					recog.signedAtom()?;
 
 					}
@@ -1289,7 +1427,7 @@ where
 					recog.base.enter_outer_alt(None, 3);
 					{
 					/*InvokeRule func_*/
-					recog.base.set_state(102);
+					recog.base.set_state(110);
 					recog.func_()?;
 
 					}
@@ -1300,7 +1438,7 @@ where
 					recog.base.enter_outer_alt(None, 4);
 					{
 					/*InvokeRule atom*/
-					recog.base.set_state(103);
+					recog.base.set_state(111);
 					recog.atom()?;
 
 					}
@@ -1414,15 +1552,15 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = AtomContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 14, RULE_atom);
+        recog.base.enter_rule(_localctx.clone(), 16, RULE_atom);
         let mut _localctx: Rc<AtomContextAll> = _localctx;
 		let result: Result<(), ANTLRError> = (|| {
 
-			recog.base.set_state(115);
+			recog.base.set_state(123);
 			recog.err_handler.sync(&mut recog.base)?;
 			match recog.base.input.la(1) {
-			 EOF | RPAREN | PLUS | MINUS | TIMES | DIV | GT | LT | EQ | NE | SEPARATOR |
-			 COMMA | POW | WS 
+			 EOF | RPAREN | PLUS | MINUS | TIMES | DIV | GT | LT | EQ | DOUBLE_EQ |
+			 NE | SEPARATOR | COMMA | POW | WS 
 				=> {
 					//recog.base.enter_outer_alt(_localctx.clone(), 1);
 					recog.base.enter_outer_alt(None, 1);
@@ -1436,7 +1574,7 @@ where
 					recog.base.enter_outer_alt(None, 2);
 					{
 					/*InvokeRule scientific*/
-					recog.base.set_state(107);
+					recog.base.set_state(115);
 					recog.scientific()?;
 
 					}
@@ -1448,19 +1586,19 @@ where
 					recog.base.enter_outer_alt(None, 3);
 					{
 					/*InvokeRule variable*/
-					recog.base.set_state(108);
+					recog.base.set_state(116);
 					recog.variable()?;
 
 					}
 				}
 
-			 PI | EULER | I 
+			 PI | EULER 
 				=> {
 					//recog.base.enter_outer_alt(_localctx.clone(), 4);
 					recog.base.enter_outer_alt(None, 4);
 					{
 					/*InvokeRule constant*/
-					recog.base.set_state(109);
+					recog.base.set_state(117);
 					recog.constant()?;
 
 					}
@@ -1472,7 +1610,7 @@ where
 					recog.base.enter_outer_alt(None, 5);
 					{
 					/*InvokeRule currency*/
-					recog.base.set_state(110);
+					recog.base.set_state(118);
 					recog.currency()?;
 
 					}
@@ -1483,14 +1621,14 @@ where
 					//recog.base.enter_outer_alt(_localctx.clone(), 6);
 					recog.base.enter_outer_alt(None, 6);
 					{
-					recog.base.set_state(111);
+					recog.base.set_state(119);
 					recog.base.match_token(LPAREN,&mut recog.err_handler)?;
 
 					/*InvokeRule expression*/
-					recog.base.set_state(112);
+					recog.base.set_state(120);
 					recog.expression()?;
 
-					recog.base.set_state(113);
+					recog.base.set_state(121);
 					recog.base.match_token(RPAREN,&mut recog.err_handler)?;
 
 					}
@@ -1584,14 +1722,14 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = ScientificContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 16, RULE_scientific);
+        recog.base.enter_rule(_localctx.clone(), 18, RULE_scientific);
         let mut _localctx: Rc<ScientificContextAll> = _localctx;
 		let result: Result<(), ANTLRError> = (|| {
 
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(117);
+			recog.base.set_state(125);
 			recog.base.match_token(SCIENTIFIC_NUMBER,&mut recog.err_handler)?;
 
 			}
@@ -1681,14 +1819,14 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = CurrencyContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 18, RULE_currency);
+        recog.base.enter_rule(_localctx.clone(), 20, RULE_currency);
         let mut _localctx: Rc<CurrencyContextAll> = _localctx;
 		let result: Result<(), ANTLRError> = (|| {
 
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(119);
+			recog.base.set_state(127);
 			recog.base.match_token(CURRENCY_NUMBER,&mut recog.err_handler)?;
 
 			}
@@ -1768,11 +1906,6 @@ fn PI(&self) -> Option<Rc<TerminalNode<'input,calculatorParserContextType>>> whe
 fn EULER(&self) -> Option<Rc<TerminalNode<'input,calculatorParserContextType>>> where Self:Sized{
 	self.get_token(EULER, 0)
 }
-/// Retrieves first TerminalNode corresponding to token I
-/// Returns `None` if there is no child corresponding to token I
-fn I(&self) -> Option<Rc<TerminalNode<'input,calculatorParserContextType>>> where Self:Sized{
-	self.get_token(I, 0)
-}
 
 }
 
@@ -1788,7 +1921,7 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = ConstantContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 20, RULE_constant);
+        recog.base.enter_rule(_localctx.clone(), 22, RULE_constant);
         let mut _localctx: Rc<ConstantContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
@@ -1796,9 +1929,9 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(121);
+			recog.base.set_state(129);
 			_la = recog.base.input.la(1);
-			if { !((((_la) & !0x3f) == 0 && ((1usize << _la) & ((1usize << PI) | (1usize << EULER) | (1usize << I))) != 0)) } {
+			if { !(_la==PI || _la==EULER) } {
 				recog.err_handler.recover_inline(&mut recog.base)?;
 
 			}
@@ -1894,14 +2027,14 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = VariableContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 22, RULE_variable);
+        recog.base.enter_rule(_localctx.clone(), 24, RULE_variable);
         let mut _localctx: Rc<VariableContextAll> = _localctx;
 		let result: Result<(), ANTLRError> = (|| {
 
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(123);
+			recog.base.set_state(131);
 			recog.base.match_token(VARIABLE,&mut recog.err_handler)?;
 
 			}
@@ -2014,7 +2147,7 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = Func_ContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 24, RULE_func_);
+        recog.base.enter_rule(_localctx.clone(), 26, RULE_func_);
         let mut _localctx: Rc<Func_ContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
@@ -2023,36 +2156,36 @@ where
 			recog.base.enter_outer_alt(None, 1);
 			{
 			/*InvokeRule funcname*/
-			recog.base.set_state(125);
+			recog.base.set_state(133);
 			recog.funcname()?;
 
-			recog.base.set_state(126);
+			recog.base.set_state(134);
 			recog.base.match_token(LPAREN,&mut recog.err_handler)?;
 
 			/*InvokeRule expression*/
-			recog.base.set_state(127);
+			recog.base.set_state(135);
 			recog.expression()?;
 
-			recog.base.set_state(132);
+			recog.base.set_state(140);
 			recog.err_handler.sync(&mut recog.base)?;
 			_la = recog.base.input.la(1);
 			while _la==COMMA {
 				{
 				{
-				recog.base.set_state(128);
+				recog.base.set_state(136);
 				recog.base.match_token(COMMA,&mut recog.err_handler)?;
 
 				/*InvokeRule expression*/
-				recog.base.set_state(129);
+				recog.base.set_state(137);
 				recog.expression()?;
 
 				}
 				}
-				recog.base.set_state(134);
+				recog.base.set_state(142);
 				recog.err_handler.sync(&mut recog.base)?;
 				_la = recog.base.input.la(1);
 			}
-			recog.base.set_state(135);
+			recog.base.set_state(143);
 			recog.base.match_token(RPAREN,&mut recog.err_handler)?;
 
 			}
@@ -2187,7 +2320,7 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = FuncnameContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 26, RULE_funcname);
+        recog.base.enter_rule(_localctx.clone(), 28, RULE_funcname);
         let mut _localctx: Rc<FuncnameContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
@@ -2195,7 +2328,7 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(137);
+			recog.base.set_state(145);
 			_la = recog.base.input.la(1);
 			if { !((((_la) & !0x3f) == 0 && ((1usize << _la) & ((1usize << COS) | (1usize << SIN) | (1usize << TAN) | (1usize << ACOS) | (1usize << ASIN) | (1usize << ATAN) | (1usize << LN) | (1usize << LOG) | (1usize << EXP) | (1usize << SQRT))) != 0)) } {
 				recog.err_handler.recover_inline(&mut recog.base)?;
@@ -2273,11 +2406,6 @@ impl<'input> RelopContextExt<'input>{
 
 pub trait RelopContextAttrs<'input>: calculatorParserContext<'input> + BorrowMut<RelopContextExt<'input>>{
 
-/// Retrieves first TerminalNode corresponding to token EQ
-/// Returns `None` if there is no child corresponding to token EQ
-fn EQ(&self) -> Option<Rc<TerminalNode<'input,calculatorParserContextType>>> where Self:Sized{
-	self.get_token(EQ, 0)
-}
 /// Retrieves first TerminalNode corresponding to token GT
 /// Returns `None` if there is no child corresponding to token GT
 fn GT(&self) -> Option<Rc<TerminalNode<'input,calculatorParserContextType>>> where Self:Sized{
@@ -2292,6 +2420,11 @@ fn LT(&self) -> Option<Rc<TerminalNode<'input,calculatorParserContextType>>> whe
 /// Returns `None` if there is no child corresponding to token NE
 fn NE(&self) -> Option<Rc<TerminalNode<'input,calculatorParserContextType>>> where Self:Sized{
 	self.get_token(NE, 0)
+}
+/// Retrieves first TerminalNode corresponding to token DOUBLE_EQ
+/// Returns `None` if there is no child corresponding to token DOUBLE_EQ
+fn DOUBLE_EQ(&self) -> Option<Rc<TerminalNode<'input,calculatorParserContextType>>> where Self:Sized{
+	self.get_token(DOUBLE_EQ, 0)
 }
 
 }
@@ -2308,7 +2441,7 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = RelopContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 28, RULE_relop);
+        recog.base.enter_rule(_localctx.clone(), 30, RULE_relop);
         let mut _localctx: Rc<RelopContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
@@ -2316,9 +2449,9 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(139);
+			recog.base.set_state(147);
 			_la = recog.base.input.la(1);
-			if { !((((_la) & !0x3f) == 0 && ((1usize << _la) & ((1usize << GT) | (1usize << LT) | (1usize << EQ) | (1usize << NE))) != 0)) } {
+			if { !((((_la) & !0x3f) == 0 && ((1usize << _la) & ((1usize << GT) | (1usize << LT) | (1usize << DOUBLE_EQ) | (1usize << NE))) != 0)) } {
 				recog.err_handler.recover_inline(&mut recog.base)?;
 
 			}
@@ -2419,7 +2552,7 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = SumopContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 30, RULE_sumop);
+        recog.base.enter_rule(_localctx.clone(), 32, RULE_sumop);
         let mut _localctx: Rc<SumopContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
@@ -2427,7 +2560,7 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(141);
+			recog.base.set_state(149);
 			_la = recog.base.input.la(1);
 			if { !(_la==PLUS || _la==MINUS) } {
 				recog.err_handler.recover_inline(&mut recog.base)?;
@@ -2530,7 +2663,7 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = MultopContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 32, RULE_multop);
+        recog.base.enter_rule(_localctx.clone(), 34, RULE_multop);
         let mut _localctx: Rc<MultopContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
@@ -2538,7 +2671,7 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(143);
+			recog.base.set_state(151);
 			_la = recog.base.input.la(1);
 			if { !(_la==TIMES || _la==DIV) } {
 				recog.err_handler.recover_inline(&mut recog.base)?;
@@ -2588,74 +2721,79 @@ lazy_static! {
 
 const _serializedATN:&'static str =
 	"\x03\u{608b}\u{a72a}\u{8133}\u{b9ed}\u{417c}\u{3be7}\u{7786}\u{5964}\x03\
-	\x21\u{94}\x04\x02\x09\x02\x04\x03\x09\x03\x04\x04\x09\x04\x04\x05\x09\x05\
+	\x21\u{9c}\x04\x02\x09\x02\x04\x03\x09\x03\x04\x04\x09\x04\x04\x05\x09\x05\
 	\x04\x06\x09\x06\x04\x07\x09\x07\x04\x08\x09\x08\x04\x09\x09\x09\x04\x0a\
 	\x09\x0a\x04\x0b\x09\x0b\x04\x0c\x09\x0c\x04\x0d\x09\x0d\x04\x0e\x09\x0e\
-	\x04\x0f\x09\x0f\x04\x10\x09\x10\x04\x11\x09\x11\x04\x12\x09\x12\x03\x02\
-	\x03\x02\x05\x02\x27\x0a\x02\x03\x02\x03\x02\x03\x02\x05\x02\x2c\x0a\x02\
-	\x07\x02\x2e\x0a\x02\x0c\x02\x0e\x02\x31\x0b\x02\x03\x02\x07\x02\x34\x0a\
-	\x02\x0c\x02\x0e\x02\x37\x0b\x02\x03\x02\x03\x02\x03\x03\x03\x03\x03\x03\
-	\x03\x03\x03\x03\x07\x03\x40\x0a\x03\x0c\x03\x0e\x03\x43\x0b\x03\x03\x03\
-	\x03\x03\x03\x03\x03\x03\x03\x04\x03\x04\x03\x04\x03\x04\x03\x05\x03\x05\
-	\x03\x05\x07\x05\x50\x0a\x05\x0c\x05\x0e\x05\x53\x0b\x05\x03\x06\x03\x06\
-	\x03\x06\x07\x06\x58\x0a\x06\x0c\x06\x0e\x06\x5b\x0b\x06\x03\x07\x03\x07\
-	\x03\x07\x07\x07\x60\x0a\x07\x0c\x07\x0e\x07\x63\x0b\x07\x03\x08\x03\x08\
-	\x03\x08\x03\x08\x03\x08\x03\x08\x05\x08\x6b\x0a\x08\x03\x09\x03\x09\x03\
-	\x09\x03\x09\x03\x09\x03\x09\x03\x09\x03\x09\x03\x09\x05\x09\x76\x0a\x09\
-	\x03\x0a\x03\x0a\x03\x0b\x03\x0b\x03\x0c\x03\x0c\x03\x0d\x03\x0d\x03\x0e\
-	\x03\x0e\x03\x0e\x03\x0e\x03\x0e\x07\x0e\u{85}\x0a\x0e\x0c\x0e\x0e\x0e\u{88}\
-	\x0b\x0e\x03\x0e\x03\x0e\x03\x0f\x03\x0f\x03\x10\x03\x10\x03\x11\x03\x11\
-	\x03\x12\x03\x12\x03\x12\x02\x02\x13\x02\x04\x06\x08\x0a\x0c\x0e\x10\x12\
-	\x14\x16\x18\x1a\x1c\x1e\x20\x22\x02\x07\x03\x02\x0f\x10\x03\x02\x11\x12\
-	\x03\x02\x1b\x1d\x03\x02\x03\x0c\x03\x02\x13\x16\x02\u{93}\x02\x26\x03\x02\
-	\x02\x02\x04\x3a\x03\x02\x02\x02\x06\x48\x03\x02\x02\x02\x08\x4c\x03\x02\
-	\x02\x02\x0a\x54\x03\x02\x02\x02\x0c\x5c\x03\x02\x02\x02\x0e\x6a\x03\x02\
-	\x02\x02\x10\x75\x03\x02\x02\x02\x12\x77\x03\x02\x02\x02\x14\x79\x03\x02\
-	\x02\x02\x16\x7b\x03\x02\x02\x02\x18\x7d\x03\x02\x02\x02\x1a\x7f\x03\x02\
-	\x02\x02\x1c\u{8b}\x03\x02\x02\x02\x1e\u{8d}\x03\x02\x02\x02\x20\u{8f}\x03\
-	\x02\x02\x02\x22\u{91}\x03\x02\x02\x02\x24\x27\x05\x04\x03\x02\x25\x27\x05\
-	\x06\x04\x02\x26\x24\x03\x02\x02\x02\x26\x25\x03\x02\x02\x02\x27\x2f\x03\
-	\x02\x02\x02\x28\x2b\x07\x17\x02\x02\x29\x2c\x05\x04\x03\x02\x2a\x2c\x05\
-	\x06\x04\x02\x2b\x29\x03\x02\x02\x02\x2b\x2a\x03\x02\x02\x02\x2c\x2e\x03\
-	\x02\x02\x02\x2d\x28\x03\x02\x02\x02\x2e\x31\x03\x02\x02\x02\x2f\x2d\x03\
-	\x02\x02\x02\x2f\x30\x03\x02\x02\x02\x30\x35\x03\x02\x02\x02\x31\x2f\x03\
-	\x02\x02\x02\x32\x34\x07\x21\x02\x02\x33\x32\x03\x02\x02\x02\x34\x37\x03\
-	\x02\x02\x02\x35\x33\x03\x02\x02\x02\x35\x36\x03\x02\x02\x02\x36\x38\x03\
-	\x02\x02\x02\x37\x35\x03\x02\x02\x02\x38\x39\x07\x02\x02\x03\x39\x03\x03\
-	\x02\x02\x02\x3a\x3b\x07\x1e\x02\x02\x3b\x3c\x07\x0d\x02\x02\x3c\x41\x05\
-	\x0e\x08\x02\x3d\x3e\x07\x17\x02\x02\x3e\x40\x05\x0e\x08\x02\x3f\x3d\x03\
-	\x02\x02\x02\x40\x43\x03\x02\x02\x02\x41\x3f\x03\x02\x02\x02\x41\x42\x03\
-	\x02\x02\x02\x42\x44\x03\x02\x02\x02\x43\x41\x03\x02\x02\x02\x44\x45\x07\
-	\x0e\x02\x02\x45\x46\x07\x15\x02\x02\x46\x47\x05\x08\x05\x02\x47\x05\x03\
-	\x02\x02\x02\x48\x49\x05\x08\x05\x02\x49\x4a\x05\x1e\x10\x02\x4a\x4b\x05\
-	\x08\x05\x02\x4b\x07\x03\x02\x02\x02\x4c\x51\x05\x0a\x06\x02\x4d\x4e\x09\
-	\x02\x02\x02\x4e\x50\x05\x0a\x06\x02\x4f\x4d\x03\x02\x02\x02\x50\x53\x03\
-	\x02\x02\x02\x51\x4f\x03\x02\x02\x02\x51\x52\x03\x02\x02\x02\x52\x09\x03\
-	\x02\x02\x02\x53\x51\x03\x02\x02\x02\x54\x59\x05\x0c\x07\x02\x55\x56\x09\
-	\x03\x02\x02\x56\x58\x05\x0c\x07\x02\x57\x55\x03\x02\x02\x02\x58\x5b\x03\
-	\x02\x02\x02\x59\x57\x03\x02\x02\x02\x59\x5a\x03\x02\x02\x02\x5a\x0b\x03\
-	\x02\x02\x02\x5b\x59\x03\x02\x02\x02\x5c\x61\x05\x0e\x08\x02\x5d\x5e\x07\
-	\x1a\x02\x02\x5e\x60\x05\x0e\x08\x02\x5f\x5d\x03\x02\x02\x02\x60\x63\x03\
-	\x02\x02\x02\x61\x5f\x03\x02\x02\x02\x61\x62\x03\x02\x02\x02\x62\x0d\x03\
-	\x02\x02\x02\x63\x61\x03\x02\x02\x02\x64\x65\x07\x0f\x02\x02\x65\x6b\x05\
-	\x0e\x08\x02\x66\x67\x07\x10\x02\x02\x67\x6b\x05\x0e\x08\x02\x68\x6b\x05\
-	\x1a\x0e\x02\x69\x6b\x05\x10\x09\x02\x6a\x64\x03\x02\x02\x02\x6a\x66\x03\
-	\x02\x02\x02\x6a\x68\x03\x02\x02\x02\x6a\x69\x03\x02\x02\x02\x6b\x0f\x03\
-	\x02\x02\x02\x6c\x76\x03\x02\x02\x02\x6d\x76\x05\x12\x0a\x02\x6e\x76\x05\
-	\x18\x0d\x02\x6f\x76\x05\x16\x0c\x02\x70\x76\x05\x14\x0b\x02\x71\x72\x07\
-	\x0d\x02\x02\x72\x73\x05\x08\x05\x02\x73\x74\x07\x0e\x02\x02\x74\x76\x03\
-	\x02\x02\x02\x75\x6c\x03\x02\x02\x02\x75\x6d\x03\x02\x02\x02\x75\x6e\x03\
-	\x02\x02\x02\x75\x6f\x03\x02\x02\x02\x75\x70\x03\x02\x02\x02\x75\x71\x03\
-	\x02\x02\x02\x76\x11\x03\x02\x02\x02\x77\x78\x07\x1f\x02\x02\x78\x13\x03\
-	\x02\x02\x02\x79\x7a\x07\x20\x02\x02\x7a\x15\x03\x02\x02\x02\x7b\x7c\x09\
-	\x04\x02\x02\x7c\x17\x03\x02\x02\x02\x7d\x7e\x07\x1e\x02\x02\x7e\x19\x03\
-	\x02\x02\x02\x7f\u{80}\x05\x1c\x0f\x02\u{80}\u{81}\x07\x0d\x02\x02\u{81}\
-	\u{86}\x05\x08\x05\x02\u{82}\u{83}\x07\x18\x02\x02\u{83}\u{85}\x05\x08\x05\
-	\x02\u{84}\u{82}\x03\x02\x02\x02\u{85}\u{88}\x03\x02\x02\x02\u{86}\u{84}\
-	\x03\x02\x02\x02\u{86}\u{87}\x03\x02\x02\x02\u{87}\u{89}\x03\x02\x02\x02\
-	\u{88}\u{86}\x03\x02\x02\x02\u{89}\u{8a}\x07\x0e\x02\x02\u{8a}\x1b\x03\x02\
-	\x02\x02\u{8b}\u{8c}\x09\x05\x02\x02\u{8c}\x1d\x03\x02\x02\x02\u{8d}\u{8e}\
-	\x09\x06\x02\x02\u{8e}\x1f\x03\x02\x02\x02\u{8f}\u{90}\x09\x02\x02\x02\u{90}\
-	\x21\x03\x02\x02\x02\u{91}\u{92}\x09\x03\x02\x02\u{92}\x23\x03\x02\x02\x02\
-	\x0d\x26\x2b\x2f\x35\x41\x51\x59\x61\x6a\x75\u{86}";
+	\x04\x0f\x09\x0f\x04\x10\x09\x10\x04\x11\x09\x11\x04\x12\x09\x12\x04\x13\
+	\x09\x13\x03\x02\x03\x02\x03\x02\x05\x02\x2a\x0a\x02\x03\x02\x03\x02\x03\
+	\x02\x03\x02\x05\x02\x30\x0a\x02\x07\x02\x32\x0a\x02\x0c\x02\x0e\x02\x35\
+	\x0b\x02\x03\x02\x07\x02\x38\x0a\x02\x0c\x02\x0e\x02\x3b\x0b\x02\x03\x02\
+	\x03\x02\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x07\x03\x44\x0a\x03\x0c\
+	\x03\x0e\x03\x47\x0b\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x04\x03\x04\
+	\x03\x04\x03\x04\x03\x05\x03\x05\x03\x05\x03\x05\x03\x06\x03\x06\x03\x06\
+	\x07\x06\x58\x0a\x06\x0c\x06\x0e\x06\x5b\x0b\x06\x03\x07\x03\x07\x03\x07\
+	\x07\x07\x60\x0a\x07\x0c\x07\x0e\x07\x63\x0b\x07\x03\x08\x03\x08\x03\x08\
+	\x07\x08\x68\x0a\x08\x0c\x08\x0e\x08\x6b\x0b\x08\x03\x09\x03\x09\x03\x09\
+	\x03\x09\x03\x09\x03\x09\x05\x09\x73\x0a\x09\x03\x0a\x03\x0a\x03\x0a\x03\
+	\x0a\x03\x0a\x03\x0a\x03\x0a\x03\x0a\x03\x0a\x05\x0a\x7e\x0a\x0a\x03\x0b\
+	\x03\x0b\x03\x0c\x03\x0c\x03\x0d\x03\x0d\x03\x0e\x03\x0e\x03\x0f\x03\x0f\
+	\x03\x0f\x03\x0f\x03\x0f\x07\x0f\u{8d}\x0a\x0f\x0c\x0f\x0e\x0f\u{90}\x0b\
+	\x0f\x03\x0f\x03\x0f\x03\x10\x03\x10\x03\x11\x03\x11\x03\x12\x03\x12\x03\
+	\x13\x03\x13\x03\x13\x02\x02\x14\x02\x04\x06\x08\x0a\x0c\x0e\x10\x12\x14\
+	\x16\x18\x1a\x1c\x1e\x20\x22\x24\x02\x07\x03\x02\x0f\x10\x03\x02\x11\x12\
+	\x03\x02\x1c\x1d\x03\x02\x03\x0c\x04\x02\x13\x14\x16\x17\x02\u{9c}\x02\x29\
+	\x03\x02\x02\x02\x04\x3e\x03\x02\x02\x02\x06\x4c\x03\x02\x02\x02\x08\x50\
+	\x03\x02\x02\x02\x0a\x54\x03\x02\x02\x02\x0c\x5c\x03\x02\x02\x02\x0e\x64\
+	\x03\x02\x02\x02\x10\x72\x03\x02\x02\x02\x12\x7d\x03\x02\x02\x02\x14\x7f\
+	\x03\x02\x02\x02\x16\u{81}\x03\x02\x02\x02\x18\u{83}\x03\x02\x02\x02\x1a\
+	\u{85}\x03\x02\x02\x02\x1c\u{87}\x03\x02\x02\x02\x1e\u{93}\x03\x02\x02\x02\
+	\x20\u{95}\x03\x02\x02\x02\x22\u{97}\x03\x02\x02\x02\x24\u{99}\x03\x02\x02\
+	\x02\x26\x2a\x05\x04\x03\x02\x27\x2a\x05\x06\x04\x02\x28\x2a\x05\x08\x05\
+	\x02\x29\x26\x03\x02\x02\x02\x29\x27\x03\x02\x02\x02\x29\x28\x03\x02\x02\
+	\x02\x2a\x33\x03\x02\x02\x02\x2b\x2f\x07\x18\x02\x02\x2c\x30\x05\x04\x03\
+	\x02\x2d\x30\x05\x06\x04\x02\x2e\x30\x05\x08\x05\x02\x2f\x2c\x03\x02\x02\
+	\x02\x2f\x2d\x03\x02\x02\x02\x2f\x2e\x03\x02\x02\x02\x30\x32\x03\x02\x02\
+	\x02\x31\x2b\x03\x02\x02\x02\x32\x35\x03\x02\x02\x02\x33\x31\x03\x02\x02\
+	\x02\x33\x34\x03\x02\x02\x02\x34\x39\x03\x02\x02\x02\x35\x33\x03\x02\x02\
+	\x02\x36\x38\x07\x21\x02\x02\x37\x36\x03\x02\x02\x02\x38\x3b\x03\x02\x02\
+	\x02\x39\x37\x03\x02\x02\x02\x39\x3a\x03\x02\x02\x02\x3a\x3c\x03\x02\x02\
+	\x02\x3b\x39\x03\x02\x02\x02\x3c\x3d\x07\x02\x02\x03\x3d\x03\x03\x02\x02\
+	\x02\x3e\x3f\x07\x1e\x02\x02\x3f\x40\x07\x0d\x02\x02\x40\x45\x05\x10\x09\
+	\x02\x41\x42\x07\x18\x02\x02\x42\x44\x05\x10\x09\x02\x43\x41\x03\x02\x02\
+	\x02\x44\x47\x03\x02\x02\x02\x45\x43\x03\x02\x02\x02\x45\x46\x03\x02\x02\
+	\x02\x46\x48\x03\x02\x02\x02\x47\x45\x03\x02\x02\x02\x48\x49\x07\x0e\x02\
+	\x02\x49\x4a\x07\x15\x02\x02\x4a\x4b\x05\x0a\x06\x02\x4b\x05\x03\x02\x02\
+	\x02\x4c\x4d\x05\x0a\x06\x02\x4d\x4e\x07\x15\x02\x02\x4e\x4f\x05\x0a\x06\
+	\x02\x4f\x07\x03\x02\x02\x02\x50\x51\x05\x0a\x06\x02\x51\x52\x05\x20\x11\
+	\x02\x52\x53\x05\x0a\x06\x02\x53\x09\x03\x02\x02\x02\x54\x59\x05\x0c\x07\
+	\x02\x55\x56\x09\x02\x02\x02\x56\x58\x05\x0c\x07\x02\x57\x55\x03\x02\x02\
+	\x02\x58\x5b\x03\x02\x02\x02\x59\x57\x03\x02\x02\x02\x59\x5a\x03\x02\x02\
+	\x02\x5a\x0b\x03\x02\x02\x02\x5b\x59\x03\x02\x02\x02\x5c\x61\x05\x0e\x08\
+	\x02\x5d\x5e\x09\x03\x02\x02\x5e\x60\x05\x0e\x08\x02\x5f\x5d\x03\x02\x02\
+	\x02\x60\x63\x03\x02\x02\x02\x61\x5f\x03\x02\x02\x02\x61\x62\x03\x02\x02\
+	\x02\x62\x0d\x03\x02\x02\x02\x63\x61\x03\x02\x02\x02\x64\x69\x05\x10\x09\
+	\x02\x65\x66\x07\x1b\x02\x02\x66\x68\x05\x10\x09\x02\x67\x65\x03\x02\x02\
+	\x02\x68\x6b\x03\x02\x02\x02\x69\x67\x03\x02\x02\x02\x69\x6a\x03\x02\x02\
+	\x02\x6a\x0f\x03\x02\x02\x02\x6b\x69\x03\x02\x02\x02\x6c\x6d\x07\x0f\x02\
+	\x02\x6d\x73\x05\x10\x09\x02\x6e\x6f\x07\x10\x02\x02\x6f\x73\x05\x10\x09\
+	\x02\x70\x73\x05\x1c\x0f\x02\x71\x73\x05\x12\x0a\x02\x72\x6c\x03\x02\x02\
+	\x02\x72\x6e\x03\x02\x02\x02\x72\x70\x03\x02\x02\x02\x72\x71\x03\x02\x02\
+	\x02\x73\x11\x03\x02\x02\x02\x74\x7e\x03\x02\x02\x02\x75\x7e\x05\x14\x0b\
+	\x02\x76\x7e\x05\x1a\x0e\x02\x77\x7e\x05\x18\x0d\x02\x78\x7e\x05\x16\x0c\
+	\x02\x79\x7a\x07\x0d\x02\x02\x7a\x7b\x05\x0a\x06\x02\x7b\x7c\x07\x0e\x02\
+	\x02\x7c\x7e\x03\x02\x02\x02\x7d\x74\x03\x02\x02\x02\x7d\x75\x03\x02\x02\
+	\x02\x7d\x76\x03\x02\x02\x02\x7d\x77\x03\x02\x02\x02\x7d\x78\x03\x02\x02\
+	\x02\x7d\x79\x03\x02\x02\x02\x7e\x13\x03\x02\x02\x02\x7f\u{80}\x07\x1f\x02\
+	\x02\u{80}\x15\x03\x02\x02\x02\u{81}\u{82}\x07\x20\x02\x02\u{82}\x17\x03\
+	\x02\x02\x02\u{83}\u{84}\x09\x04\x02\x02\u{84}\x19\x03\x02\x02\x02\u{85}\
+	\u{86}\x07\x1e\x02\x02\u{86}\x1b\x03\x02\x02\x02\u{87}\u{88}\x05\x1e\x10\
+	\x02\u{88}\u{89}\x07\x0d\x02\x02\u{89}\u{8e}\x05\x0a\x06\x02\u{8a}\u{8b}\
+	\x07\x19\x02\x02\u{8b}\u{8d}\x05\x0a\x06\x02\u{8c}\u{8a}\x03\x02\x02\x02\
+	\u{8d}\u{90}\x03\x02\x02\x02\u{8e}\u{8c}\x03\x02\x02\x02\u{8e}\u{8f}\x03\
+	\x02\x02\x02\u{8f}\u{91}\x03\x02\x02\x02\u{90}\u{8e}\x03\x02\x02\x02\u{91}\
+	\u{92}\x07\x0e\x02\x02\u{92}\x1d\x03\x02\x02\x02\u{93}\u{94}\x09\x05\x02\
+	\x02\u{94}\x1f\x03\x02\x02\x02\u{95}\u{96}\x09\x06\x02\x02\u{96}\x21\x03\
+	\x02\x02\x02\u{97}\u{98}\x09\x02\x02\x02\u{98}\x23\x03\x02\x02\x02\u{99}\
+	\u{9a}\x09\x03\x02\x02\u{9a}\x25\x03\x02\x02\x02\x0d\x29\x2f\x33\x39\x45\
+	\x59\x61\x69\x72\x7d\u{8e}";
 

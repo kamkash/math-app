@@ -29,7 +29,9 @@
 grammar calculator;
 
 block
-    : (functionDefinition | equation) (SEPARATOR (functionDefinition | equation))* WS* EOF
+    : (functionDefinition | equation | relational_expression) (
+        SEPARATOR (functionDefinition | equation | relational_expression)
+    )* WS* EOF
     ;
 
 functionDefinition
@@ -37,6 +39,10 @@ functionDefinition
     ;
 
 equation
+    : expression EQ expression
+    ;
+
+relational_expression
     : expression relop expression
     ;
 
@@ -79,7 +85,6 @@ currency
 constant
     : PI
     | EULER
-    | I
     ;
 
 variable
@@ -104,10 +109,10 @@ funcname
     ;
 
 relop
-    : EQ
-    | GT
+    : GT
     | LT
     | NE
+    | DOUBLE_EQ
     ;
 
 sumop
@@ -196,6 +201,10 @@ EQ
     : '='
     ;
 
+DOUBLE_EQ
+    : '=='
+    ;    
+
 NE
     : '!='
     ;
@@ -223,10 +232,6 @@ PI
 
 EULER
     : E2
-    ;
-
-I
-    : 'i'
     ;
 
 fragment CURRENCY_SYMBOL
@@ -261,6 +266,7 @@ fragment DIGIT
 
 fragment NUMBER
     : '0' ..'9'+ ('.' '0' ..'9'+)?
+    | NUMBER_WITH_COMMAS
     ;
 
 fragment NUMBER_WITH_COMMAS

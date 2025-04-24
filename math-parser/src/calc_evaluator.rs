@@ -2,11 +2,13 @@
 use core::num;
 use std::fmt;
 use std::result;
+use std::sync::Arc;
 
 use antlr_rust::tree::ParseTree;
 use antlr_rust::tree::{ParseTreeVisitorCompat, Tree};
 use log::info;
 
+use crate::gen_calc_parser::calculatorparser::MultiplyingExpressionContextAttrs;
 use crate::gen_calc_parser::calculatorparser::{
     calculatorParserContextType, AtomContext, BlockContext, ConstantContext, CurrencyContext,
     EquationContext, EquationContextAttrs, ExpressionContext, ExpressionContextAttrs, Func_Context,
@@ -18,6 +20,7 @@ use symengine_rs::basic::Basic;
 
 pub enum Relop {
     Equal,
+    DoubleEqual,
     NotEqual,
     LessThan,
     GreaterThan,
@@ -28,7 +31,8 @@ pub enum Relop {
 impl fmt::Debug for Relop {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let s = match self {
-            Relop::Equal => "==",
+            Relop::DoubleEqual => "==",
+            Relop::Equal => "=",
             Relop::NotEqual => "!=",
             Relop::LessThan => "<",
             Relop::GreaterThan => ">",
@@ -42,7 +46,8 @@ impl fmt::Debug for Relop {
 impl fmt::Display for Relop {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let s = match self {
-            Relop::Equal => "==",
+            Relop::DoubleEqual => "==",
+            Relop::Equal => "=",
             Relop::NotEqual => "!=",
             Relop::LessThan => "<",
             Relop::GreaterThan => ">",
@@ -141,33 +146,17 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
     fn visit_equation(&mut self, ctx: &EquationContext<'input>) -> Self::Return {
         // info!("Visiting Equation: {}", ctx.get_text());
         self.visit_children(ctx);
-        // info!("equation relop {:?}", ctx.relop().unwrap().get_text());
-        // info!("stack: {:?} {}", self.result_stack, self.result_stack.len());
-        // let left = self.result_stack.pop().unwrap();
-        // let right = self.result_stack.pop().unwrap();
-
         let len = self.result_stack.len();
-        if len >= 2 {
-            let right = &self.result_stack[len - 1];
-            let left = &self.result_stack[len - 2];
-            let relop = ctx.relop().unwrap().get_text();
-            info!("relop of equation: {}", relop);
-            let relop = match relop.as_str() {
-                "=" => Relop::Equal,
-                "!=" => Relop::NotEqual,
-                ">" => Relop::LessThan,
-                "<" => Relop::GreaterThan,
-                _ => panic!("Unknown relop: {}", relop),
-            };
-            let equation = SymEquation::new(
-                left.clone(), right.clone(), relop
-            );
-            info!("Equation: {:?}", &equation);
-            self.block_result.push(equation);
-        }
+        let right = &self.result_stack[len - 1];
+        let left = &self.result_stack[len - 2];
+        let equation = SymEquation::new(left.clone(), right.clone(), Relop::Equal);
+        Basic::default()
+    }
 
-        // self.result_stack.push(left);
-        // self.result_stack.push(right);
+    fn visit_relational_expression(
+        &mut self,
+        ctx: &crate::gen_calc_parser::calculatorparser::Relational_expressionContext<'input>,
+    ) -> Self::Return {
         Basic::default()
     }
 
@@ -182,7 +171,7 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
             let result = if is_add {
                 left.add(&right)
             } else {
-                left.sub(&right)
+                right.sub(&left)
             };
             self.result_stack.push(result);
         }
@@ -193,8 +182,21 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
         &mut self,
         ctx: &MultiplyingExpressionContext<'input>,
     ) -> Self::Return {
-        // info!("Visiting MultiplyingExpression: {}", ctx.get_text());
-        self.visit_children(ctx)
+        self.visit_children(ctx);
+        // info!("Visiting multiplying Expression: {}", ctx.get_text());
+        let is_times = ctx.TIMES(0).is_some();
+        let is_divide = ctx.DIV(0).is_some();
+        if is_times || is_divide {
+            let left = self.result_stack.pop().unwrap();
+            let right = self.result_stack.pop().unwrap();
+            let result = if is_times {
+                left.mul(&right)
+            } else {
+                right.div(&left)
+            };
+            self.result_stack.push(result);
+        }
+        Basic::default()
     }
 
     fn visit_powExpression(&mut self, ctx: &PowExpressionContext<'input>) -> Self::Return {
@@ -220,9 +222,17 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
 
     fn visit_scientific(&mut self, ctx: &ScientificContext<'input>) -> Self::Return {
         self.visit_children(ctx);
-        let number: f64 = ctx.get_text().parse().unwrap_or(0.0);
-        let result = Basic::real(number);
-        // info!("Visited Scientific returning: {}", result);
+        // Parse the currency value (assuming it's a number with a currency symbol, e.g., "$100")
+        let sci_text = ctx.get_text();
+        info!("**** Scientific text: {}", sci_text);
+
+        let filtered: String = sci_text
+            .chars()
+            .filter(|c| c.is_numeric() || *c == '.' || *c == '-')
+            .collect();
+        let value: f64 = filtered.parse().unwrap_or(0.0);
+        let result = Basic::real(value);
+        info!("**** Visited Scientific: {} {}", value, result);
         self.result_stack.push(result);
         Basic::default()
     }
@@ -231,12 +241,11 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
         self.visit_children(ctx);
         // Extract the text of the currency node
         let currency_text = ctx.get_text();
-
-        // Parse the currency value (assuming it's a number with a currency symbol, e.g., "$100")
-        let value: f64 = currency_text
-            .trim_start_matches(|c: char| !c.is_numeric()) // Remove non-numeric prefix (e.g., "$")
-            .parse()
-            .unwrap_or(0.0);
+        let filtered: String = currency_text
+            .chars()
+            .filter(|c| c.is_numeric() || *c == '.' || *c == '-')
+            .collect();
+        let value: f64 = filtered.parse().unwrap_or(0.0);
 
         let result = Basic::real(value);
         self.result_stack.push(result);

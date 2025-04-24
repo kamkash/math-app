@@ -460,6 +460,8 @@ impl Basic {
             TypeID_SYMENGINE_SYMBOL => "Symbol",
             TypeID_SYMENGINE_FUNCTIONSYMBOL => "Function",
             TypeID_SYMENGINE_ADD => "Add",
+            TypeID_SYMENGINE_MUL => "Multiply",
+            TypeID_SYMENGINE_POW => "Power",
             _ => "Unknown",
         }
     }

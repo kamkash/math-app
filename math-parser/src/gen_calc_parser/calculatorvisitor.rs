@@ -27,6 +27,12 @@ pub trait calculatorVisitor<'input>: ParseTreeVisitor<'input,calculatorParserCon
 	fn visit_equation(&mut self, ctx: &EquationContext<'input>) { self.visit_children(ctx) }
 
 	/**
+	 * Visit a parse tree produced by {@link calculatorParser#relational_expression}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_relational_expression(&mut self, ctx: &Relational_expressionContext<'input>) { self.visit_children(ctx) }
+
+	/**
 	 * Visit a parse tree produced by {@link calculatorParser#expression}.
 	 * @param ctx the parse tree
 	 */
@@ -134,6 +140,14 @@ pub trait calculatorVisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= c
 	 * @param ctx the parse tree
 	 */
 		fn visit_equation(&mut self, ctx: &EquationContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link calculatorParser#relational_expression}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_relational_expression(&mut self, ctx: &Relational_expressionContext<'input>) -> Self::Return {
 			self.visit_children(ctx)
 		}
 
@@ -267,6 +281,11 @@ where
 
 	fn visit_equation(&mut self, ctx: &EquationContext<'input>){
 		let result = <Self as calculatorVisitorCompat>::visit_equation(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_relational_expression(&mut self, ctx: &Relational_expressionContext<'input>){
+		let result = <Self as calculatorVisitorCompat>::visit_relational_expression(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
