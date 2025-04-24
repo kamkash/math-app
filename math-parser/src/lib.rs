@@ -1,6 +1,6 @@
 use log::info;
 
-pub mod calc_evaluator;
+pub mod symengine_evaluator;
 pub mod gen_calc_parser;
 
 pub fn echo_parser(name: &str) -> String {

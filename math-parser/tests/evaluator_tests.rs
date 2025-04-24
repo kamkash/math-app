@@ -1,7 +1,7 @@
 use antlr_rust::tree::ParseTreeVisitorCompat;
 use antlr_rust::{common_token_stream::CommonTokenStream, InputStream};
 use log::info;
-use math_parser::calc_evaluator::SymBasicCalcVisitor;
+use math_parser::symengine_evaluator::SymBasicCalcVisitor;
 use math_parser::gen_calc_parser::{
     calculatorlexer::calculatorLexer, calculatorparser::calculatorParser,
 };
@@ -22,11 +22,7 @@ fn test_evaluator_results() {
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = calculatorParser::new(token_stream);
     let parse_tree = parser.block().unwrap();
-    let _result = visitor.visit(parse_tree.as_ref());
-    // info!("Result: {}", result);
-    // info!("visitor stack: {:?}", visitor.result_stack);
-    // info!("Parsed result: {:?}", parse_tree);
-    
+    let _ = visitor.visit(parse_tree.as_ref());
     info!("input: {}", input);
     info!("visitor block result: {:?}", visitor.block_result);
     info!("visitor symbol table: {:?}", visitor.symbol_table);
