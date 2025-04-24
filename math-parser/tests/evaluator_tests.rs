@@ -14,6 +14,7 @@ fn test_evaluator_results() {
                         i = 1 - x,
                         q = 100000 / w,
                         q1 = 100,000 / w1,
+                        q11 != 100,000 / w11,
                         z * 7 = t + 3.14";
     let mut visitor = SymBasicCalcVisitor::new();
     let lexer = calculatorLexer::new(InputStream::new(input));
@@ -29,6 +30,4 @@ fn test_evaluator_results() {
     info!("input: {}", input);
     info!("visitor block result: {:?}", visitor.block_result);
 
-    // let line_count = input.split(",").count();
-    // assert!(line_count * 2 == visitor.result_stack.len());
 }

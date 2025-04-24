@@ -150,6 +150,7 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
         let right = &self.result_stack[len - 1];
         let left = &self.result_stack[len - 2];
         let equation = SymEquation::new(left.clone(), right.clone(), Relop::Equal);
+        self.block_result.push(equation);
         Basic::default()
     }
 
@@ -157,6 +158,16 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
         &mut self,
         ctx: &crate::gen_calc_parser::calculatorparser::Relational_expressionContext<'input>,
     ) -> Self::Return {
+        self.visit_children(ctx);
+        let len = self.result_stack.len();
+        let right = &self.result_stack[len - 1];
+        let left = &self.result_stack[len - 2];
+
+        ctx.get_children()
+            .for_each(|child| info!("---- Relation Expression Child: {}", child.get_text()));
+
+        let equation = SymEquation::new(left.clone(), right.clone(), Relop::Equal);
+        self.block_result.push(equation);
         Basic::default()
     }
 
