@@ -1,10 +1,13 @@
+use std::rc::Rc;
+
 use antlr_rust::tree::ParseTreeVisitorCompat;
 use antlr_rust::{common_token_stream::CommonTokenStream, InputStream};
 use log::info;
-use math_parser::symengine_evaluator::SymBasicCalcVisitor;
 use math_parser::gen_calc_parser::{
     calculatorlexer::calculatorLexer, calculatorparser::calculatorParser,
 };
+use math_parser::symengine_evaluator::SymBasicCalcVisitor;
+use symengine_rs::basic::Basic;
 // use symengine_rs::basic::Basic;
 
 #[test]
@@ -31,13 +34,18 @@ fn test_evaluator_equations() {
 
 #[test]
 fn test_evaluator_compound_interest() {
-
-    let input = "p = 100000
-                i = 0.1
-                n = 5
-                compound_interest = p * (1 + i) ^ n ";
+    let p = 100_000.0f64;
+    let i = 0.10f64;
+    let n = 5.0f64;
+    let compound_interest = p * (1.0 + i).powf(n);
+    let input = format!(
+        "p = {p} 
+         i = {i}
+         n = {n}
+         compound_interest = p * (1 + i) ^ n "
+    );
     let mut visitor = SymBasicCalcVisitor::new();
-    let lexer = calculatorLexer::new(InputStream::new(input));
+    let lexer = calculatorLexer::new(InputStream::new(input.as_str()));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = calculatorParser::new(token_stream);
     let parse_tree = parser.block().unwrap();
@@ -45,7 +53,13 @@ fn test_evaluator_compound_interest() {
     info!("input: {}", input);
     info!("visitor block result: {:?}", visitor.block_expressions);
     info!("visitor symbol table: {:?}", visitor.symbol_table);
+    info!("visitor result table: {:?}", visitor.result_table);
 
     assert_eq!(visitor.block_expressions.len(), input.split('\n').count());
-
+    assert_eq!(
+        visitor
+            .result_table
+            .get(&Basic::symbol("compound_interest")),
+        Some(&Rc::new(Basic::real(compound_interest))),
+    );
 }
