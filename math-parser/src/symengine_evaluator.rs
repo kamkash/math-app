@@ -102,24 +102,26 @@ impl std::fmt::Display for SymEquation {
 
 pub struct SymBasicCalcVisitor {
     pub tmp_result: Rc<Basic>,
-    pub result_stack: Vec<Rc<Basic>>,
-    pub block_result: Vec<SymEquation>,
+    pub visitor_stack: Vec<Rc<Basic>>,
+    pub block_expressions: Vec<SymEquation>,
     pub symbol_table: std::collections::HashMap<Rc<Basic>, Rc<Basic>>,
+    pub result_table: std::collections::HashMap<Rc<Basic>, Rc<Basic>>,
 }
 
 impl SymBasicCalcVisitor {
     pub fn new() -> Self {
         SymBasicCalcVisitor {
             tmp_result: Rc::new(Basic::default()),
-            result_stack: Vec::new(),
-            block_result: Vec::new(),
+            visitor_stack: Vec::new(),
+            block_expressions: Vec::new(),
             symbol_table: std::collections::HashMap::new(),
+            result_table: std::collections::HashMap::new(),
         }
     }
 
     fn build_symbol_table(&mut self) {
         // build symbol table
-        for sym_eq in &self.block_result {
+        for sym_eq in &self.block_expressions {
             let left = &sym_eq.left;
             let right = &sym_eq.right;
             let relop = &sym_eq.relop;
@@ -129,6 +131,19 @@ impl SymBasicCalcVisitor {
                 self.symbol_table.insert(Rc::clone(right), Rc::clone(left));
             }
         }
+    }
+
+    fn build_result_table(&mut self) {
+
+        for (sym, expr) in &self.symbol_table {
+            let value = Basic::rc_subs(
+                expr,
+                self.symbol_table.iter().map(|(k, v)| (k, v)),
+            );
+            self.result_table.insert(Rc::clone(sym), Rc::new(value));
+        }
+
+
     }
 }
 
@@ -149,6 +164,7 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
     fn visit_block(&mut self, ctx: &BlockContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
         self.build_symbol_table();
+        self.build_result_table();
         res
     }
 
@@ -161,11 +177,11 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
 
     fn visit_equation(&mut self, ctx: &EquationContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
-        let len = self.result_stack.len();
-        let right = Rc::clone(&self.result_stack[len - 1]);
-        let left = Rc::clone(&self.result_stack[len - 2]);
+        let len = self.visitor_stack.len();
+        let right = Rc::clone(&self.visitor_stack[len - 1]);
+        let left = Rc::clone(&self.visitor_stack[len - 2]);
         let equation = SymEquation::new(left, right, Relop::Equal);
-        self.block_result.push(equation);
+        self.block_expressions.push(equation);
         res
     }
 
@@ -174,13 +190,13 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
         ctx: &crate::gen_calc_parser::calculatorparser::Relational_expressionContext<'input>,
     ) -> Self::Return {
         let res = self.visit_children(ctx);
-        let len = self.result_stack.len();
-        let right = Rc::clone(&self.result_stack[len - 1]);
-        let left = Rc::clone(&self.result_stack[len - 2]);
+        let len = self.visitor_stack.len();
+        let right = Rc::clone(&self.visitor_stack[len - 1]);
+        let left = Rc::clone(&self.visitor_stack[len - 2]);
         let relop_text = ctx.get_child(1).unwrap().get_text();
         let relop = Relop::from(relop_text.as_str());
         let equation = SymEquation::new(left, right, relop);
-        self.block_result.push(equation);
+        self.block_expressions.push(equation);
         res
     }
 
@@ -189,14 +205,14 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
         let is_add = ctx.PLUS(0).is_some();
         let is_sub = ctx.MINUS(0).is_some();
         if is_add || is_sub {
-            let left = self.result_stack.pop().unwrap();
-            let right = self.result_stack.pop().unwrap();
+            let left = self.visitor_stack.pop().unwrap();
+            let right = self.visitor_stack.pop().unwrap();
             let result = if is_add {
                 Rc::new(left.add(&right))
             } else {
                 Rc::new(right.sub(&left))
             };
-            self.result_stack.push(result);
+            self.visitor_stack.push(result);
         }
         res
     }
@@ -209,14 +225,14 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
         let is_times = ctx.TIMES(0).is_some();
         let is_divide = ctx.DIV(0).is_some();
         if is_times || is_divide {
-            let left = self.result_stack.pop().unwrap();
-            let right = self.result_stack.pop().unwrap();
+            let left = self.visitor_stack.pop().unwrap();
+            let right = self.visitor_stack.pop().unwrap();
             let result = if is_times {
                 Rc::new(left.mul(&right))
             } else {
                 Rc::new(right.div(&left))
             };
-            self.result_stack.push(result);
+            self.visitor_stack.push(result);
         }
         res
     }
@@ -225,10 +241,10 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
         let res = self.visit_children(ctx);
         let is_pow = ctx.POW(0).is_some();
         if is_pow {
-            let left = self.result_stack.pop().unwrap();
-            let right = self.result_stack.pop().unwrap();
+            let left = self.visitor_stack.pop().unwrap();
+            let right = self.visitor_stack.pop().unwrap();
             let result = Rc::new(right.pow(&left));
-            self.result_stack.push(result);
+            self.visitor_stack.push(result);
         }
         res
     }
@@ -237,9 +253,9 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
         let res = self.visit_children(ctx);
         let negate = ctx.get_children().any(|child| child.get_text() == "-");
         if negate {
-            let signed_basic = self.result_stack.pop().unwrap();
+            let signed_basic = self.visitor_stack.pop().unwrap();
             let result = Rc::new(signed_basic.neg());
-            self.result_stack.push(result);
+            self.visitor_stack.push(result);
         }
         res
     }
@@ -257,7 +273,7 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
             .collect();
         let value: f64 = filtered.parse().unwrap_or(0.0);
         let result = Rc::new(Basic::real(value));
-        self.result_stack.push(result);
+        self.visitor_stack.push(result);
         res
     }
 
@@ -271,7 +287,7 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
         let value: f64 = filtered.parse().unwrap_or(0.0);
 
         let result = Rc::new(Basic::real(value));
-        self.result_stack.push(result);
+        self.visitor_stack.push(result);
         res
     }
 
@@ -283,7 +299,7 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
         let var_text = ctx.get_text();
         let res = self.visit_children(ctx);
         let var_symbol = Rc::new(Basic::symbol(&var_text));
-        self.result_stack.push(var_symbol);
+        self.visitor_stack.push(var_symbol);
         res
     }
 

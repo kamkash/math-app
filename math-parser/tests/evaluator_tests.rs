@@ -23,10 +23,10 @@ fn test_evaluator_equations() {
     let parse_tree = parser.block().unwrap();
     let _ = visitor.visit(parse_tree.as_ref());
     info!("input: {}", input);
-    info!("visitor block result: {:?}", visitor.block_result);
+    info!("visitor block result: {:?}", visitor.block_expressions);
     info!("visitor symbol table: {:?}", visitor.symbol_table);
 
-    assert_eq!(visitor.block_result.len(), input.split('\n').count());
+    assert_eq!(visitor.block_expressions.len(), input.split('\n').count());
 }
 
 #[test]
@@ -43,9 +43,9 @@ fn test_evaluator_compound_interest() {
     let parse_tree = parser.block().unwrap();
     let _ = visitor.visit(parse_tree.as_ref());
     info!("input: {}", input);
-    info!("visitor block result: {:?}", visitor.block_result);
+    info!("visitor block result: {:?}", visitor.block_expressions);
     info!("visitor symbol table: {:?}", visitor.symbol_table);
 
-    assert_eq!(visitor.block_result.len(), input.split('\n').count());
+    assert_eq!(visitor.block_expressions.len(), input.split('\n').count());
 
 }

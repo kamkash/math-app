@@ -352,11 +352,16 @@ impl Basic {
         }
     }
 
-    pub fn rc_subs<I>(exp: &Basic, rcpairs: I) -> Self
+    pub fn rc_subs<'a, I>(exp: &Basic, rcpairs: I) -> Self
     where
-        I: IntoIterator<Item = (Rc<Basic>, Rc<Basic>)>,
+        I: IntoIterator<Item = (&'a Rc<Basic>, &'a Rc<Basic>)>,
     {
-        let mb = BasicMap::from_rc_pairs(rcpairs).unwrap();
+        let mb = BasicMap::from_rc_pairs(
+            rcpairs
+                .into_iter()
+                .map(|(k, v)| (Rc::clone(k), Rc::clone(v))),
+        )
+        .unwrap();
         let b = Self::heap_alloc().unwrap() as *mut basic_struct;
         unsafe {
             basic_subs(
