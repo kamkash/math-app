@@ -1,4 +1,4 @@
-# Rust Tauri based desktop and mobile symbolic math app 
+# Yet another intelligent symbolic math application
 ## Planned features:
     1. Symbolic algebra, calculus, linear algebra, statistics solver
     2. Math notes style UI with plots and charts
