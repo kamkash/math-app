@@ -1,4 +1,4 @@
-# Yet another intelligent symbolic math application
+# Yet another intelligent symbolic math calculator app
 ## Planned features:
     1. Symbolic algebra, calculus, linear algebra, statistics solver
     2. Math notes style UI with plots and charts
