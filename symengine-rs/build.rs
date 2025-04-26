@@ -10,6 +10,7 @@ fn main() {
         .clang_arg("-I/usr/include")
         .clang_arg("-I/usr/local/include")
         .clang_arg("-I/opt/homebrew/opt/gmp/include")
+        .clang_arg("-I/usr/include/x86_64-linux-gnu")
         .generate()
         .expect("Unable to generate bindings");
 
@@ -18,9 +19,12 @@ fn main() {
         .write_to_file(out_path.join("bindings.rs"))
         .expect("Couldn't write bindings!");
 
+    println!("cargo:rustc-link-search=native=/lib/x86_64-linux-gnu");
     println!("cargo:rustc-link-search=native=/usr/local/lib");
+    println!("cargo:rustc-link-search=native=/usr/lib/x86_64-linux-gnu");
     println!("cargo:rustc-link-search=native=/opt/homebrew/opt/gmp/lib");
     println!("cargo:rustc-link-lib=symengine");
     println!("cargo:rustc-link-lib=gmp");
     println!("cargo:rustc-link-lib=c++");
+    println!("cargo:rustc-link-lib=stdc++");
 }
