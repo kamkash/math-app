@@ -19,7 +19,7 @@ fn main() {
         );
     }
     println!("cargo:rerun-if-changed=build.rs");
-    println!("cargo:rerun-if-changed=/Users/kamran/mathappws/math-app/math-parser/tools/antlr-libs/antlr4-4.8-2-SNAPSHOT-complete.jar");
+    println!("cargo:rerun-if-changed=/media/kamran/T7/mathappws/math-app-git/math-parser/tools/antlr-libs/antlr4-4.8-2-SNAPSHOT-complete.jar");
 }
 
 fn gen_for_grammar(
