@@ -55,6 +55,18 @@ impl Basic {
         unsafe { real_double_get_d(ptr) }
     }
 
+    /// Parses a string into a Basic expression using SymEngine's parser.
+    pub fn parse(expr: &str) -> Result<Self, &'static str> {
+        let b = Basic::new();
+        let cstr = CString::new(expr).map_err(|_| "CString conversion failed")?;
+        let status = unsafe { basic_parse(b.inner as *mut basic_struct, cstr.as_ptr()) };
+        if status == 0 {
+            Ok(b)
+        } else {
+            Err("Failed to parse expression")
+        }
+    }
+
     pub fn symbols<const N: usize>(names: [&str; N]) -> [Basic; N] {
         names.map(|name| Basic::symbol(name))
     }

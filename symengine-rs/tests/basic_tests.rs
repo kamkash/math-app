@@ -1,5 +1,6 @@
+use itertools::Itertools;
 use log::*;
-use symengine_rs::basic::Basic;
+use symengine_rs::basic::Basic; // Import Itertools for the `sorted` method
 
 #[test]
 fn test_basic_symbol() {
@@ -7,7 +8,6 @@ fn test_basic_symbol() {
     let y = Basic::symbol("y");
     assert!(x.is_symbol() && x.to_string() == "x");
     assert!(y.is_symbol() && y.to_string() == "y");
-
 
     let [z, t] = Basic::symbols(["z", "t"]);
     assert!(z.is_symbol() && z.to_string() == "z");
@@ -216,7 +216,6 @@ fn test_univariate_polynomial_solver() {
     assert!(solutions.len() == 1);
     assert!(solutions.contains(&Basic::integer(-1)));
 
-
     poly = x.sqr().sub(&Basic::one());
     info!("Polynomial: {}", poly);
     solutions = Basic::solve_poly(&poly, &x);
@@ -233,5 +232,34 @@ fn test_univariate_polynomial_solver() {
     assert!(solutions.contains(&Basic::integer(-3)));
     assert!(solutions.contains(&Basic::integer(3)));
 
+    poly = x
+        .sqr()
+        .sub(&x.mul(&Basic::integer(2)))
+        .add(&Basic::integer(6));
+    info!("Polynomial: {}", poly);
+    solutions = Basic::solve_poly(&poly, &x);
+    info!("Solutions: {:?}", solutions);
+    assert!(solutions.len() == 2);
 }
 
+#[test]
+fn test_basic_parse() {
+    let mut b_expr: Basic = Basic::parse("x + y").expect("Failed to parse expression");
+    assert_eq!(b_expr.to_string(), "x + y");
+    info!("Parsed expression: {}", b_expr);
+
+    b_expr = Basic::parse("sin(x) + cos(y)").expect("Failed to parse expression");
+    assert_eq!(b_expr.to_string(), "sin(x) + cos(y)");
+    info!("Parsed expression: {}", b_expr);
+
+    let exp_str_inp = "x**2 + 2*x + 1";
+    b_expr = Basic::parse(exp_str_inp).expect("Failed to parse expression");
+
+    let sorted_input: String = exp_str_inp.chars().sorted().collect();
+    let sorted_expr: String = b_expr.to_string().chars().sorted().collect();
+    assert_eq!(sorted_expr, sorted_input);
+
+    info!("Parsed expression: {}", b_expr.to_string());
+    info!("sorted input: {}", sorted_input);
+    info!("sorted expr:  {}", sorted_expr);
+}
