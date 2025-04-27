@@ -2,9 +2,21 @@ use log::*;
 use symengine_rs::basic::Basic;
 
 #[test]
-fn test_basic_symbol_add() {
+fn test_basic_symbol() {
     let x = Basic::symbol("x");
     let y = Basic::symbol("y");
+    assert!(x.is_symbol() && x.to_string() == "x");
+    assert!(y.is_symbol() && y.to_string() == "y");
+
+
+    let [z, t] = Basic::symbols(["z", "t"]);
+    assert!(z.is_symbol() && z.to_string() == "z");
+    assert!(t.is_symbol() && t.to_string() == "t");
+}
+
+#[test]
+fn test_basic_symbol_add() {
+    let [x, y] = Basic::symbols(["x", "y"]);
     let sum = x.add(&y);
     assert_eq!(sum.to_string(), "x + y");
 }
@@ -189,3 +201,37 @@ fn test_basic_type() {
     assert_eq!(basic_real.get_type_str(), "Real");
     assert_eq!(x_plus_int.get_type_str(), "Add");
 }
+
+#[test]
+fn test_univariate_polynomial_solver() {
+    let x = Basic::symbol("x");
+
+    // Create a univariate polynomial: x^2 + 2*x + 1
+    let mut poly = x.sqr().add(&x.mul(&Basic::integer(2))).add(&Basic::one());
+    info!("Polynomial: {}", poly);
+
+    // Solve the polynomial for x
+    let mut solutions = Basic::solve_poly(&poly, &x);
+    info!("Solutions: {:?}", solutions);
+    assert!(solutions.len() == 1);
+    assert!(solutions.contains(&Basic::integer(-1)));
+
+
+    poly = x.sqr().sub(&Basic::one());
+    info!("Polynomial: {}", poly);
+    solutions = Basic::solve_poly(&poly, &x);
+    info!("Solutions: {:?}", solutions);
+    assert!(solutions.len() == 2);
+    assert!(solutions.contains(&Basic::integer(-1)));
+    assert!(solutions.contains(&Basic::one()));
+
+    poly = x.sqr().sub(&Basic::integer(9));
+    info!("Polynomial: {}", poly);
+    solutions = Basic::solve_poly(&poly, &x);
+    info!("Solutions: {:?}", solutions);
+    assert!(solutions.len() == 2);
+    assert!(solutions.contains(&Basic::integer(-3)));
+    assert!(solutions.contains(&Basic::integer(3)));
+
+}
+

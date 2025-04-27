@@ -55,8 +55,8 @@ impl Basic {
         unsafe { real_double_get_d(ptr) }
     }
 
-    pub fn symbols(names: Vec<&str>) -> Vec<Basic> {
-        names.iter().map(|&name| Basic::symbol(name)).collect()
+    pub fn symbols<const N: usize>(names: [&str; N]) -> [Basic; N] {
+        names.map(|name| Basic::symbol(name))
     }
 
     // ===========================
