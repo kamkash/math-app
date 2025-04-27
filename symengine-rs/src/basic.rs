@@ -43,8 +43,20 @@ impl Basic {
         }
     }
 
+    /// Creates a new, uninitialized Basic instance.
+    pub fn new() -> Self {
+        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        Self {
+            inner: b as *mut basic,
+        }
+    }
+
     fn real_double_get_d_safe(ptr: *const basic_struct) -> f64 {
         unsafe { real_double_get_d(ptr) }
+    }
+
+    pub fn symbols(names: Vec<&str>) -> Vec<Basic> {
+        names.iter().map(|&name| Basic::symbol(name)).collect()
     }
 
     // ===========================
@@ -53,68 +65,56 @@ impl Basic {
 
     /// Creates a `Basic` instance representing the constant zero.
     pub fn zero() -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
-            basic_const_zero(b);
+            basic_const_zero(b.inner as *mut basic_struct);
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     /// Creates a `Basic` instance representing the constant one.
     pub fn one() -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
-            basic_const_one(b);
+            basic_const_one(b.inner as *mut basic_struct);
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     /// Creates a `Basic` instance representing the constant minus one.
     pub fn minus_one() -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
-            basic_const_minus_one(b);
+            basic_const_minus_one(b.inner as *mut basic_struct);
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     /// Creates a `Basic` instance representing the imaginary unit `i`.
     pub fn i() -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
-            basic_const_I(b);
+            basic_const_I(b.inner as *mut basic_struct);
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     /// Creates a `Basic` instance representing the constant π.
     pub fn pi() -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
-            basic_const_pi(b);
+            basic_const_pi(b.inner as *mut basic_struct);
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     /// Creates a `Basic` instance representing Euler's number `e`.
     pub fn e() -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
-            basic_const_E(b);
+            basic_const_E(b.inner as *mut basic_struct);
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     // ===========================
@@ -122,87 +122,92 @@ impl Basic {
     // ===========================
 
     pub fn add(&self, rhs: &Basic) -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
             basic_add(
-                b,
+                b.inner as *mut basic_struct,
                 self.inner as *mut basic_struct,
                 rhs.inner as *mut basic_struct,
             );
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     pub fn sub(&self, rhs: &Basic) -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
             basic_sub(
-                b,
+                b.inner as *mut basic_struct,
                 self.inner as *mut basic_struct,
                 rhs.inner as *mut basic_struct,
             );
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     pub fn mul(&self, rhs: &Basic) -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
             basic_mul(
-                b,
+                b.inner as *mut basic_struct,
                 self.inner as *mut basic_struct,
                 rhs.inner as *mut basic_struct,
             );
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     pub fn div(&self, rhs: &Basic) -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
             basic_div(
-                b,
+                b.inner as *mut basic_struct,
                 self.inner as *mut basic_struct,
                 rhs.inner as *mut basic_struct,
             );
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     pub fn div_int(&self, val: i64) -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
             basic_div(
-                b,
+                b.inner as *mut basic_struct,
                 self.inner as *mut basic_struct,
                 Basic::integer(val).inner as *mut basic_struct,
             );
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     pub fn pow(&self, rhs: &Basic) -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
             basic_pow(
-                b,
+                b.inner as *mut basic_struct,
                 self.inner as *mut basic_struct,
                 rhs.inner as *mut basic_struct,
             );
         }
-        Self {
-            inner: b as *mut basic,
+        b
+    }
+
+    /// Computes the square of the given `Basic` instance.
+    pub fn sqr(&self) -> Self {
+        self.pow(&Basic::integer(2))
+    }
+
+    /// Computes the square root of the given `Basic` instance.
+    pub fn sqrt(&self) -> Self {
+        let b = Basic::new();
+        unsafe {
+            basic_sqrt(
+                b.inner as *mut basic_struct,
+                self.inner as *mut basic_struct,
+            );
         }
+        b
     }
 
     // ===========================
@@ -210,88 +215,96 @@ impl Basic {
     // ===========================
 
     pub fn sin(symbol: &Basic) -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
-            basic_sin(b, symbol.inner as *mut basic_struct);
+            basic_sin(
+                b.inner as *mut basic_struct,
+                symbol.inner as *mut basic_struct,
+            );
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     pub fn cos(symbol: &Basic) -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
-            basic_cos(b, symbol.inner as *mut basic_struct);
+            basic_cos(
+                b.inner as *mut basic_struct,
+                symbol.inner as *mut basic_struct,
+            );
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     pub fn tan(symbol: &Basic) -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
-            basic_tan(b, symbol.inner as *mut basic_struct);
+            basic_tan(
+                b.inner as *mut basic_struct,
+                symbol.inner as *mut basic_struct,
+            );
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     /// Computes the arcsine (asin) of the given `Basic` instance.
     pub fn asin(symbol: &Basic) -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
-            basic_asin(b, symbol.inner as *mut basic_struct);
+            basic_asin(
+                b.inner as *mut basic_struct,
+                symbol.inner as *mut basic_struct,
+            );
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     /// Computes the arccosine (acos) of the given `Basic` instance.
     pub fn acos(symbol: &Basic) -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
-            basic_acos(b, symbol.inner as *mut basic_struct);
+            basic_acos(
+                b.inner as *mut basic_struct,
+                symbol.inner as *mut basic_struct,
+            );
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     /// Computes the arctangent (atan) of the given `Basic` instance.
     pub fn atan(symbol: &Basic) -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
-            basic_atan(b, symbol.inner as *mut basic_struct);
+            basic_atan(
+                b.inner as *mut basic_struct,
+                symbol.inner as *mut basic_struct,
+            );
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     /// Computes the cosecant (csc) of the given `Basic` instance.
     pub fn csc(symbol: &Basic) -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
-            basic_csc(b, symbol.inner as *mut basic_struct);
+            basic_csc(
+                b.inner as *mut basic_struct,
+                symbol.inner as *mut basic_struct,
+            );
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     /// Computes the secant (sec) of the given `Basic` instance.
     pub fn sec(symbol: &Basic) -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
-            basic_sec(b, symbol.inner as *mut basic_struct);
+            basic_sec(
+                b.inner as *mut basic_struct,
+                symbol.inner as *mut basic_struct,
+            );
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     // ===========================
@@ -299,39 +312,32 @@ impl Basic {
     // ===========================
 
     pub fn abs(&self) -> Self {
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
-            basic_abs(b, self.inner as *mut basic_struct);
+            basic_abs(
+                b.inner as *mut basic_struct,
+                self.inner as *mut basic_struct,
+            );
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     pub fn min(args: Vec<&Basic>) -> Self {
         let bv = BasicVec::from_slice(&args).unwrap();
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
-
+        let b = Basic::new();
         unsafe {
-            basic_min(b, bv.inner as *const CVecBasic);
+            basic_min(b.inner as *mut basic_struct, bv.inner as *const CVecBasic);
         }
-
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     pub fn max(args: Vec<&Basic>) -> Self {
         let bv = BasicVec::from_slice(&args).unwrap();
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
-
+        let b = Basic::new();
         unsafe {
-            basic_max(b, bv.inner as *const CVecBasic);
+            basic_max(b.inner as *mut basic_struct, bv.inner as *const CVecBasic);
         }
-
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     pub fn subs<'a, I>(exp: &Basic, pairs: I) -> Self
@@ -339,17 +345,15 @@ impl Basic {
         I: IntoIterator<Item = (&'a Basic, &'a Basic)>,
     {
         let mb = BasicMap::from_pairs(pairs).unwrap();
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
             basic_subs(
-                b,
+                b.inner as *mut basic_struct,
                 exp.inner as *mut basic_struct,
                 mb.inner as *const CMapBasicBasic,
             );
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     pub fn rc_subs<'a, I>(exp: &Basic, rcpairs: I) -> Self
@@ -362,17 +366,15 @@ impl Basic {
                 .map(|(k, v)| (Rc::clone(k), Rc::clone(v))),
         )
         .unwrap();
-        let b = Self::heap_alloc().unwrap() as *mut basic_struct;
+        let b = Basic::new();
         unsafe {
             basic_subs(
-                b,
+                b.inner as *mut basic_struct,
                 exp.inner as *mut basic_struct,
                 mb.inner as *const CMapBasicBasic,
             );
         }
-        Self {
-            inner: b as *mut basic,
-        }
+        b
     }
 
     pub fn equals(&self, rhs: &Basic) -> bool {
@@ -504,6 +506,33 @@ impl Basic {
             TypeID_SYMENGINE_POW => "Power",
             _ => "Unknown",
         }
+    }
+
+    // solvers
+
+    // Solves the univariate polynomial equation `self == 0` for the given symbol.
+    // Returns a Vec of Basic instances representing the roots.
+    pub fn solve_poly(&self, symbol: &Basic) -> Vec<Basic> {
+        let mut roots = Vec::new();
+        let basic_set = BasicSet::new().unwrap();
+        if basic_set.inner.is_null() {
+            return roots;
+        }
+        unsafe {
+            basic_solve_poly(
+                basic_set.inner as *mut CSetBasic,
+                self.inner as *const basic_struct,
+                symbol.inner as *const basic_struct,
+            );
+            let n = setbasic_size(basic_set.inner);
+            for i in 0..n {
+                let elem = basic_set.get(i);
+                if !elem.is_none() {
+                    roots.push(elem.unwrap());
+                }
+            }
+        }
+        roots
     }
 }
 
@@ -671,5 +700,73 @@ impl BasicMap {
 impl Drop for BasicMap {
     fn drop(&mut self) {
         unsafe { mapbasicbasic_free(self.inner as *mut CMapBasicBasic) }
+    }
+}
+
+#[derive(Debug)]
+pub struct BasicSet {
+    inner: *mut CSetBasic,
+}
+
+impl BasicSet {
+    /// Creates a new empty BasicSet.
+    pub fn new() -> Result<Self, &'static str> {
+        unsafe {
+            let ptr = setbasic_new();
+            if ptr.is_null() {
+                return Err("Failed to allocate memory for BasicSet");
+            }
+            Ok(Self { inner: ptr })
+        }
+    }
+
+    /// Creates a BasicSet from an iterator of &Basic.
+    pub fn from_slice<'a, I>(iter: I) -> Result<Self, &'static str>
+    where
+        I: IntoIterator<Item = &'a Basic>,
+    {
+        let set = Self::new()?;
+        for b in iter {
+            unsafe {
+                setbasic_insert(set.inner, b.inner as *mut basic_struct);
+            }
+        }
+        Ok(set)
+    }
+
+    /// Returns the number of elements in the set.
+    pub fn len(&self) -> usize {
+        unsafe { setbasic_size(self.inner) }
+    }
+
+    /// Returns true if the set contains no elements.
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+
+    /// Gets the element at the given index, if any.
+    pub fn get(&self, index: usize) -> Option<Basic> {
+        if index >= self.len().try_into().unwrap() {
+            return None;
+        }
+        unsafe {
+            let b = Basic::new();
+            setbasic_get(
+                self.inner,
+                index.try_into().unwrap(),
+                b.inner as *mut basic_struct,
+            );
+            if b.inner.is_null() {
+                None
+            } else {
+                Some(b)
+            }
+        }
+    }
+}
+
+impl Drop for BasicSet {
+    fn drop(&mut self) {
+        unsafe { setbasic_free(self.inner) }
     }
 }
