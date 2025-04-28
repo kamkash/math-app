@@ -101,38 +101,6 @@ math-field {
   margin-top: 1em;;
 }
 
-/* #prompt-input {
-  width: 100%; 
-  height: 200px;
-  overflow-y: auto; 
-  overflow-x: hidden; 
-  /* color: #333;  */
-  border-radius: 5px; 
-  padding: 10px; 
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); 
-  font-family: Arial, sans-serif; 
-  font-size: 14px; 
-  background-color: lightyellow;
-  color: black;
-}
-
-#response-output {
-  width: 100%; 
-  height: 200px;
-  overflow-y: auto; 
-  overflow-x: hidden; 
-  /* color: #333;  */
-  border-radius: 5px; 
-  padding: 10px; 
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); 
-  font-family: Arial, sans-serif; 
-  font-size: 14px; 
-  background-color: lightyellow;
-  color: black;
-  /* border: solid 1px #ccc; */
-} */
-
-
 a {
   font-weight: 500;
   color: #646cff;

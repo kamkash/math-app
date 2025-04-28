@@ -55,21 +55,26 @@ async function greet() {
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 async function llm_generate() {
   if (promptInputEl && responseOutputEl) {
-    let question = promptInputEl.value;
-    let spoken = convertLatexToSpeakableText(promptInputEl.value);
     let ascii = convertLatexToAsciiMath(promptInputEl.value);
+    ascii += " Important: Answer in LaTeX format.";
     let answer: string = await invoke("llm_generate", {
       prompt: ascii,
     });
-    console.log(`llm_generate ${answer}`);
-    responseOutputEl.value = replaceLatexBlocks(answer); ;
-  }
+    let latex = processLatexBlocks(answer);
+    latex = `\\begin{align} ${latex} \\end{align}`;
+    responseOutputEl.value = latex;
+    console.log("using", latex);
+
+
+    }
 }
 
-function replaceLatexBlocks(text: string): string {
+function processLatexBlocks(text: string): string {
   return text
     .replace(/^```latex\s*$/gm, "\\begin{align}")
-    .replace(/^```\s*$/gm, "\\end{align}");
+    .replace(/^```\s*$/gm, "\\end{align}")
+    .replace(/\r?\n|\r$/g, "\\\\")
+    .replace(/ +/gm, "~");
 }
 
 window.addEventListener("DOMContentLoaded", () => {
