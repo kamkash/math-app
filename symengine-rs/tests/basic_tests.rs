@@ -200,6 +200,8 @@ fn test_basic_type() {
     assert_eq!(basic_int.get_type_str(), "Integer");
     assert_eq!(basic_real.get_type_str(), "Real");
     assert_eq!(x_plus_int.get_type_str(), "Add");
+    assert!(x.is_symbol());
+    assert!(basic_int.is_integer());
 }
 
 #[test]

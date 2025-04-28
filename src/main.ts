@@ -1,4 +1,12 @@
 import { invoke } from "@tauri-apps/api/core";
+import "mathlive";
+
+import {
+  convertAsciiMathToLatex,
+  convertLatexToAsciiMath,
+  convertLatexToSpeakableText,
+  MathfieldElement,
+} from "mathlive";
 
 declare global {
   interface Window {
@@ -7,8 +15,13 @@ declare global {
   }
 }
 
-let promptInputEl: HTMLInputElement | null;
-let contentEl: HTMLElement | null;
+let promptInputEl: MathfieldElement | null;
+let responseOutputEl: MathfieldElement | null;
+
+function load_globals() {
+  promptInputEl = document.querySelector("#prompt-input");
+  responseOutputEl = document.querySelector("#response-output");
+}
 
 async function reset_context(topic: string) {
   console.log("reset context");
@@ -22,18 +35,18 @@ async function reset_model(name: string) {
 
 async function add_grammar() {
   console.log("add grammar");
-  if (contentEl && promptInputEl) {
+  if (responseOutputEl && promptInputEl) {
     let res = await invoke("add_grammar", {
       grammar: promptInputEl.value,
     });
-    contentEl.textContent = `Grammar added: ${res}`;
+    responseOutputEl.value = `Grammar added: ${res}`;
   }
 }
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 async function greet() {
-  if (contentEl && promptInputEl) {
-    contentEl.textContent = await invoke("greet", {
+  if (responseOutputEl && promptInputEl) {
+    responseOutputEl.value = await invoke("greet", {
       name: promptInputEl.value,
     });
   }
@@ -41,28 +54,30 @@ async function greet() {
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 async function llm_generate() {
-  if (promptInputEl && contentEl) {
+  if (promptInputEl && responseOutputEl) {
+    let question = promptInputEl.value;
+    let spoken = convertLatexToSpeakableText(promptInputEl.value);
+    let ascii = convertLatexToAsciiMath(promptInputEl.value);
     let answer: string = await invoke("llm_generate", {
-      prompt: promptInputEl.value,
+      prompt: ascii,
     });
-    answer = String.raw`${answer}`;
-    const options = {
-      htmlTags: true,
-      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
-    };
-    console.log(`${answer}`);
-    const html = window.render(answer, options);
-    contentEl.innerHTML = html;
+    console.log(`llm_generate ${answer}`);
+    responseOutputEl.value = replaceLatexBlocks(answer); ;
   }
+}
+
+function replaceLatexBlocks(text: string): string {
+  return text
+    .replace(/^```latex\s*$/gm, "\\begin{align}")
+    .replace(/^```\s*$/gm, "\\end{align}");
 }
 
 window.addEventListener("DOMContentLoaded", () => {
   console.log("dom content loaded");
-  load_mathpix();
-  promptInputEl = document.querySelector("#prompt-input");
-  contentEl = document.querySelector("#content-text");
+  load_globals();
+
   document
-    .querySelector("#greet-form")
+    .querySelector("#input-form")
     ?.addEventListener("submit", async (e) => {
       e.preventDefault();
       await llm_generate();
@@ -94,13 +109,3 @@ window.addEventListener("DOMContentLoaded", () => {
     await greet();
   });
 });
-
-function load_mathpix() {
-  let script = document.createElement("script");
-  script.src = "/src/libs/mathpix2.0.12.js";
-  document.head.append(script);
-  script.onload = function () {
-    const isLoaded = window.loadMathJax();
-    console.log(`Mathpix loaded ${isLoaded}`);
-  };
-}
