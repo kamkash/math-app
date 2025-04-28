@@ -37,15 +37,17 @@ form button {
 }
 
 math-field {
-  font-family: Arial, sans-serif;
-  font-size: 1.1em;
-  padding: 20px;
+  font-family: "STIX Two Math", "Latin Modern Math", "Cambria Math",
+    "Noto Sans Math", "XITS Math", "Asana Math", serif;
+  /* font-size: 1.1em; */
+  padding: 10px;
   margin: 10px;
   width: 90%;
   min-height: 150px;
-  overflow-y: auto; /* Enable scrolling */
+  overflow: auto; /* Enable scrolling */
   box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.7);
   border-radius: 8px; /* Add rounded corners */
+  display: flex;
 }
 
 .row button {

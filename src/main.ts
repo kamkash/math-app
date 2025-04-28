@@ -1,19 +1,13 @@
 import { invoke } from "@tauri-apps/api/core";
 import "mathlive";
+import "mathlive/fonts.css";
 
 import {
-  convertAsciiMathToLatex,
+  // convertAsciiMathToLatex,
   convertLatexToAsciiMath,
-  convertLatexToSpeakableText,
+  // convertLatexToSpeakableText,
   MathfieldElement,
 } from "mathlive";
-
-declare global {
-  interface Window {
-    render: any; // Mathpix render function
-    loadMathJax: any; // MathJax loadMathJax function
-  }
-}
 
 let promptInputEl: MathfieldElement | null;
 let responseOutputEl: MathfieldElement | null;
@@ -21,6 +15,17 @@ let responseOutputEl: MathfieldElement | null;
 function load_globals() {
   promptInputEl = document.querySelector("#prompt-input");
   responseOutputEl = document.querySelector("#response-output");
+}
+
+async function run_solver(name: string) {
+  console.log(`run solver ${name}`);
+  if (responseOutputEl && promptInputEl) {
+    let res = await invoke("run_solver", {
+      input_block: convertLatexToAsciiMath(promptInputEl.value),
+    });
+    // let latex = processLatexBlock(res as string);
+    responseOutputEl.setValue(res as string, { mode: "text" });
+  }
 }
 
 async function reset_context(topic: string) {
@@ -49,7 +54,7 @@ async function greet() {
     let ans = await invoke("greet", {
       name: promptInputEl.value,
     });
-    let latex: string = processLatexBlocks(ans as string);
+    let latex: string = processLatexBlock(ans as string);
     responseOutputEl.value = latex;
   }
 }
@@ -62,15 +67,21 @@ async function llm_generate() {
     let answer: string = await invoke("llm_generate", {
       prompt: ascii,
     });
-    let latex = processLatexBlocks(answer);
-    latex = `\\begin{align} ${latex} \\end{align}`;
+    let latex = processLatexBlock(answer);
     responseOutputEl.value = latex;
-    console.log("using", latex);
   }
 }
 
-function processLatexBlocks(text: string): string {
+function processLatexBlock(answer: string) {
+  let latex = formatLatexBlock(answer);
+  latex = `\\begin{align} ${latex} \\end{align}`;
+  return latex;
+}
+
+function formatLatexBlock(text: string): string {
   return text
+    .replace(/\$\$\s*\\documentclass\{article\}\$\$/gm, "")
+    .replace(/\$\$\s*\\usepackage\s*amsmath\s*\$\$/gm, "")
     .replace(/^```latex\s*$/gm, "\\begin{align}")
     .replace(/^```\s*$/gm, "\\end{align}")
     .replace(/\r?\n|\r$/g, "\\\\")
@@ -87,6 +98,11 @@ window.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       await llm_generate();
     });
+
+  document.querySelector("#solver")?.addEventListener("click", async (e) => {
+    e.preventDefault();
+    await run_solver("new solver");
+  });
 
   document
     .querySelector("#reset_context")
