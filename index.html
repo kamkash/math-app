@@ -5,26 +5,24 @@
   <meta charset="UTF-8" />
   <link rel="stylesheet" href="/src/styles.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tauri App</title>
   <script type="module" src="/src/main.ts" defer></script>
 
 </head>
 
 <body>
   <main class="container">
-    <div class="kktoolbar">
-      <button id="reset_model">Reset Model</button>
-      <button id="reset_context">Reset context</button>
-      <button id="add_grammar">Add grammar</button>
-      <button id="greet">greet</button>
-    </div>
-
     <form class="row" id="input-form">
-      <math-field id="prompt-input" placeholder="What's \ up..." smart-mode="on"></math-field>
-      <button type="submit">
-        <img src="/src/assets/go.svg" alt="Go" />
-        Go
-      </button>
+      <div class="toolbar">
+        <button id="reset_model">Reset Model</button>
+        <button id="reset_context">Reset context</button>
+        <button id="add_grammar">Add grammar</button>
+        <button id="greet">greet</button>
+        <button type="submit">
+          <img src="/src/assets/go.svg" alt="Go" />
+          Go
+        </button>
+      </div>
+      <math-field id="prompt-input" placeholder="What's up..." smart-mode="on"></math-field>
       <math-field id="response-output" smart-mode="on"></math-field>
     </form>
 

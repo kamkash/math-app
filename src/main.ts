@@ -46,9 +46,11 @@ async function add_grammar() {
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 async function greet() {
   if (responseOutputEl && promptInputEl) {
-    responseOutputEl.value = await invoke("greet", {
+    let ans = await invoke("greet", {
       name: promptInputEl.value,
     });
+    let latex: string = processLatexBlocks(ans as string);
+    responseOutputEl.value = latex;
   }
 }
 
@@ -64,9 +66,7 @@ async function llm_generate() {
     latex = `\\begin{align} ${latex} \\end{align}`;
     responseOutputEl.value = latex;
     console.log("using", latex);
-
-
-    }
+  }
 }
 
 function processLatexBlocks(text: string): string {
