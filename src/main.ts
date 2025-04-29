@@ -21,7 +21,7 @@ async function run_solver(name: string) {
   console.log(`run solver ${name}`);
   if (responseOutputEl && promptInputEl) {
     let res = await invoke("run_solver", {
-      input_block: convertLatexToAsciiMath(promptInputEl.value),
+      input: convertLatexToAsciiMath(promptInputEl.value),
     });
     // let latex = processLatexBlock(res as string);
     responseOutputEl.setValue(res as string, { mode: "text" });
@@ -67,6 +67,7 @@ async function llm_generate() {
     let answer: string = await invoke("llm_generate", {
       prompt: ascii,
     });
+    console.log("llm_generate", answer);
     let latex = processLatexBlock(answer);
     responseOutputEl.value = latex;
   }
@@ -80,6 +81,8 @@ function processLatexBlock(answer: string) {
 
 function formatLatexBlock(text: string): string {
   return text
+    .replace(/\\documentclass{article}/gm, "")
+    .replace(/\\usepackage{amsmath}/gm, "")
     .replace(/\$\$\s*\\documentclass\{article\}\$\$/gm, "")
     .replace(/\$\$\s*\\usepackage\s*amsmath\s*\$\$/gm, "")
     .replace(/^```latex\s*$/gm, "\\begin{align}")

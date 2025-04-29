@@ -5,8 +5,10 @@ use std::rc::Rc;
 use std::result;
 use std::sync::Arc;
 
+use antlr_rust::common_token_stream::CommonTokenStream;
 use antlr_rust::tree::ParseTree;
 use antlr_rust::tree::{ParseTreeVisitorCompat, Tree};
+use antlr_rust::InputStream;
 use log::info;
 
 use crate::gen_calc_parser::calculatorparser::{
@@ -19,6 +21,9 @@ use crate::gen_calc_parser::calculatorparser::{
     MultiplyingExpressionContextAttrs, PowExpressionContextAttrs,
 };
 use crate::gen_calc_parser::calculatorvisitor::calculatorVisitorCompat;
+use crate::gen_calc_parser::{
+    calculatorlexer::calculatorLexer, calculatorparser::calculatorParser,
+};
 use symengine_rs::basic::Basic;
 
 pub enum Relop {
@@ -134,16 +139,10 @@ impl SymBasicCalcVisitor {
     }
 
     fn build_result_table(&mut self) {
-
         for (sym, expr) in &self.symbol_table {
-            let value = Basic::rc_subs(
-                expr,
-                self.symbol_table.iter().map(|(k, v)| (k, v)),
-            );
+            let value = Basic::rc_subs(expr, self.symbol_table.iter().map(|(k, v)| (k, v)));
             self.result_table.insert(Rc::clone(sym), Rc::new(value));
         }
-
-
     }
 }
 
@@ -314,4 +313,20 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
     fn visit_relop(&mut self, ctx: &RelopContext<'input>) -> Self::Return {
         self.visit_children(ctx)
     }
+}
+
+pub fn evaluate_ascii_math(input: &str) -> String {
+    info!("evaluate_ascii_math {}", input);
+    let mut visitor = SymBasicCalcVisitor::new();
+    let lexer = calculatorLexer::new(InputStream::new(input));
+    let token_stream = CommonTokenStream::new(lexer);
+    let mut parser = calculatorParser::new(token_stream);
+    let parse_tree = parser.block().unwrap();
+    let _ = visitor.visit(parse_tree.as_ref());
+    info!("input: {}", input);
+    info!("visitor block result: {:?}", visitor.block_expressions);
+    info!("visitor symbol table: {:?}", visitor.symbol_table);
+    info!("visitor result table: {:?}", visitor.result_table);
+
+    format!("{:?}", visitor.result_table)
 }

@@ -8,6 +8,12 @@ pub fn echo_parser(name: &str) -> String {
     format!("{}", name)
 }
 
+pub fn evaluate_ascii_math(input: &str) -> String {
+    info!("evaluate_ascii_math {}", input);
+    let result = symengine_evaluator::evaluate_ascii_math(input);
+    format!("{}", result)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

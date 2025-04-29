@@ -1,6 +1,7 @@
 use lazy_static::lazy_static;
 use libloading::{Library, Symbol};
 use log::{debug, error, info, warn};
+use math_parser::symengine_evaluator;
 use std::ffi::CStr;
 use std::ffi::CString;
 use std::ffi::{c_char, c_int};
@@ -9,8 +10,6 @@ use std::ptr;
 use std::str;
 use tauri_plugin_log::Target;
 use tauri_plugin_log::TargetKind;
-
-use math_parser;
 
 const LOG_FILE_NAME: &str = "mathapp";
 // pub const MODEL_FILE_NAME: &str = "DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf";
@@ -98,6 +97,15 @@ fn llm_generate(prompt: &str) -> String {
 }
 
 #[tauri::command]
+fn run_solver(input: &str) -> String {
+    let res = run_solver_rust(input).unwrap_or_else(|e| {
+        error!("Failed to run solver: {}", e);
+        "Failed to run solver".to_string()
+    });
+    format!("{}", res)
+}
+
+#[tauri::command]
 fn add_grammar(grammar: &str) -> String {
     let res = add_grammar_rust(grammar).unwrap_or_else(|e| {
         error!("Failed to add grammar: {}", e);
@@ -136,6 +144,7 @@ pub fn run() {
             reset_context,
             reset_model,
             llm_generate,
+            run_solver,
             greet,
             add_grammar
         ])
@@ -178,6 +187,12 @@ pub fn echo_rust(estr: &str) -> Result<String, String> {
             .map(|s| s.to_string())
             .map_err(|e| e.to_string())
     }
+}
+
+// fixme:: error handling
+pub fn run_solver_rust(prompt: &str) -> Result<String, String> {
+    let res = symengine_evaluator::evaluate_ascii_math(prompt);
+    Ok(res)
 }
 
 pub fn generate_text_rust(prompt: &str, n_predict: i32) -> Result<String, String> {
