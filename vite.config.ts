@@ -33,14 +33,14 @@ export default defineConfig(async () => ({
       ignored: ["**/src-tauri/**", "**/math-parser/**", "**/symengine-rs/**"],
     },
   },
-  plugins: [
-    viteStaticCopy({
-      targets: [
-        {
-          src: 'node_modules/mathlive/fonts', // Copy from node_modules
-          dest: 'node_modules/.vite/deps',    // Copy to deps where MathLive expects
-        },
-      ],
-    }),
-  ],
+  // plugins: [
+  //   viteStaticCopy({
+  //     targets: [
+  //       {
+  //         src: 'node_modules/mathlive/fonts', // Copy from node_modules
+  //         dest: 'node_modules/.vite/deps',    // Copy to deps where MathLive expects
+  //       },
+  //     ],
+  //   }),
+  // ],
 }));
