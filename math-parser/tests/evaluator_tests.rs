@@ -68,6 +68,7 @@ fn test_evaluator_polynomial() {
     // $$ z=x^3+3x^2-9 $$
 
     let x = 10.0f64;
+    let fx = x.powf(3.0) + 3.0 * x.powf(2.0) - 9.0;
     let input = format!(
         "x = {x} 
          z = x^3 + 3*x^2 - 9"
@@ -82,6 +83,13 @@ fn test_evaluator_polynomial() {
     info!("visitor block result: {:?}", visitor.block_expressions);
     info!("visitor symbol table: {:?}", visitor.symbol_table);
     info!("visitor result table: {:?}", visitor.result_table);
+
+    assert_eq!(
+        visitor
+            .result_table
+            .get(&Basic::symbol("z")),
+        Some(&Rc::new(Basic::real(fx))),
+    );
 }
 
 #[test]
