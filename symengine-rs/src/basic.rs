@@ -101,6 +101,21 @@ impl Basic {
         }
         b
     }
+    
+    /// Returns true if this Basic number is zero.
+    pub fn is_zero(&self) -> bool {
+        unsafe { number_is_zero(self.inner as *const basic_struct) != 0 }
+    }
+
+    /// Returns true if this Basic number is negative.
+    pub fn is_negative(&self) -> bool {
+        unsafe { number_is_negative(self.inner as *const basic_struct) != 0 }
+    }
+
+    /// Returns true if this Basic number is positive.
+    pub fn is_positive(&self) -> bool {
+        unsafe { number_is_positive(self.inner as *const basic_struct) != 0 }
+    }
 
     /// Creates a `Basic` instance representing the imaginary unit `i`.
     pub fn i() -> Self {

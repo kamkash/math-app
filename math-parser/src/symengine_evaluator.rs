@@ -1,5 +1,6 @@
 #![allow(unused)]
 use core::num;
+use std::arch::is_aarch64_feature_detected;
 use std::fmt;
 use std::rc::Rc;
 use std::result;
@@ -176,10 +177,10 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
 
     fn visit_equation(&mut self, ctx: &EquationContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
-        let len = self.visitor_stack.len();
-        let right = Rc::clone(&self.visitor_stack[len - 1]);
-        let left = Rc::clone(&self.visitor_stack[len - 2]);
-        let equation = SymEquation::new(left, right, Relop::Equal);
+        assert!(self.visitor_stack.len() >= 2);
+        let right = self.visitor_stack.pop().unwrap();
+        let left = self.visitor_stack.pop().unwrap();
+        let equation = SymEquation::new(Rc::clone(&left), Rc::clone(&right), Relop::Equal);
         self.block_expressions.push(equation);
         res
     }
@@ -190,8 +191,8 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
     ) -> Self::Return {
         let res = self.visit_children(ctx);
         let len = self.visitor_stack.len();
-        let right = Rc::clone(&self.visitor_stack[len - 1]);
-        let left = Rc::clone(&self.visitor_stack[len - 2]);
+        let left = Rc::clone(&self.visitor_stack[len - 1]);
+        let right = Rc::clone(&self.visitor_stack[len - 2]);
         let relop_text = ctx.get_child(1).unwrap().get_text();
         let relop = Relop::from(relop_text.as_str());
         let equation = SymEquation::new(left, right, relop);
@@ -201,17 +202,21 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
 
     fn visit_expression(&mut self, ctx: &ExpressionContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
-        let is_add = ctx.PLUS(0).is_some();
-        let is_sub = ctx.MINUS(0).is_some();
-        if is_add || is_sub {
-            let left = self.visitor_stack.pop().unwrap();
-            let right = self.visitor_stack.pop().unwrap();
-            let result = if is_add {
-                Rc::new(left.add(&right))
-            } else {
-                Rc::new(right.sub(&left))
-            };
-            self.visitor_stack.push(result);
+        let len = ctx.get_child_count();
+        if len > 1 {
+            let mut right = self.visitor_stack.pop().unwrap();
+            for c in 0..(len - 1) / 2 {
+                let op = self.visitor_stack.pop().unwrap();
+                assert!(op.is_integer());
+                if op.is_positive() {
+                    let left = self.visitor_stack.pop().unwrap();
+                    right = Rc::new(left.add(&right));
+                } else {
+                    let left = self.visitor_stack.pop().unwrap();
+                    right = Rc::new(left.sub(&right));
+                }
+            }
+            self.visitor_stack.push(right);
         }
         res
     }
@@ -221,29 +226,35 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
         ctx: &MultiplyingExpressionContext<'input>,
     ) -> Self::Return {
         let res = self.visit_children(ctx);
-        let is_times = ctx.TIMES(0).is_some();
-        let is_divide = ctx.DIV(0).is_some();
-        if is_times || is_divide {
-            let left = self.visitor_stack.pop().unwrap();
-            let right = self.visitor_stack.pop().unwrap();
-            let result = if is_times {
-                Rc::new(left.mul(&right))
-            } else {
-                Rc::new(right.div(&left))
-            };
-            self.visitor_stack.push(result);
+        let len = ctx.get_child_count();
+        if len > 1 {
+            let mut right = self.visitor_stack.pop().unwrap();
+            for c in 0..(len - 1) / 2 {
+                let op = self.visitor_stack.pop().unwrap();
+                assert!(op.is_integer());
+                if op.is_positive() {
+                    let left = self.visitor_stack.pop().unwrap();
+                    right = Rc::new(left.mul(&right));
+                } else {
+                    let left = self.visitor_stack.pop().unwrap();
+                    right = Rc::new(left.div(&right));
+                }
+            }
+            self.visitor_stack.push(right);
         }
         res
     }
 
     fn visit_powExpression(&mut self, ctx: &PowExpressionContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
-        let is_pow = ctx.POW(0).is_some();
-        if is_pow {
-            let left = self.visitor_stack.pop().unwrap();
-            let right = self.visitor_stack.pop().unwrap();
-            let result = Rc::new(right.pow(&left));
-            self.visitor_stack.push(result);
+        let len = ctx.get_child_count();
+        if len > 1 {
+            let mut right = self.visitor_stack.pop().unwrap();
+            for c in 0..(len - 1) / 2 {
+                let left = self.visitor_stack.pop().unwrap();
+                right = Rc::new(left.pow(&right));
+            }
+            self.visitor_stack.push(right);
         }
         res
     }
@@ -264,8 +275,8 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
     }
 
     fn visit_scientific(&mut self, ctx: &ScientificContext<'input>) -> Self::Return {
-        let sci_text = ctx.get_text();
         let res = self.visit_children(ctx);
+        let sci_text = ctx.get_text();
         let filtered: String = sci_text
             .chars()
             .filter(|c| c.is_numeric() || *c == '.' || *c == '-')
@@ -277,8 +288,8 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
     }
 
     fn visit_currency(&mut self, ctx: &CurrencyContext<'input>) -> Self::Return {
-        let currency_text = ctx.get_text();
         let res = self.visit_children(ctx);
+        let currency_text = ctx.get_text();
         let filtered: String = currency_text
             .chars()
             .filter(|c| c.is_numeric() || *c == '.' || *c == '-')
@@ -295,8 +306,8 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
     }
 
     fn visit_variable(&mut self, ctx: &VariableContext<'input>) -> Self::Return {
-        let var_text = ctx.get_text();
         let res = self.visit_children(ctx);
+        let var_text = ctx.get_text();
         let var_symbol = Rc::new(Basic::symbol(&var_text));
         self.visitor_stack.push(var_symbol);
         res
@@ -312,6 +323,34 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
 
     fn visit_relop(&mut self, ctx: &RelopContext<'input>) -> Self::Return {
         self.visit_children(ctx)
+    }
+
+    fn visit_multop(
+        &mut self,
+        ctx: &crate::gen_calc_parser::calculatorparser::MultopContext<'input>,
+    ) -> Self::Return {
+        let res = self.visit_children(ctx);
+        let op_text = ctx.get_text();
+        if op_text == "*" {
+            self.visitor_stack.push(Rc::new(Basic::integer(1000)));
+        } else {
+            self.visitor_stack.push(Rc::new(Basic::integer(-1000)));
+        }
+        res
+    }
+
+    fn visit_sumop(
+        &mut self,
+        ctx: &crate::gen_calc_parser::calculatorparser::SumopContext<'input>,
+    ) -> Self::Return {
+        let res = self.visit_children(ctx);
+        let op_text = ctx.get_text();
+        if op_text == "+" {
+            self.visitor_stack.push(Rc::new(Basic::integer(1000)));
+        } else {
+            self.visitor_stack.push(Rc::new(Basic::integer(-1000)));
+        }
+        res
     }
 }
 

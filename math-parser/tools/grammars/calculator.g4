@@ -47,11 +47,11 @@ relational_expression
     ;
 
 expression
-    : multiplyingExpression ((PLUS | MINUS) multiplyingExpression)*
+    : multiplyingExpression (sumop multiplyingExpression)*
     ;
 
 multiplyingExpression
-    : powExpression ((TIMES | DIV) powExpression)*
+    : powExpression (multop powExpression)*
     ;
 
 powExpression

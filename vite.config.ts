@@ -6,12 +6,12 @@ const host = process.env.TAURI_DEV_HOST;
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
   base: './', // very important for Tauri!
-  build: {
-    assetsDir: 'assets', // so fonts/css/js go to 'dist/assets'
-  },
-  optimizeDeps: {
-    exclude: ['@mathlive/mathlive'], // Exclude MathLive from Vite optimization
-  },
+  // build: {
+  //   assetsDir: 'assets', // so fonts/css/js go to 'dist/assets'
+  // },
+  // optimizeDeps: {
+  //   exclude: ['@mathlive/mathlive'], // Exclude MathLive from Vite optimization
+  // },
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //
   // 1. prevent vite from obscuring rust errors

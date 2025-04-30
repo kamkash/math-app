@@ -260,8 +260,14 @@ fn test_basic_parse() {
     let sorted_input: String = exp_str_inp.chars().sorted().collect();
     let sorted_expr: String = b_expr.to_string().chars().sorted().collect();
     assert_eq!(sorted_expr, sorted_input);
-
     info!("Parsed expression: {}", b_expr.to_string());
-    info!("sorted input: {}", sorted_input);
-    info!("sorted expr:  {}", sorted_expr);
+}
+
+#[test]
+fn test_basic_eval_order() {
+    let [x, y] = Basic::symbols(["x", "y"]);
+    info!("x + y: {}", x.add(&y));
+    info!("x - y: {}", x.sub(&y));
+    info!("x * y: {}", x.mul(&y));
+    info!("x / y: {}", x.div(&y));
 }
