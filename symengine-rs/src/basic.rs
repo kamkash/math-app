@@ -101,7 +101,7 @@ impl Basic {
         }
         b
     }
-    
+
     /// Returns true if this Basic number is zero.
     pub fn is_zero(&self) -> bool {
         unsafe { number_is_zero(self.inner as *const basic_struct) != 0 }
@@ -232,6 +232,30 @@ impl Basic {
             basic_sqrt(
                 b.inner as *mut basic_struct,
                 self.inner as *mut basic_struct,
+            );
+        }
+        b
+    }
+    
+    /// Computes the natural logarithm (log) of the given `Basic` instance.
+    pub fn log(symbol: &Basic) -> Self {
+        let b = Basic::new();
+        unsafe {
+            basic_log(
+                b.inner as *mut basic_struct,
+                symbol.inner as *mut basic_struct,
+            );
+        }
+        b
+    }
+
+    /// Computes the exponential (exp) of the given `Basic` instance.
+    pub fn exp(symbol: &Basic) -> Self {
+        let b = Basic::new();
+        unsafe {
+            basic_exp(
+                b.inner as *mut basic_struct,
+                symbol.inner as *mut basic_struct,
             );
         }
         b

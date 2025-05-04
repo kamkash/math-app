@@ -265,9 +265,24 @@ fn test_basic_parse() {
 
 #[test]
 fn test_basic_eval_order() {
-    let [x, y] = Basic::symbols(["x", "y"]);
-    info!("x + y: {}", x.add(&y));
-    info!("x - y: {}", x.sub(&y));
-    info!("x * y: {}", x.mul(&y));
-    info!("x / y: {}", x.div(&y));
+    let x = 10.0f64;
+    let fx = x.powf(3.0) + x.powf(2.0) / 3.0 - 9.0 * x + 21.0;
+    let input = "x^3 + x^2 / 3 - 9 * x + 21";
+
+    let [symx] = Basic::symbols(["x"]);
+    let exp = Basic::parse(input).expect("Failed to parse expression");
+    let result = Basic::subs(&exp, vec![(&symx, &Basic::real(x))].into_iter());
+    info!("eval order exp = {}", result.to_string());
+    assert_eq!(result.to_f64(), fx);
+
+}
+
+#[test]
+fn test_basic_funcs() {
+    let [angle] = Basic::symbols(["angle"]);
+    let bsin = Basic::sin(&angle);
+    let pi_over_4 = Basic::real(std::f64::consts::FRAC_PI_4);
+    let result = Basic::subs(&bsin, vec![(&angle, &pi_over_4)].into_iter());
+    info!("sin(pi/4) = {}", result.to_string());
+    assert_eq!(result.to_f64(), std::f64::consts::FRAC_PI_4.sin());
 }

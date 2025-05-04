@@ -29,8 +29,8 @@
 grammar calculator;
 
 block
-    : (functionDefinition | equation | relational_expression) (
-        SEPARATOR (functionDefinition | equation | relational_expression)
+    : (expression | functionDefinition | equation | relational_expression) (
+        SEPARATOR (expression | functionDefinition | equation | relational_expression)
     )* SEPARATOR*  WS* EOF
     ;
 
@@ -310,3 +310,4 @@ WS : [ \t]+ -> skip;
 // WS
 //     : [ \r\n\t]+ -> skip
 //     ;
+

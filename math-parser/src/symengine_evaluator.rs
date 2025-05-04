@@ -1,10 +1,14 @@
 #![allow(unused)]
 use core::num;
 use std::arch::is_aarch64_feature_detected;
+use std::collections::VecDeque;
 use std::fmt;
 use std::rc::Rc;
 use std::result;
+use std::str::FromStr;
 use std::sync::Arc;
+
+use crate::Relop;
 
 use antlr_rust::common_token_stream::CommonTokenStream;
 use antlr_rust::tree::ParseTree;
@@ -26,61 +30,6 @@ use crate::gen_calc_parser::{
     calculatorlexer::calculatorLexer, calculatorparser::calculatorParser,
 };
 use symengine_rs::basic::Basic;
-
-pub enum Relop {
-    Equal,
-    DoubleEqual,
-    NotEqual,
-    LessThan,
-    GreaterThan,
-    LessThanOrEqual,
-    GreaterThanOrEqual,
-}
-
-impl From<&str> for Relop {
-    fn from(s: &str) -> Self {
-        match s {
-            "=" => Relop::Equal,
-            "==" => Relop::DoubleEqual,
-            "!=" => Relop::NotEqual,
-            "<" => Relop::LessThan,
-            ">" => Relop::GreaterThan,
-            "<=" => Relop::LessThanOrEqual,
-            ">=" => Relop::GreaterThanOrEqual,
-            _ => panic!("Unknown relational operator: {}", s),
-        }
-    }
-}
-
-impl fmt::Debug for Relop {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let s = match self {
-            Relop::DoubleEqual => "==",
-            Relop::Equal => "=",
-            Relop::NotEqual => "!=",
-            Relop::LessThan => "<",
-            Relop::GreaterThan => ">",
-            Relop::LessThanOrEqual => "<=",
-            Relop::GreaterThanOrEqual => ">=",
-        };
-        write!(f, "{}", s)
-    }
-}
-
-impl fmt::Display for Relop {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let s = match self {
-            Relop::DoubleEqual => "==",
-            Relop::Equal => "=",
-            Relop::NotEqual => "!=",
-            Relop::LessThan => "<",
-            Relop::GreaterThan => ">",
-            Relop::LessThanOrEqual => "<=",
-            Relop::GreaterThanOrEqual => ">=",
-        };
-        write!(f, "{}", s)
-    }
-}
 
 pub struct SymEquation {
     pub left: Rc<Basic>,
@@ -314,7 +263,29 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
     }
 
     fn visit_func_(&mut self, ctx: &Func_Context<'input>) -> Self::Return {
-        self.visit_children(ctx)
+        let res = self.visit_children(ctx);
+        let func_name = ctx.get_child(0).unwrap().get_text();
+        let func_args = ctx
+            .get_children()
+            .map(|child| {
+                let arg_text = child.get_text();
+                let arg_value: f64 = arg_text.parse().unwrap_or(0.0);
+                Rc::new(Basic::real(arg_value))
+            })
+            .collect::<Vec<_>>();
+        let func_result = match func_name.as_str() {
+            "sin" => Basic::sin(&func_args[0]),
+            "cos" => Basic::cos(&func_args[0]),
+            "tan" => Basic::tan(&func_args[0]),
+            "asin" => Basic::asin(&func_args[0]),
+            "acos" => Basic::acos(&func_args[0]),
+            "atan" => Basic::atan(&func_args[0]),
+            "exp" => Basic::exp(&func_args[0]),
+            "log" => Basic::log(&func_args[0]),
+            _ => panic!("Unknown function: {}", func_name),
+        };
+        self.visitor_stack.push(Rc::new(func_result));
+        res
     }
 
     fn visit_funcname(&mut self, ctx: &FuncnameContext<'input>) -> Self::Return {

@@ -9,5 +9,6 @@ fn init_logger() {
     info!("Logger initialized");
 }
 
-pub mod evaluator_tests;
+pub mod symengine_evaluator_tests;
+pub mod string_evaluator_tests;
 pub mod general_tests;
