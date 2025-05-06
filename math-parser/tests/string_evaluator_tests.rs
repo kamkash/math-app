@@ -73,3 +73,25 @@ fn test_symstring_eval_error_handling() {
         }
     }
 }
+
+#[test_log::test]
+fn test_symstring_basic_eval() {
+    let x = 10.0f64;
+    let input = format!(
+        "x = {x} 
+         z = x^3 + x^2 / 3 - 9 * x + 21
+         x/3 = 
+        10
+         "
+         
+    );
+    match string_evaluator::evaluate_string(input.as_str()) {
+        Ok(result) => {
+            info!("input: {}", input);
+            info!("result: {}", result);
+        }
+        Err(e) => {
+            info!("Error: {}", e);
+        }
+    }
+}

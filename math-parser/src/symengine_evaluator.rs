@@ -8,7 +8,7 @@ use std::result;
 use std::str::FromStr;
 use std::sync::Arc;
 
-use crate::Relop;
+use crate::{Relop, SymEquation};
 
 use antlr_rust::common_token_stream::CommonTokenStream;
 use antlr_rust::tree::ParseTree;
@@ -30,30 +30,6 @@ use crate::gen_calc_parser::{
     calculatorlexer::calculatorLexer, calculatorparser::calculatorParser,
 };
 use symengine_rs::basic::Basic;
-
-pub struct SymEquation {
-    pub left: Rc<Basic>,
-    pub right: Rc<Basic>,
-    pub relop: Relop,
-}
-
-impl SymEquation {
-    pub fn new(left: Rc<Basic>, right: Rc<Basic>, relop: Relop) -> Self {
-        SymEquation { left, right, relop }
-    }
-}
-
-impl std::fmt::Debug for SymEquation {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:?} {:?} {:?}", self.left, self.relop, self.right)
-    }
-}
-
-impl std::fmt::Display for SymEquation {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{} {} {}", self.left, self.relop, self.right)
-    }
-}
 
 pub struct SymBasicCalcVisitor {
     pub tmp_result: Rc<Basic>,

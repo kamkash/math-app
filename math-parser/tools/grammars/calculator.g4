@@ -66,7 +66,7 @@ signedAtom
     ;
 
 atom
-    :
+    : // allows empty atoms :O
     | scientific
     | variable
     | constant

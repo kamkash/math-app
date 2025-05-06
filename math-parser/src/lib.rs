@@ -1,13 +1,34 @@
 use log::info;
+use symengine_rs::basic::Basic;
 
-use std::fmt;
+use std::{fmt, rc::Rc};
 pub mod gen_calc_parser;
-pub mod symengine_evaluator;
 pub mod string_evaluator;
+pub mod symengine_evaluator;
 
+pub struct SymEquation {
+    pub left: Rc<Basic>,
+    pub right: Rc<Basic>,
+    pub relop: Relop,
+}
 
+impl SymEquation {
+    pub fn new(left: Rc<Basic>, right: Rc<Basic>, relop: Relop) -> Self {
+        SymEquation { left, right, relop }
+    }
+}
 
+impl std::fmt::Debug for SymEquation {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?} {:?} {:?}", self.left, self.relop, self.right)
+    }
+}
 
+impl std::fmt::Display for SymEquation {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{} {} {}", self.left, self.relop, self.right)
+    }
+}
 
 pub enum ArithmeticOp {
     Lparen,
@@ -127,10 +148,6 @@ pub fn evaluate_ascii_math(input: &str) -> String {
     let result = symengine_evaluator::evaluate_ascii_math(input);
     format!("{}", result)
 }
-
-
-
-
 
 pub fn echo_parser(name: &str) -> String {
     info!("parser echo {}", name);

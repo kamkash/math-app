@@ -115,15 +115,44 @@ fn test_evaluator_polynomial_order_bad_result() {
     info!(
         "result: {}",
         visitor
-        .result_table
-        .get(&Basic::symbol("z"))
-        .unwrap()
-        .to_f64()
+            .result_table
+            .get(&Basic::symbol("z"))
+            .unwrap()
+            .to_f64()
     );
     assert_ne!(
-        visitor
-            .result_table
-            .get(&Basic::symbol("z")),
+        visitor.result_table.get(&Basic::symbol("z")),
         Some(&Rc::new(Basic::real(fx))),
     );
+}
+
+#[test_log::test]
+fn test_symehgine_eval_error_handling() {
+    let x = 10.0f64;
+    let input = format!(
+        "x = {x} 
+        10
+         z = x^3 + x^2 / 3 - 9 * x + 21
+         f(x) = x^3 + 3*x^2 + 10
+         x^3 + x^2 / 3 - 9 * x + 21
+         x/3 = 
+         x(1-x) = 
+         "
+    );
+    let mut visitor = SymBasicCalcVisitor::new();
+    let lexer = calculatorLexer::new(InputStream::new(input.as_str()));
+    let token_stream = CommonTokenStream::new(lexer);
+    let mut parser = calculatorParser::new(token_stream);
+
+    let parse_tree = match parser.block() {
+        Ok(tree) => {
+            info!("Parse no errors");
+            tree
+        }
+        Err(e) => {
+            info!("Parse error: {}", e);
+            return;
+        }
+    };
+    let _ = visitor.visit(parse_tree.as_ref());
 }

@@ -44,10 +44,7 @@ fn test_basic_mul_pow_eq() {
 #[allow(unused_variables)]
 #[test]
 fn test_basic_operations() {
-    let x = Basic::symbol("x");
-    let y = Basic::symbol("y");
-    let z = Basic::symbol("z");
-
+    let [x, y, z] = Basic::symbols(["x", "y", "z"]);
     let im1 = Basic::integer(-1);
     let i2 = Basic::integer(2);
     let i3 = Basic::integer(3);
@@ -79,9 +76,7 @@ fn test_pi_div_int() {
 
 #[test]
 fn test_basic_min() {
-    let x = Basic::symbol("x");
-    let y = Basic::symbol("y");
-    let z = Basic::symbol("z");
+    let [x, y, z] = Basic::symbols(["x", "y", "z"]);
 
     // Test min with multiple arguments
     let minimum = Basic::min(vec![&x, &y, &z]);
@@ -111,9 +106,7 @@ fn test_basic_min() {
 
 #[test]
 fn test_basic_max() {
-    let x = Basic::symbol("x");
-    let y = Basic::symbol("y");
-    let z = Basic::symbol("z");
+    let [x, y, z] = Basic::symbols(["x", "y", "z"]);
 
     // Test max with multiple arguments
     let maximum = Basic::max(vec![&x, &y, &z]);
@@ -139,8 +132,7 @@ fn test_basic_max() {
 
 #[test]
 fn test_evaluation_addition() {
-    let x = Basic::symbol("x");
-    let y = Basic::symbol("y");
+    let [x, y]  = Basic::symbols(["x", "y"]);
     let expr = x.add(&y);
     let result = Basic::subs(
         &expr,
@@ -155,9 +147,7 @@ fn test_evaluation_addition() {
 
 #[test]
 fn test_evaluation_compound_interest() {
-    let p = Basic::symbol("p"); // principal
-    let i = Basic::symbol("i"); // interest
-    let n = Basic::symbol("n"); // years
+    let [p, i, n] = Basic::symbols(["p", "i", "n"]);
     let const_one = Basic::integer(1);
 
     let one_plus_i = Basic::add(&const_one, &i);
@@ -274,7 +264,6 @@ fn test_basic_eval_order() {
     let result = Basic::subs(&exp, vec![(&symx, &Basic::real(x))].into_iter());
     info!("eval order exp = {}", result.to_string());
     assert_eq!(result.to_f64(), fx);
-
 }
 
 #[test]
