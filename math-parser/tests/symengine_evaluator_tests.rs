@@ -4,7 +4,7 @@ use log::info;
 use math_parser::gen_calc_parser::{
     calculatorlexer::calculatorLexer, calculatorparser::calculatorParser,
 };
-use math_parser::symengine_evaluator::SymBasicCalcVisitor;
+use math_parser::symengine_basic_evaluator::SymBasicCalcVisitor;
 use std::rc::Rc;
 use symengine_rs::basic::Basic;
 

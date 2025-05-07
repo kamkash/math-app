@@ -301,7 +301,7 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
     }
 }
 
-pub fn evaluate_ascii_math(input: &str) -> String {
+pub fn evaluate_ascii_math_block(input: &str) -> Result<String, String> {
     info!("evaluate_ascii_math {}", input);
     let mut visitor = SymBasicCalcVisitor::new();
     let lexer = calculatorLexer::new(InputStream::new(input));
@@ -309,10 +309,6 @@ pub fn evaluate_ascii_math(input: &str) -> String {
     let mut parser = calculatorParser::new(token_stream);
     let parse_tree = parser.block().unwrap();
     let _ = visitor.visit(parse_tree.as_ref());
-    info!("input: {}", input);
-    info!("visitor block result: {:?}", visitor.block_expressions);
-    info!("visitor symbol table: {:?}", visitor.symbol_table);
-    info!("visitor result table: {:?}", visitor.result_table);
-
-    format!("{:?}", visitor.result_table)
+    let result = format!("{:?}", visitor.result_table);
+    Ok(result)
 }

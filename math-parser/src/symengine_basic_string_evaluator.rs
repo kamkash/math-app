@@ -34,7 +34,7 @@ use crate::gen_calc_parser::{
     calculatorlexer::calculatorLexer, calculatorparser::calculatorParser,
 };
 
-pub fn evaluate_string(input: &str) -> Result<String, String> {
+pub fn evaluate_ascii_math_block(input: &str) -> Result<String, String> {
     let input_stream = InputStream::new(input.into());
     let lexer = calculatorLexer::new(input_stream);
     let token_stream = CommonTokenStream::new(lexer);
@@ -45,7 +45,8 @@ pub fn evaluate_string(input: &str) -> Result<String, String> {
     match result {
         Ok(context) => {
             let mut visitor = SymStringVisitor::new();
-            let result = visitor.visit(&*context);
+            let _ = visitor.visit(&*context);
+            let result = format!("{:?}", visitor.result_table);
             Ok(result)
         }
         Err(e) => Err(format!("parser error {}", e).to_string()),

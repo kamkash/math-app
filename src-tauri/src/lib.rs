@@ -1,7 +1,7 @@
 use lazy_static::lazy_static;
 use libloading::{Library, Symbol};
 use log::{debug, error, info, warn};
-use math_parser::symengine_evaluator;
+use math_parser::symengine_basic_string_evaluator;
 use std::ffi::CStr;
 use std::ffi::CString;
 use std::ffi::{c_char, c_int};
@@ -191,7 +191,7 @@ pub fn echo_rust(estr: &str) -> Result<String, String> {
 
 // fixme:: error handling
 pub fn run_solver_rust(prompt: &str) -> Result<String, String> {
-    let res = symengine_evaluator::evaluate_ascii_math(prompt);
+    let res = symengine_basic_string_evaluator::evaluate_ascii_math_block(prompt)?;
     Ok(res)
 }
 

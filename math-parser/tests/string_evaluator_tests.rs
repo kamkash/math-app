@@ -1,5 +1,5 @@
 use log::info;
-use math_parser::string_evaluator::{self, SymStringVisitor};
+use math_parser::symengine_basic_string_evaluator::{self, SymStringVisitor};
 use test_log;
 
 use antlr_rust::tree::ParseTreeVisitorCompat;
@@ -63,7 +63,7 @@ fn test_symstring_eval_error_handling() {
          "
          
     );
-    match string_evaluator::evaluate_string(input.as_str()) {
+    match symengine_basic_string_evaluator::evaluate_ascii_math_block(input.as_str()) {
         Ok(result) => {
             info!("input: {}", input);
             info!("result: {}", result);
@@ -85,7 +85,7 @@ fn test_symstring_basic_eval() {
          "
          
     );
-    match string_evaluator::evaluate_string(input.as_str()) {
+    match symengine_basic_string_evaluator::evaluate_ascii_math_block(input.as_str()) {
         Ok(result) => {
             info!("input: {}", input);
             info!("result: {}", result);
