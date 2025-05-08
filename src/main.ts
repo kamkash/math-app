@@ -18,10 +18,11 @@ function load_globals() {
 }
 
 async function run_solver(name: string) {
-  console.log(`run solver ${name}`);
   if (responseOutputEl && promptInputEl) {
+    let prompt = convertLatexToAsciiMath(promptInputEl.value);
+    console.log("AsciiMath input", prompt);
     let res = await invoke("run_solver", {
-      input: convertLatexToAsciiMath(promptInputEl.value),
+      input: prompt,
     });
     // let latex = processLatexBlock(res as string);
     responseOutputEl.setValue(res as string, { mode: "text" });
@@ -29,17 +30,14 @@ async function run_solver(name: string) {
 }
 
 async function reset_context(topic: string) {
-  console.log("reset context");
   await invoke("reset_context", { topic: topic });
 }
 
 async function reset_model(name: string) {
-  console.log("reset model");
   await invoke("reset_model", { name: name });
 }
 
 async function add_grammar() {
-  console.log("add grammar");
   if (responseOutputEl && promptInputEl) {
     let res = await invoke("add_grammar", {
       grammar: promptInputEl.value,
@@ -63,6 +61,7 @@ async function greet() {
 async function llm_generate() {
   if (promptInputEl && responseOutputEl) {
     let ascii = convertLatexToAsciiMath(promptInputEl.value);
+    console.log("AsciiMath", ascii);
     ascii += " Important: Answer in LaTeX format.";
     let answer: string = await invoke("llm_generate", {
       prompt: ascii,
