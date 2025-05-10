@@ -3,16 +3,16 @@ use antlr_rust::InputStream;
 use antlr_rust::{common_token_stream::CommonTokenStream, tree::ParseTree};
 use log::info;
 
-use math_parser::gen_calc_parser::calculatorlexer::calculatorLexer;
-use math_parser::gen_calc_parser::calculatorparser::calculatorParser;
+use math_parser::gen_parsers::calculatorlexer::calculatorLexer;
+use math_parser::gen_parsers::calculatorparser::calculatorParser;
 
-use math_parser::gen_calc_parser::calculatorparser::{
+use math_parser::gen_parsers::calculatorparser::{
     calculatorParserContextType, AtomContext, BlockContext, ConstantContext, EquationContext,
     ExpressionContext, Func_Context, FuncnameContext, FunctionDefinitionContext,
     MultiplyingExpressionContext, PowExpressionContext, RelopContext, ScientificContext,
     SignedAtomContext, VariableContext,
 };
-use math_parser::gen_calc_parser::calculatorvisitor::calculatorVisitorCompat;
+use math_parser::gen_parsers::calculatorvisitor::calculatorVisitorCompat;
 
 #[test]
 fn test_calculator_parser() {

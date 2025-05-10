@@ -3,10 +3,9 @@ use std::error::Error;
 use std::process::Command;
 
 fn main() {
-    let grammars = vec!["calculator"];
+    let grammars = vec!["calculator", "AsciiMath2"];
     let additional_args = vec![Some("-visitor"); grammars.len()];
     let antlr_file = "antlr4-4.8-2-SNAPSHOT-complete.jar";
-
     let path_buf = env::current_dir().unwrap();
     let antlr_path = path_buf.join("tools").join("antlr-libs").join(antlr_file);
 
@@ -19,9 +18,8 @@ fn main() {
         );
     }
     println!("cargo:rerun-if-changed=build.rs");
-    println!("cargo:rerun-if-changed=/media/kamran/T7/mathappws/math-app-git/math-parser/tools/antlr-libs/antlr4-4.8-2-SNAPSHOT-complete.jar");
+    println!("cargo:rerun-if-changed={}", antlr_path.to_str().unwrap());
 }
-
 fn gen_for_grammar(
     grammar_file_name: &str,
     antlr_path: &str,
@@ -41,7 +39,7 @@ fn gen_for_grammar(
         .arg("-Dlanguage=Rust")
         .arg("-o")
         // .arg("../../tests/gen")
-        .arg("../../src/gen_calc_parser")
+        .arg("../../src/gen_parsers")
         .arg(&file_name)
         .args(additional_arg)
         .spawn()

@@ -2,7 +2,7 @@ use log::info;
 use symengine_rs::basic::Basic;
 
 use std::{fmt, rc::Rc};
-pub mod gen_calc_parser;
+pub mod gen_parsers;
 pub mod symengine_basic_string_evaluator;
 pub mod symengine_basic_evaluator;
 

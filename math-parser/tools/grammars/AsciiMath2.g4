@@ -2,7 +2,6 @@ grammar AsciiMath2;
 
 // Parser Rules
 
-// Entry point
 block: expression (SEPARATOR expression)* SEPARATOR* EOF;
 
 expression: logical_expression; // Start with lowest precedence
@@ -12,34 +11,31 @@ expression: logical_expression; // Start with lowest precedence
 logical_expression:
 	relation_expression ((AND | OR) relation_expression)*;
 
-// Relational operators (e.g., =, <, >, <=, >=, !=)
 relation_expression:
 	add_sub_expression (
 		(EQ | NEQ | LT | GT | LTE | GTE) add_sub_expression
-	)?; // Allow only one relational op for simplicity here
+	)?;
 
-// Addition and Subtraction (Left associative)
 add_sub_expression:
 	mult_div_implicit_expression (
 		(PLUS | MINUS | PM) mult_div_implicit_expression
 	)*;
 
-// Multiplication, Division, and Implicit Multiplication (Left associative) Order: Handle explicit
-// ops first, then try to parse implicit. This is a tricky part. Implicit multiplication 'atom atom'
-// has high precedence. Let's group them:
 mult_div_implicit_expression:
 	unary_op_expression (
 		(STAR | FSLASH | TIMES | DIV) unary_op_expression
 		| unary_op_expression
-	)*; // Last 'unary_op_expression' is for implicit: 2x, (a)x
+	)*;
 
-// Unary Plus/Minus (Prefix)
-unary_op_expression: (PLUS | MINUS) script_op_expression	# unaryPrefixExpression
-	| script_op_expression									# unaryExpression;
+// Unary operations
+unary_op_expression: (PLUS | MINUS) script_op_expression	# unaryPlusMinus
+	| d_dx_prefix_operator script_op_expression				# appliedDByDxPrefix // For d/dx f(x)
+	| script_op_expression									# noUnaryOperator;
 
-// Superscript (Power), Subscript AsciiMath usually handles scripts after the base: base^script or
-// base_script Power is often right-associative: a^b^c -> a^(b^c) Subscripts/Superscripts have
-// higher precedence than mult/div.
+d_dx_function: d_dx_prefix_operator LPAREN primary_expression RPAREN;
+d_dx_prefix_operator: D_LOWERCASE FSLASH differential;
+differential: D_LOWERCASE (IDENTIFIER | GREEK_LETTER);
+
 script_op_expression:
 	primary_expression (
 		(HAT primary_expression (UNDERSCORE primary_expression)?)
@@ -47,70 +43,85 @@ script_op_expression:
 	| (UNDERSCORE primary_expression (HAT primary_expression)?)	# subscriptPowerExpression
 	| HAT primary_expression									# powerExpression
 	| UNDERSCORE primary_expression								# subscriptExpression
-	| PRIME														# primeExpression ; // Allow multiple scripts like f'_1^2 but needs care
+	| PRIME														# primeExpression; // Allow multiple scripts like f'_1^2 but needs care
 
 // Primary expressions - the highest precedence
 primary_expression:
-	LPAREN expression RPAREN			# parenExpression // (expression)
-	| LBRACE expression RBRACE			# braceExpression // {expression}
-	| LBRACKET matrix_content RBRACKET	# matrixExpression // [a,b;c,d]
-	| ABS expression ABS				# absExpression // |expression|  (abs() preferred)
-	| L_ANGLE expression R_ANGLE		# angleBracketExpression // (: expression :) or << expression >>
+	// MODIFICATION: Rule for f(x), f'(x), f''(x) etc. This rule takes an IDENTIFIER, optionally
+	// followed by one or more PRIME symbols, then a parenthesized argument list.
+	IDENTIFIER (PRIME+)? LPAREN arguments RPAREN # explicitIdentifierCall
 
-	// Standard Functions
-	| func_name LPAREN arguments RPAREN	# functionCall // sin(x), log(x,y)
-	| func_name primary_expression		# functionCallSimple
-	// sin x (less common for multi-char func name but possible)
+	// Rule for built-in function calls like sin(x), log(x) if they can't be primed or have
+	// different syntax BUILTIN_KEYWORD_FUNC_NAME should be a rule or token set for sin, cos, log
+	// etc.
+	| BUILTIN_KEYWORD_FUNC_NAME LPAREN arguments RPAREN # explicitKeywordCall
 
-	// AsciiMath specific functions/keywords as prefix
-	| SQRT primary_expression						# sqrtFunction // sqrt x or sqrt(x)
-	| ROOT primary_expression primary_expression	# rootFunction // root n x
-	| FRAC primary_expression primary_expression	# fracFunction // frac num den
-	| TEXT LPAREN text_argument RPAREN				# textFunction // text("some text") or text(x)
+	// Rule for built-in functions that don't use parentheses in AsciiMath like sin x (If different
+	// from SQRT primary_expression etc. which are already prefix ops)
+	| BUILTIN_KEYWORD_FUNC_NAME primary_expression # simpleKeywordCall // e.g., sin x
 
-	// Calculus
+	// Specific parenthesized structures first: 1. Column vectors like ((a),(b),(c)) where comma
+	// separates rows of parenthesized elements
+	| LPAREN paren_element_for_column_vector (
+		COMMA paren_element_for_column_vector
+	)* RPAREN # parenColumnVector
+
+	// 2. Parentheses for matrices (e.g. (a,b; c,d) ) or row vectors (e.g. (a,b,c) ) This rule will
+	// also catch single expressions like (x) if not caught by parenExpression first or if
+	// paren_column_vector_row fails.
+	| LPAREN matrix_content RPAREN # parenMatrix
+
+	// 3. General parentheses for grouping any expression (fallback for simple grouping)
+	| LPAREN expression RPAREN # parenExpression
+
+	// Standard matrix with square brackets (can represent row or column vectors too)
+	| LBRACKET matrix_content RBRACKET # bracketMatrix
+
+	// Angle bracket vectors (typically row vectors like <x,y,z> or (:x,y,z:))
+	| L_ANGLE matrix_row R_ANGLE						# angleBracketRowVector
+	| LBRACE expression RBRACE							# braceExpression // e.g. {a+b}
+	| ABS expression ABS								# absExpression // |expression|
+	| IDENTIFIER (PRIME+)? LPAREN arguments RPAREN		# explicitIdentifierCall // f(x), f'(x)
+	| BUILTIN_KEYWORD_FUNC_NAME LPAREN arguments RPAREN	# explicitKeywordCall // sin(x), vec(x,y,z)
+	| BUILTIN_KEYWORD_FUNC_NAME primary_expression		# simpleKeywordCall // e.g., sin x
+	| SQRT primary_expression							# sqrtFunction
+	| ROOT primary_expression primary_expression		# rootFunction
+	| FRAC primary_expression primary_expression		# fracFunction
+	| TEXT LPAREN text_argument RPAREN					# textFunction
 	| INTEGRAL (UNDERSCORE primary_expression)? (
 		HAT primary_expression
-	)? primary_expression (differential_dx)?				# integralExpression // int_a^b f(x) dx
-	| DERIV primary_expression (WTRT primary_expression)?	# derivativeFunction
-	// deriv(f) or deriv(f,x)
-	| PARTIAL primary_expression (WTRT primary_expression)? # partialFunction
-	// partial(f) or partial(f,x)
-	| D_LOWERCASE primary_expression FSLASH D_LOWERCASE primary_expression					# LeibnizNotation // dy/dx
+	)? primary_expression (differential)?													# integralExpression
+	| DERIV primary_expression (wrt_argument)?												# derivativeFunction
+	| PARTIAL primary_expression (wrt_argument)?											# partialFunction
+	| differential FSLASH differential														# fractionLeibniz
 	| LIM UNDERSCORE primary_expression (TO | RARROW) primary_expression primary_expression	#
-		limitExpression // lim_(x->a) f(x)
+		limitExpression
 
-	// Linear Algebra specific constructs or functions
-	| VEC primary_expression			# vecFunction // vec(x)
-	| MAT LPAREN matrix_content RPAREN	# matFunction // mat([a,b];[c,d])
-	| DET primary_expression			# detFunction // det(A)
-	| TRANSPOSE primary_expression		# transposeFunction // T A or transpose(A)
+	// Explicit MAT constructor (if different from bracketMatrix/parenMatrix)
+	| MAT LPAREN matrix_content RPAREN	# matFunction // mat((a,b];[c,d]))
+	| DET primary_expression			# detFunction
+	| TRANSPOSE primary_expression		# transposeFunction
+	| IDENTIFIER						# identifierAtom
+	| NUMBER							# numberAtom
+	| GREEK_LETTER						# greekLetterAtom
+	| constant_symbol					# constantAtom
+	| STRING							# stringAtom;
 
-	// Atoms
-	| NUMBER			# numberAtom
-	| IDENTIFIER		# identifierAtom
-	| GREEK_LETTER		# greekLetterAtom
-	| constant_symbol	# constantAtom
-	| STRING			# stringAtom; // "text"
+// Rule for elements of the specific ((a),(b)) column vector style
+paren_element_for_column_vector: LPAREN expression RPAREN;
 
-arguments:
-	expression (COMMA expression)*
-	|; // Allows empty arguments for f()
+arguments: expression (COMMA expression)* |;
+text_argument: STRING | expression;
+wrt_argument: COMMA expression;
 
-text_argument: STRING | expression; // text("hello") or text(var)
-
-differential_dx:
-	D_LOWERCASE (IDENTIFIER | GREEK_LETTER); // dx, dy, dtheta
-
-// For derivatives like deriv(f,x) or partial(f,x) meaning 'with respect to x' wrt_expression: WRT
-// primary_expression;
-
-// Matrix content: rows separated by semicolon, elements by comma
 matrix_content: matrix_row (SEMICOLON matrix_row)*;
+// Can be a full matrix, a row vector (1 row), or a column vector (1 col)
 
-matrix_row: expression (COMMA expression)*;
+matrix_row:
+	expression (COMMA expression)*; // Represents a single row with comma-separated elements
 
-func_name:
+// For functions like sin, cos, log, and now vec
+BUILTIN_KEYWORD_FUNC_NAME:
 	SIN
 	| COS
 	| TAN
@@ -143,13 +154,15 @@ func_name:
 	| ROUND
 	| MIN
 	| MAX
-	| ABS_FUNC // abs as a function name
+	| ABS_FUNC
 	| NORM
-	| SUM
-	| PROD
 	| CARD
-	| IDENTIFIER; // For any other function name like f, g, myFunc
-
+	| SUM
+	| PROD // if used as name(args)
+	| VEC; // Added VEC here
+// Note: SQRT, FRAC, ROOT, TEXT, DET, TRANSPOSE are handled by their own specific rules in
+// primary_expression MAT is also a specific rule (matFunction) if it's a keyword based
+// constructor.;
 constant_symbol:
 	PI_CONST
 	| E_CONST
@@ -161,17 +174,17 @@ constant_symbol:
 	| NAN_CONST
 	| PHI_CONST;
 
-// Lexer Rules (Tokens) Keywords should be defined before IDENTIFIER
+// --- Lexer Rules (Tokens) --- (Ensure these are complete and correctly ordered, Keywords before
+// IDENTIFIER)
 
-// Calculus Keywords
 INTEGRAL: 'int' | '\u222B';
-DERIV: 'deriv'; // Using 'deriv' for d/dx as a function
+D_LOWERCASE: 'd';
+DERIV: 'deriv' | DBYD;
+DBYD: D_LOWERCASE WS* FSLASH D_LOWERCASE (IDENTIFIER | GREEK_LETTER);
 PARTIAL: 'partial' | 'del' | '\u2202';
 LIM: 'lim';
-D_LOWERCASE:
-	'd'; // For dy/dx, needs to be distinct from identifier 'd' if possible, context helps
 
-// Standard Function Keywords (many are similar to IDENTIFIER, context in parser helps)
+// Function name keywords
 SIN: 'sin';
 COS: 'cos';
 TAN: 'tan';
@@ -199,10 +212,6 @@ ACOTH: 'acoth' | 'arcoth';
 LOG: 'log';
 LN: 'ln';
 EXP: 'exp';
-SQRT: 'sqrt' | '\u221A';
-ROOT: 'root';
-FRAC: 'frac';
-TEXT: 'text';
 FLOOR: 'floor';
 CEIL: 'ceil';
 ROUND: 'round';
@@ -210,63 +219,55 @@ MIN: 'min';
 MAX: 'max';
 NORM: 'norm';
 CARD: 'card';
-ABS_FUNC:
-	'abs'; // abs as a function name to distinguish from |x|
+ABS_FUNC: 'abs'; // abs as a function name
+SUM: 'sum' | '\u2211';
+PROD: 'prod' | '\u220F';
+VEC: 'vec'; // Token for the vec function
 
-// Linear Algebra Keywords
-VEC: 'vec';
-MAT: 'mat'; // For mat(...) construct
+// Other keywords used as prefix operators or specific structures
+SQRT: 'sqrt' | '\u221A';
+ROOT: 'root';
+FRAC: 'frac';
+TEXT: 'text';
+MAT:
+	'mat'; // Keyword for explicit matrix constructor e.g. mat(...)
 DET: 'det';
 TRANSPOSE:
 	'transpose'
 	| ('T' ~[a-zA-Z0-9]); // T not followed by letter/digit (e.g. T A)
 
-// Summation/Product Keywords
-SUM: 'sum' | '\u2211';
-PROD: 'prod' | '\u220F';
-
 // Constant Keywords
 PI_CONST: 'pi' | '\u03C0';
-E_CONST:
-	'e'; // Euler's number 'e' can be tricky if also a variable
-I_CONST: 'i'; // Imaginary unit 'i'
+E_CONST: 'e';
+I_CONST: 'i';
 INFINITY_CONST: 'oo' | 'infty' | '\u221E';
-GAMMA_CONST:
-	'gamma'
-	| '\u03B3'; // If 'gamma' is always Euler-Mascheroni, otherwise GREEK_LETTER
-PHI_CONST:
-	'phi'
-	| '\u03C6'; // Golden ratio, if always this, otherwise GREEK_LETTER
+GAMMA_CONST: 'gamma' | '\u03B3';
+PHI_CONST: 'phi' | '\u03C6';
 TRUE_CONST: 'true';
 FALSE_CONST: 'false';
 NAN_CONST: 'NaN';
 
-// Operators (Order can matter if ambiguous, e.g. '-' vs '->')
+// Operators
 PLUS: '+';
 MINUS: '-';
-STAR: '*'; // Explicit multiplication
-FSLASH: '/'; // Division or fraction
+STAR: '*';
+FSLASH: '/';
 HAT: '^';
 UNDERSCORE: '_';
 PRIME: '\'';
-BANG: '!'; // Factorial
-EQ: '='; // Equality, not assignment in expressions
+BANG: '!';
+EQ: '=';
 NEQ: '!=' | '<>';
 LT: '<';
 GT: '>';
 LTE: '<=' | 'le';
 GTE: '>=' | 'ge';
-TO: 'to'; // For limits x->a
-RARROW: '->' | '\u2192'; // Right arrow
-LARROW: '<-' | '\u2190'; // Left arrow (if needed)
-PM: '+-' | '\u00B1'; // Plus-minus
-TIMES:
-	'xx'
-	| 'cdot'
-	| '\u00D7'
-	| '\u22C5'; // Multiplication cross/dot
-DIV: '-:' | 'div' | '\u00F7'; // Division symbol
-WTRT: 'wrt'; // "with respect to" for derivatives
+TO: 'to';
+RARROW: '->' | '\u2192';
+LARROW: '<-' | '\u2190';
+PM: '+-' | '\u00B1';
+TIMES: 'xx' | 'cdot' | '\u00D7' | '\u22C5';
+DIV: '-:' | 'div' | '\u00F7';
 
 AND: 'and';
 OR: 'or';
@@ -279,24 +280,17 @@ LBRACKET: '[';
 RBRACKET: ']';
 LBRACE: '{';
 RBRACE: '}';
-ABS: '|'; // Absolute value bars
-L_ANGLE:
-	'(:'
-	| '<<'
-	| '\u2329'; // Invisible paren, or angle bracket
-R_ANGLE:
-	':)'
-	| '>>'
-	| '\u232A'; // Invisible paren, or angle bracket
+ABS: '|';
+L_ANGLE: '(:' | '<<' | '\u2329';
+R_ANGLE: ':)' | '>>' | '\u232A';
 
 // Separators
 COMMA: ',';
 SEMICOLON: ';';
 
-// Greek Letters (Common ones, more can be added) These should come before IDENTIFIER if they are
-// reserved
+// Greek Letters
 ALPHA_G: 'alpha';
-BETA_G: 'beta'; //GAMMA_G: 'gamma'; // covered by GAMMA_CONST
+BETA_G: 'beta';
 DELTA_G: 'delta';
 EPSILON_G: 'epsilon';
 ZETA_G: 'zeta';
@@ -308,15 +302,13 @@ LAMBDA_G: 'lambda';
 MU_G: 'mu';
 NU_G: 'nu';
 XI_G: 'xi';
-//PI_G: 'pi'; // covered by PI_CONST
 RHO_G: 'rho';
 SIGMA_G: 'sigma';
 TAU_G: 'tau';
-UPSILON_G: 'upsilon'; //PHI_G: 'phi'; // covered by PHI_CONST
+UPSILON_G: 'upsilon';
 CHI_G: 'chi';
 PSI_G: 'psi';
 OMEGA_G: 'omega';
-// Capital Greek letters if needed, e.g., Delta, Sigma, Omega (often IDENTIFIERs)
 GREEK_LETTER:
 	ALPHA_G
 	| BETA_G
@@ -339,20 +331,17 @@ GREEK_LETTER:
 	| PSI_G
 	| OMEGA_G;
 
-// General Identifier (for variables, unrecognized functions) Must be after all keywords that might
-// look like identifiers
-IDENTIFIER:
-	[_]* [a-zA-Z] [a-zA-Z0-9_]*; // Allows underscore in variable names, e.g. x_1
+// General Identifier
+IDENTIFIER: [a-zA-Z] [a-zA-Z0-9_]*;
 
-// Numbers: Integers and decimals, scientific notation optional
+// Numbers
 NUMBER:
 	MINUS? DIGITS ('.' DIGITS)? ([eE] MINUS? DIGITS)?
 	| MINUS? '.' DIGITS ( [eE] MINUS? DIGITS)?;
 fragment DIGITS: [0-9]+;
 
-// String Literals for text("...")
-STRING:
-	'"' (~["\r\n] | '""')*? '"'; // Allows "" for escaped quote
+// String Literals
+STRING: '"' ( ~["\r\n] | '""')*? '"';
 
 SEPARATOR: NEWLINE;
 

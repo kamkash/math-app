@@ -4,7 +4,7 @@ use test_log;
 
 use antlr_rust::tree::ParseTreeVisitorCompat;
 use antlr_rust::{common_token_stream::CommonTokenStream, InputStream};
-use math_parser::gen_calc_parser::{
+use math_parser::gen_parsers::{
     calculatorlexer::calculatorLexer, calculatorparser::calculatorParser,
 };
 

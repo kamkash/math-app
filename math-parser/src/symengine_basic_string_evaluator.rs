@@ -20,17 +20,17 @@ use antlr_rust::{recognizer, InputStream, Parser};
 use log::info;
 use symengine_rs::basic::Basic;
 
-use crate::gen_calc_parser::calculatorparser::{
+use crate::gen_parsers::calculatorparser::{
     calculatorParserContextType, AtomContext, BlockContext, ConstantContext, CurrencyContext,
     EquationContext, EquationContextAttrs, ExpressionContext, ExpressionContextAttrs, Func_Context,
     FuncnameContext, FunctionDefinitionContext, MultiplyingExpressionContext, PowExpressionContext,
     RelopContext, ScientificContext, SignedAtomContext, VariableContext,
 };
-use crate::gen_calc_parser::calculatorparser::{
+use crate::gen_parsers::calculatorparser::{
     MultiplyingExpressionContextAttrs, PowExpressionContextAttrs,
 };
-use crate::gen_calc_parser::calculatorvisitor::calculatorVisitorCompat;
-use crate::gen_calc_parser::{
+use crate::gen_parsers::calculatorvisitor::calculatorVisitorCompat;
+use crate::gen_parsers::{
     calculatorlexer::calculatorLexer, calculatorparser::calculatorParser,
 };
 
@@ -157,7 +157,7 @@ impl<'input> calculatorVisitorCompat<'input> for SymStringVisitor {
     }
     fn visit_relational_expression(
         &mut self,
-        ctx: &crate::gen_calc_parser::calculatorparser::Relational_expressionContext<'input>,
+        ctx: &crate::gen_parsers::calculatorparser::Relational_expressionContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }

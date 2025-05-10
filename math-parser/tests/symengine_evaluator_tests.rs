@@ -1,7 +1,7 @@
 use antlr_rust::tree::ParseTreeVisitorCompat;
 use antlr_rust::{common_token_stream::CommonTokenStream, InputStream};
 use log::info;
-use math_parser::gen_calc_parser::{
+use math_parser::gen_parsers::{
     calculatorlexer::calculatorLexer, calculatorparser::calculatorParser,
 };
 use math_parser::symengine_basic_evaluator::SymBasicCalcVisitor;

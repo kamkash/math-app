@@ -16,17 +16,17 @@ use antlr_rust::tree::{ParseTreeVisitorCompat, Tree};
 use antlr_rust::InputStream;
 use log::info;
 
-use crate::gen_calc_parser::calculatorparser::{
+use crate::gen_parsers::calculatorparser::{
     calculatorParserContextType, AtomContext, BlockContext, ConstantContext, CurrencyContext,
     EquationContext, EquationContextAttrs, ExpressionContext, ExpressionContextAttrs, Func_Context,
     FuncnameContext, FunctionDefinitionContext, MultiplyingExpressionContext, PowExpressionContext,
     RelopContext, ScientificContext, SignedAtomContext, VariableContext,
 };
-use crate::gen_calc_parser::calculatorparser::{
+use crate::gen_parsers::calculatorparser::{
     MultiplyingExpressionContextAttrs, PowExpressionContextAttrs,
 };
-use crate::gen_calc_parser::calculatorvisitor::calculatorVisitorCompat;
-use crate::gen_calc_parser::{
+use crate::gen_parsers::calculatorvisitor::calculatorVisitorCompat;
+use crate::gen_parsers::{
     calculatorlexer::calculatorLexer, calculatorparser::calculatorParser,
 };
 use symengine_rs::basic::Basic;
@@ -112,7 +112,7 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
 
     fn visit_relational_expression(
         &mut self,
-        ctx: &crate::gen_calc_parser::calculatorparser::Relational_expressionContext<'input>,
+        ctx: &crate::gen_parsers::calculatorparser::Relational_expressionContext<'input>,
     ) -> Self::Return {
         let res = self.visit_children(ctx);
         let len = self.visitor_stack.len();
@@ -274,7 +274,7 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
 
     fn visit_multop(
         &mut self,
-        ctx: &crate::gen_calc_parser::calculatorparser::MultopContext<'input>,
+        ctx: &crate::gen_parsers::calculatorparser::MultopContext<'input>,
     ) -> Self::Return {
         let res = self.visit_children(ctx);
         let op_text = ctx.get_text();
@@ -288,7 +288,7 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
 
     fn visit_sumop(
         &mut self,
-        ctx: &crate::gen_calc_parser::calculatorparser::SumopContext<'input>,
+        ctx: &crate::gen_parsers::calculatorparser::SumopContext<'input>,
     ) -> Self::Return {
         let res = self.visit_children(ctx);
         let op_text = ctx.get_text();
