@@ -103,6 +103,8 @@ primary_expression:
 	| TRANSPOSE primary_expression		# transposeFunction
 	| IDENTIFIER						# identifierAtom
 	| NUMBER							# numberAtom
+	| NUMBER_WITH_COMMAS				# numberWithCommasAtom
+	| CURRENCY_NUMBER					# currencyNumberAtom
 	| GREEK_LETTER						# greekLetterAtom
 	| constant_symbol					# constantAtom
 	| STRING							# stringAtom;
@@ -331,14 +333,55 @@ GREEK_LETTER:
 	| PSI_G
 	| OMEGA_G;
 
+fragment CURRENCY_SYMBOL
+    : '$'
+    | '€'
+    | '£'
+    | '¥'
+    ; // Add more symbols as needed
+
+fragment E1
+    : 'E'
+    ;
+
+fragment E2
+    : 'e'
+    ;
+
+fragment SIGN
+    : '+'
+    | '-'
+    ;
+
+
 // General Identifier
-IDENTIFIER: [a-zA-Z] [a-zA-Z0-9_]*;
+IDENTIFIER: [_]* [a-zA-Z] [a-zA-Z0-9_]*;
 
 // Numbers
 NUMBER:
 	MINUS? DIGITS ('.' DIGITS)? ([eE] MINUS? DIGITS)?
 	| MINUS? '.' DIGITS ( [eE] MINUS? DIGITS)?;
 fragment DIGITS: [0-9]+;
+
+NUMBER_WITH_COMMAS
+    : DIGIT+ (',' DIGIT_THREE)* ('.' DIGIT+)?
+    ;
+
+CURRENCY_NUMBER
+    : CURRENCY_SYMBOL (NUMBER_WITH_COMMAS | SCIENTIFIC_NUMBER)
+    ;
+
+SCIENTIFIC_NUMBER
+    : NUMBER ((E1 | E2) SIGN? NUMBER)?
+    ;
+
+fragment DIGIT
+    : [0-9]
+    ;
+
+fragment DIGIT_THREE
+    : DIGIT DIGIT DIGIT
+    ;
 
 // String Literals
 STRING: '"' ( ~["\r\n] | '""')*? '"';
