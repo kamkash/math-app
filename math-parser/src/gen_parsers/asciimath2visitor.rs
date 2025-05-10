@@ -33,6 +33,12 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	fn visit_relation_expression(&mut self, ctx: &Relation_expressionContext<'input>) { self.visit_children(ctx) }
 
 	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#relation_expression_no_rhs}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_relation_expression_no_rhs(&mut self, ctx: &Relation_expression_no_rhsContext<'input>) { self.visit_children(ctx) }
+
+	/**
 	 * Visit a parse tree produced by {@link AsciiMath2Parser#add_sub_expression}.
 	 * @param ctx the parse tree
 	 */
@@ -287,6 +293,20 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	fn visit_numberAtom(&mut self, ctx: &NumberAtomContext<'input>) { self.visit_children(ctx) }
 
 	/**
+	 * Visit a parse tree produced by the {@code numberWithCommasAtom}
+	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_numberWithCommasAtom(&mut self, ctx: &NumberWithCommasAtomContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by the {@code currencyNumberAtom}
+	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_currencyNumberAtom(&mut self, ctx: &CurrencyNumberAtomContext<'input>) { self.visit_children(ctx) }
+
+	/**
 	 * Visit a parse tree produced by the {@code greekLetterAtom}
 	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
 	 * @param ctx the parse tree
@@ -381,6 +401,14 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 	 * @param ctx the parse tree
 	 */
 		fn visit_relation_expression(&mut self, ctx: &Relation_expressionContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#relation_expression_no_rhs}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_relation_expression_no_rhs(&mut self, ctx: &Relation_expression_no_rhsContext<'input>) -> Self::Return {
 			self.visit_children(ctx)
 		}
 
@@ -713,6 +741,24 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 		}
 
 	/**
+	 * Visit a parse tree produced by the {@code numberWithCommasAtom}
+	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_numberWithCommasAtom(&mut self, ctx: &NumberWithCommasAtomContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by the {@code currencyNumberAtom}
+	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_currencyNumberAtom(&mut self, ctx: &CurrencyNumberAtomContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
 	 * Visit a parse tree produced by the {@code greekLetterAtom}
 	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
 	 * @param ctx the parse tree
@@ -818,6 +864,11 @@ where
 
 	fn visit_relation_expression(&mut self, ctx: &Relation_expressionContext<'input>){
 		let result = <Self as AsciiMath2VisitorCompat>::visit_relation_expression(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_relation_expression_no_rhs(&mut self, ctx: &Relation_expression_no_rhsContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_relation_expression_no_rhs(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
@@ -1003,6 +1054,16 @@ where
 
 	fn visit_numberAtom(&mut self, ctx: &NumberAtomContext<'input>){
 		let result = <Self as AsciiMath2VisitorCompat>::visit_numberAtom(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_numberWithCommasAtom(&mut self, ctx: &NumberWithCommasAtomContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_numberWithCommasAtom(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_currencyNumberAtom(&mut self, ctx: &CurrencyNumberAtomContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_currencyNumberAtom(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 

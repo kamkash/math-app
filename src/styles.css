@@ -24,6 +24,10 @@ button img {
   vertical-align: middle; /* Ensures the image aligns properly */
 }
 
+h3 {
+  margin: 0.3em;
+}
+
 form button {
   margin: 0px;
   font-size: 0.8em;

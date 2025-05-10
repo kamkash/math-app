@@ -12,9 +12,12 @@ logical_expression:
 	relation_expression ((AND | OR) relation_expression)*;
 
 relation_expression:
-	add_sub_expression (
+	relation_expression_no_rhs
+	| add_sub_expression (
 		(EQ | NEQ | LT | GT | LTE | GTE) add_sub_expression
 	)?;
+
+relation_expression_no_rhs: add_sub_expression EQ SEPARATOR+;
 
 add_sub_expression:
 	mult_div_implicit_expression (
@@ -32,7 +35,8 @@ unary_op_expression: (PLUS | MINUS) script_op_expression	# unaryPlusMinus
 	| d_dx_prefix_operator script_op_expression				# appliedDByDxPrefix // For d/dx f(x)
 	| script_op_expression									# noUnaryOperator;
 
-d_dx_function: d_dx_prefix_operator LPAREN primary_expression RPAREN;
+d_dx_function:
+	d_dx_prefix_operator LPAREN primary_expression RPAREN;
 d_dx_prefix_operator: D_LOWERCASE FSLASH differential;
 differential: D_LOWERCASE (IDENTIFIER | GREEK_LETTER);
 
@@ -182,7 +186,11 @@ constant_symbol:
 INTEGRAL: 'int' | '\u222B';
 D_LOWERCASE: 'd';
 DERIV: 'deriv' | DBYD;
-DBYD: D_LOWERCASE WS* FSLASH D_LOWERCASE (IDENTIFIER | GREEK_LETTER);
+DBYD:
+	D_LOWERCASE WS* FSLASH D_LOWERCASE (
+		IDENTIFIER
+		| GREEK_LETTER
+	);
 PARTIAL: 'partial' | 'del' | '\u2202';
 LIM: 'lim';
 
@@ -333,26 +341,17 @@ GREEK_LETTER:
 	| PSI_G
 	| OMEGA_G;
 
-fragment CURRENCY_SYMBOL
-    : '$'
-    | '€'
-    | '£'
-    | '¥'
-    ; // Add more symbols as needed
+fragment CURRENCY_SYMBOL:
+	'$'
+	| '€'
+	| '£'
+	| '¥'; // Add more symbols as needed
 
-fragment E1
-    : 'E'
-    ;
+fragment E1: 'E';
 
-fragment E2
-    : 'e'
-    ;
+fragment E2: 'e';
 
-fragment SIGN
-    : '+'
-    | '-'
-    ;
-
+fragment SIGN: '+' | '-';
 
 // General Identifier
 IDENTIFIER: [_]* [a-zA-Z] [a-zA-Z0-9_]*;
@@ -363,25 +362,16 @@ NUMBER:
 	| MINUS? '.' DIGITS ( [eE] MINUS? DIGITS)?;
 fragment DIGITS: [0-9]+;
 
-NUMBER_WITH_COMMAS
-    : DIGIT+ (',' DIGIT_THREE)* ('.' DIGIT+)?
-    ;
+NUMBER_WITH_COMMAS: DIGIT+ (',' DIGIT_THREE)* ('.' DIGIT+)?;
 
-CURRENCY_NUMBER
-    : CURRENCY_SYMBOL (NUMBER_WITH_COMMAS | SCIENTIFIC_NUMBER)
-    ;
+CURRENCY_NUMBER:
+	CURRENCY_SYMBOL (NUMBER_WITH_COMMAS | SCIENTIFIC_NUMBER);
 
-SCIENTIFIC_NUMBER
-    : NUMBER ((E1 | E2) SIGN? NUMBER)?
-    ;
+SCIENTIFIC_NUMBER: NUMBER ((E1 | E2) SIGN? NUMBER)?;
 
-fragment DIGIT
-    : [0-9]
-    ;
+fragment DIGIT: [0-9];
 
-fragment DIGIT_THREE
-    : DIGIT DIGIT DIGIT
-    ;
+fragment DIGIT_THREE: DIGIT DIGIT DIGIT;
 
 // String Literals
 STRING: '"' ( ~["\r\n] | '""')*? '"';
