@@ -17,7 +17,7 @@ relation_expression:
 		(EQ | NEQ | LT | GT | LTE | GTE) add_sub_expression
 	)?;
 
-relation_expression_no_rhs: add_sub_expression EQ SEPARATOR+;
+relation_expression_no_rhs: add_sub_expression EQ (SEPARATOR+ | EOF);
 
 add_sub_expression:
 	mult_div_implicit_expression (
