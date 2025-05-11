@@ -17,7 +17,7 @@ relation_expression:
 		(EQ | NEQ | LT | GT | LTE | GTE) add_sub_expression
 	)?;
 
-relation_expression_no_rhs: add_sub_expression EQ (SEPARATOR+ | EOF);
+relation_expression_no_rhs: add_sub_expression EQ SEPARATOR+;
 
 add_sub_expression:
 	mult_div_implicit_expression (
@@ -32,12 +32,15 @@ mult_div_implicit_expression:
 
 // Unary operations
 unary_op_expression: (PLUS | MINUS) script_op_expression	# unaryPlusMinus
+	| d_dx_function											# appliedDByDxFunction // For d/dx f(x)
 	| d_dx_prefix_operator script_op_expression				# appliedDByDxPrefix // For d/dx f(x)
 	| script_op_expression									# noUnaryOperator;
 
 d_dx_function:
 	d_dx_prefix_operator LPAREN primary_expression RPAREN;
+
 d_dx_prefix_operator: D_LOWERCASE FSLASH differential;
+
 differential: D_LOWERCASE (IDENTIFIER | GREEK_LETTER);
 
 script_op_expression:
