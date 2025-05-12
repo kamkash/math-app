@@ -1,15 +1,35 @@
 use std::rc::Rc;
 
+use crate::gen_parsers::asciimath2lexer::AsciiMath2Lexer;
 use crate::gen_parsers::asciimath2parser::{
-    AsciiMath2ParserContextType, BraceExpressionContext, BracketMatrixContext,
+    AsciiMath2Parser, AsciiMath2ParserContextType, BraceExpressionContext, BracketMatrixContext,
     NoUnaryOperatorContext, ParenExpressionContext,
 };
+use antlr_rust::common_token_stream::CommonTokenStream;
 use antlr_rust::tree::{ParseTree, ParseTreeVisitorCompat, TerminalNode, Tree};
+use antlr_rust::InputStream;
 use log::info;
 use symengine_rs::basic::Basic;
 
 use crate::gen_parsers::asciimath2visitor::AsciiMath2VisitorCompat;
 use crate::{Relop, SymEquation};
+
+pub fn evaluate_ascii_math_block(input: &str) -> Result<String, String> {
+    let mut visitor = AsciiMathVisitor::new();
+    let lexer = AsciiMath2Lexer::new(InputStream::new(input));
+    let token_stream = CommonTokenStream::new(lexer);
+    let mut parser = AsciiMath2Parser::new(token_stream);
+    let result = parser.block();
+    // If parsing succeeded, visit the parse tree
+    match result {
+        Ok(context) => {
+            let _ = visitor.visit(&*context);
+            let result = format!("{:?}", visitor.result_table);
+            Ok(result)
+        }
+        Err(e) => Err(format!("parser error {}", e).to_string()),
+    }
+}
 
 pub struct AsciiMathVisitor {
     equation_count: u32,
@@ -106,7 +126,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
     ) -> Self::Return {
         let res = self.visit_children(ctx);
         let len = ctx.get_child_count();
-        
+
         if len == 3 {
             info!("Equation: count {}, {}", len, ctx.get_text());
             let mut left = ctx.get_child(0).unwrap().get_text().to_string();
@@ -127,7 +147,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
                 right
             };
             let symeq = SymEquation::new(
-                Rc::new(Basic::parse(&left).unwrap()),                
+                Rc::new(Basic::parse(&left).unwrap()),
                 Rc::new(Basic::parse(&right).unwrap()),
                 Relop::from(oper.as_str()),
             );
