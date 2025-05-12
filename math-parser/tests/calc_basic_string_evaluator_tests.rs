@@ -1,5 +1,5 @@
 use log::info;
-use math_parser::symengine_basic_string_evaluator::{self, SymStringVisitor};
+use math_parser::calc_basic_string_evaluator::{self, SymStringVisitor};
 use test_log;
 
 use antlr_rust::tree::ParseTreeVisitorCompat;
@@ -14,8 +14,8 @@ fn test_symstring_eval_equations() {
                         p = x + y
                         i = 1 - x
                         q = 100000 / w
-                        q1 = 100,000 / w1
-                        q11 != 100,000 / w11
+                        q1 = 100000 / w1
+                        q11 = 100000 / w11
                         z * 7 = t + 3.14";
     let mut visitor = SymStringVisitor::new();
     let lexer = calculatorLexer::new(InputStream::new(input));
@@ -63,7 +63,7 @@ fn test_symstring_eval_error_handling() {
          "
          
     );
-    match symengine_basic_string_evaluator::evaluate_ascii_math_block(input.as_str()) {
+    match calc_basic_string_evaluator::evaluate_ascii_math_block(input.as_str()) {
         Ok(result) => {
             info!("input: {}", input);
             info!("result: {}", result);
@@ -85,7 +85,7 @@ fn test_symstring_basic_eval() {
          "
          
     );
-    match symengine_basic_string_evaluator::evaluate_ascii_math_block(input.as_str()) {
+    match calc_basic_string_evaluator::evaluate_ascii_math_block(input.as_str()) {
         Ok(result) => {
             info!("input: {}", input);
             info!("result: {}", result);

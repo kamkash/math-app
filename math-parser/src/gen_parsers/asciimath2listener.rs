@@ -87,6 +87,18 @@ fn enter_unaryPlusMinus(&mut self, _ctx: &UnaryPlusMinusContext<'input>) { }
  */
 fn exit_unaryPlusMinus(&mut self, _ctx: &UnaryPlusMinusContext<'input>) { }
 /**
+ * Enter a parse tree produced by the {@code appliedDByDxFunction}
+ * labeled alternative in {@link AsciiMath2Parser#unary_op_expression}.
+ * @param ctx the parse tree
+ */
+fn enter_appliedDByDxFunction(&mut self, _ctx: &AppliedDByDxFunctionContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code appliedDByDxFunction}
+ * labeled alternative in {@link AsciiMath2Parser#unary_op_expression}.
+ * @param ctx the parse tree
+ */
+fn exit_appliedDByDxFunction(&mut self, _ctx: &AppliedDByDxFunctionContext<'input>) { }
+/**
  * Enter a parse tree produced by the {@code appliedDByDxPrefix}
  * labeled alternative in {@link AsciiMath2Parser#unary_op_expression}.
  * @param ctx the parse tree

@@ -58,6 +58,13 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	fn visit_unaryPlusMinus(&mut self, ctx: &UnaryPlusMinusContext<'input>) { self.visit_children(ctx) }
 
 	/**
+	 * Visit a parse tree produced by the {@code appliedDByDxFunction}
+	 * labeled alternative in {@link AsciiMath2Parser#unary_op_expression}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_appliedDByDxFunction(&mut self, ctx: &AppliedDByDxFunctionContext<'input>) { self.visit_children(ctx) }
+
+	/**
 	 * Visit a parse tree produced by the {@code appliedDByDxPrefix}
 	 * labeled alternative in {@link AsciiMath2Parser#unary_op_expression}.
 	 * @param ctx the parse tree
@@ -434,6 +441,15 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 	 * @param ctx the parse tree
 	 */
 		fn visit_unaryPlusMinus(&mut self, ctx: &UnaryPlusMinusContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by the {@code appliedDByDxFunction}
+	 * labeled alternative in {@link AsciiMath2Parser#unary_op_expression}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_appliedDByDxFunction(&mut self, ctx: &AppliedDByDxFunctionContext<'input>) -> Self::Return {
 			self.visit_children(ctx)
 		}
 
@@ -884,6 +900,11 @@ where
 
 	fn visit_unaryPlusMinus(&mut self, ctx: &UnaryPlusMinusContext<'input>){
 		let result = <Self as AsciiMath2VisitorCompat>::visit_unaryPlusMinus(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_appliedDByDxFunction(&mut self, ctx: &AppliedDByDxFunctionContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_appliedDByDxFunction(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 

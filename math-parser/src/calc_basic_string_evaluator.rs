@@ -30,9 +30,7 @@ use crate::gen_parsers::calculatorparser::{
     MultiplyingExpressionContextAttrs, PowExpressionContextAttrs,
 };
 use crate::gen_parsers::calculatorvisitor::calculatorVisitorCompat;
-use crate::gen_parsers::{
-    calculatorlexer::calculatorLexer, calculatorparser::calculatorParser,
-};
+use crate::gen_parsers::{calculatorlexer::calculatorLexer, calculatorparser::calculatorParser};
 
 pub fn evaluate_ascii_math_block(input: &str) -> Result<String, String> {
     let input_stream = InputStream::new(input.into());
@@ -155,6 +153,7 @@ impl<'input> calculatorVisitorCompat<'input> for SymStringVisitor {
         self.block_expressions.push(symeq);
         res
     }
+
     fn visit_relational_expression(
         &mut self,
         ctx: &crate::gen_parsers::calculatorparser::Relational_expressionContext<'input>,

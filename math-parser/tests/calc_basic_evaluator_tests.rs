@@ -4,7 +4,7 @@ use log::info;
 use math_parser::gen_parsers::{
     calculatorlexer::calculatorLexer, calculatorparser::calculatorParser,
 };
-use math_parser::symengine_basic_evaluator::SymBasicCalcVisitor;
+use math_parser::calc_basic_evaluator::SymBasicCalcVisitor;
 use std::rc::Rc;
 use symengine_rs::basic::Basic;
 
@@ -127,7 +127,7 @@ fn test_evaluator_polynomial_order_bad_result() {
 }
 
 #[test_log::test]
-fn test_symehgine_eval_error_handling() {
+fn test_symengine_eval_error_handling() {
     let x = 10.0f64;
     let input = format!(
         "x = {x} 
