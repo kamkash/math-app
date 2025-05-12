@@ -59,3 +59,26 @@ fn test_asciimath_compound_interest() {
         Some(&Rc::new(Basic::real(compound_interest))),
     );
 }
+
+#[test_log::test]
+fn test_asciimath_eval_expressions_no_rhs() {
+    let input = "-1 + 2 = __ans__
+                        x = 10
+                        y = 3.14159
+                        w = x + y
+                        w1 = 1 - x
+                        w11 = 1 / (1 - x)^2
+                        q = 100000 / w
+                        q1 = 100000 / w1
+                        q11 != 100000 / w11
+                        z * 7 = t + 3.14
+                        t = 
+                        ";
+    let mut visitor = AsciiMathVisitor::new();
+    let lexer = AsciiMath2Lexer::new(InputStream::new(input));
+    let token_stream = CommonTokenStream::new(lexer);
+    let mut parser = AsciiMath2Parser::new(token_stream);
+    let parse_tree = parser.block().unwrap();
+    visitor.visit(parse_tree.as_ref());
+    info!("input: {}", input);
+}

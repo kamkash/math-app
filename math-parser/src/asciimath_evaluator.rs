@@ -140,6 +140,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
         &mut self,
         ctx: &crate::gen_parsers::asciimath2parser::Relation_expression_no_rhsContext<'input>,
     ) -> Self::Return {
+        info!("Relation expression no rhs: {:?}", ctx.get_text());
         self.visit_children(ctx)
     }
 
