@@ -3,14 +3,11 @@ use std::rc::Rc;
 use antlr_rust::tree::ParseTreeVisitorCompat;
 use antlr_rust::{common_token_stream::CommonTokenStream, InputStream};
 use log::info;
-use math_parser::gen_parsers::asciimath2lexer::AsciiMath2Lexer;
 use math_parser::asciimath_evaluator::AsciiMathVisitor;
+use math_parser::gen_parsers::asciimath2lexer::AsciiMath2Lexer;
 use math_parser::gen_parsers::asciimath2parser::AsciiMath2Parser;
 use symengine_rs::basic::Basic;
 use test_log;
-
-
-
 
 #[test_log::test]
 fn test_asciimath_eval_expressions() {
@@ -81,4 +78,36 @@ fn test_asciimath_eval_expressions_no_rhs() {
     let parse_tree = parser.block().unwrap();
     visitor.visit(parse_tree.as_ref());
     info!("input: {}", input);
+}
+
+#[test_log::test]
+fn test_asciimath_eval_trig_expressions() {
+    let x: f64 = 33.0;
+    let y: f64 = x.sin().powi(2) + x.cos().powi(2);
+    let yp: f64 = (2.0 * x).sin().powi(2) + x.powi(2).cos().powi(2);
+
+    let input = format!("x = {:?}    
+                            y = sin(x)^2 + cos(x)^2
+                            yp = sin(2 * x)^2 + cos(x^2)^2",
+                            x
+    );
+    let mut visitor = AsciiMathVisitor::new();
+    let lexer = AsciiMath2Lexer::new(InputStream::new(input.as_str()));
+    let token_stream = CommonTokenStream::new(lexer);
+    let mut parser = AsciiMath2Parser::new(token_stream);
+    let parse_tree = parser.block().unwrap();
+    visitor.visit(parse_tree.as_ref());
+    info!("input: {}", input);
+    assert_eq!(
+        visitor
+            .result_table
+            .get(&Basic::symbol("y")),
+        Some(&Rc::new(Basic::real(y))),
+    );
+    assert_eq!(
+        visitor
+            .result_table
+            .get(&Basic::symbol("yp")),
+        Some(&Rc::new(Basic::real(yp))),
+    );
 }
