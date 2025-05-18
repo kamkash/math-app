@@ -14,6 +14,7 @@ use antlr_rust::common_token_stream::CommonTokenStream;
 use antlr_rust::tree::ParseTree;
 use antlr_rust::tree::{ParseTreeVisitorCompat, Tree};
 use antlr_rust::InputStream;
+use antlr_rust::TidExt;
 use log::info;
 
 use crate::gen_parsers::calculatorparser::{

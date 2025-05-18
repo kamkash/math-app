@@ -17,7 +17,7 @@ relation_expression:
 		(EQ | NEQ | LT | GT | LTE | GTE) add_sub_expression
 	)?;
 
-relation_expression_no_rhs: add_sub_expression EQ SEPARATOR+;
+relation_expression_no_rhs: (add_sub_expression | function_call) EQ;
 
 add_sub_expression:
 	mult_div_implicit_expression (
@@ -32,14 +32,8 @@ mult_div_implicit_expression:
 
 // Unary operations
 unary_op_expression: (PLUS | MINUS) script_op_expression	# unaryPlusMinus
-	| d_dx_function											# appliedDByDxFunction // For d/dx f(x)
-	| d_dx_prefix_operator script_op_expression				# appliedDByDxPrefix // For d/dx f(x)
 	| script_op_expression									# noUnaryOperator;
 
-d_dx_function:
-	d_dx_prefix_operator LPAREN primary_expression RPAREN;
-
-d_dx_prefix_operator: D_LOWERCASE FSLASH differential;
 
 differential: D_LOWERCASE (IDENTIFIER | GREEK_LETTER);
 
@@ -54,18 +48,7 @@ script_op_expression:
 
 // Primary expressions - the highest precedence
 primary_expression:
-	// MODIFICATION: Rule for f(x), f'(x), f''(x) etc. This rule takes an IDENTIFIER, optionally
-	// followed by one or more PRIME symbols, then a parenthesized argument list.
-	IDENTIFIER (PRIME+)? LPAREN arguments RPAREN # explicitIdentifierCall
-
-	// Rule for built-in function calls like sin(x), log(x) if they can't be primed or have
-	// different syntax BUILTIN_KEYWORD_FUNC_NAME should be a rule or token set for sin, cos, log
-	// etc.
-	| BUILTIN_KEYWORD_FUNC_NAME LPAREN arguments RPAREN # explicitKeywordCall
-
-	// Rule for built-in functions that don't use parentheses in AsciiMath like sin x (If different
-	// from SQRT primary_expression etc. which are already prefix ops)
-	| BUILTIN_KEYWORD_FUNC_NAME primary_expression # simpleKeywordCall // e.g., sin x
+	function_call # explicitIdentifierCall
 
 	// Specific parenthesized structures first: 1. Column vectors like ((a),(b),(c)) where comma
 	// separates rows of parenthesized elements
@@ -85,21 +68,21 @@ primary_expression:
 	| LBRACKET matrix_content RBRACKET # bracketMatrix
 
 	// Angle bracket vectors (typically row vectors like <x,y,z> or (:x,y,z:))
-	| L_ANGLE matrix_row R_ANGLE						# angleBracketRowVector
-	| LBRACE expression RBRACE							# braceExpression // e.g. {a+b}
-	| ABS expression ABS								# absExpression // |expression|
-	| IDENTIFIER (PRIME+)? LPAREN arguments RPAREN		# explicitIdentifierCall // f(x), f'(x)
-	| BUILTIN_KEYWORD_FUNC_NAME LPAREN arguments RPAREN	# explicitKeywordCall // sin(x), vec(x,y,z)
-	| BUILTIN_KEYWORD_FUNC_NAME primary_expression		# simpleKeywordCall // e.g., sin x
-	| SQRT primary_expression							# sqrtFunction
-	| ROOT primary_expression primary_expression		# rootFunction
-	| FRAC primary_expression primary_expression		# fracFunction
-	| TEXT LPAREN text_argument RPAREN					# textFunction
+	| L_ANGLE matrix_row R_ANGLE					# angleBracketRowVector
+	| LBRACE expression RBRACE						# braceExpression // e.g. {a+b}
+	| ABS expression ABS							# absExpression // |expression|
+	| IDENTIFIER (PRIME+)? LPAREN arguments RPAREN	# explicitIdentifierCall // f(x), f'(x)
+	| keyword_func									# explicitKeywordCall // sin(x), vec(x,y,z)
+	| simple_keyword_func							# simpleKeywordCall // e.g., sin x
+	| SQRT primary_expression						# sqrtFunction
+	| ROOT primary_expression primary_expression	# rootFunction
+	| FRAC primary_expression primary_expression	# fracFunction
+	| TEXT LPAREN text_argument RPAREN				# textFunction
 	| INTEGRAL (UNDERSCORE primary_expression)? (
 		HAT primary_expression
 	)? primary_expression (differential)?													# integralExpression
-	| DERIV primary_expression (wrt_argument)?												# derivativeFunction
-	| PARTIAL primary_expression (wrt_argument)?											# partialFunction
+	| derivative																			# derivativeFunction
+	| partial_derivative																	# partialFunction
 	| differential FSLASH differential														# fractionLeibniz
 	| LIM UNDERSCORE primary_expression (TO | RARROW) primary_expression primary_expression	#
 		limitExpression
@@ -119,7 +102,7 @@ primary_expression:
 // Rule for elements of the specific ((a),(b)) column vector style
 paren_element_for_column_vector: LPAREN expression RPAREN;
 
-arguments: expression (COMMA expression)* |;
+arguments: expression (COMMA expression)*;
 text_argument: STRING | expression;
 wrt_argument: COMMA expression;
 
@@ -128,6 +111,25 @@ matrix_content: matrix_row (SEMICOLON matrix_row)*;
 
 matrix_row:
 	expression (COMMA expression)*; // Represents a single row with comma-separated elements
+
+keyword_func: BUILTIN_KEYWORD_FUNC_NAME LPAREN arguments RPAREN;
+
+simple_keyword_func:
+	BUILTIN_KEYWORD_FUNC_NAME primary_expression;
+
+deriv_function: DERIV;
+d_by_d: DBYD;
+derivative: (deriv_function | d_by_d) primary_expression (wrt_argument)?;
+
+partial_derivative: PARTIAL primary_expression (wrt_argument)?;
+
+// MODIFICATION: Rule for f(x), f'(x), f''(x) etc. This rule takes an IDENTIFIER, optionally
+// followed by one or more PRIME symbols, then a parenthesized argument list.
+function_call:
+	IDENTIFIER LPAREN arguments RPAREN
+	| IDENTIFIER (PRIME+)? LPAREN arguments RPAREN;
+
+// --- Lexer Rules (Tokens) ---
 
 // For functions like sin, cos, log, and now vec
 BUILTIN_KEYWORD_FUNC_NAME:
@@ -168,7 +170,8 @@ BUILTIN_KEYWORD_FUNC_NAME:
 	| CARD
 	| SUM
 	| PROD // if used as name(args)
-	| VEC; // Added VEC here
+	| VEC // Added VEC here
+	| SOLVE;
 // Note: SQRT, FRAC, ROOT, TEXT, DET, TRANSPOSE are handled by their own specific rules in
 // primary_expression MAT is also a specific rule (matFunction) if it's a keyword based
 // constructor.;
@@ -188,16 +191,17 @@ constant_symbol:
 
 INTEGRAL: 'int' | '\u222B';
 D_LOWERCASE: 'd';
-DERIV: 'deriv' | DBYD;
+DERIV: 'deriv';
 DBYD:
-	D_LOWERCASE WS* FSLASH D_LOWERCASE (
+	LPAREN? D_LOWERCASE RPAREN? FSLASH LPAREN? D_LOWERCASE WS* (
 		IDENTIFIER
 		| GREEK_LETTER
-	);
+	) RPAREN?;
 PARTIAL: 'partial' | 'del' | '\u2202';
 LIM: 'lim';
 
 // Function name keywords
+SOLVE: 'solve';
 SIN: 'sin';
 COS: 'cos';
 TAN: 'tan';

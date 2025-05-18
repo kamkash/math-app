@@ -118,7 +118,7 @@ fn test_evaluator_polynomial_order_bad_result() {
             .result_table
             .get(&Basic::symbol("z"))
             .unwrap()
-            .to_f64()
+            .to_f64().unwrap()
     );
     assert_ne!(
         visitor.result_table.get(&Basic::symbol("z")),

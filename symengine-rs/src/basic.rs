@@ -236,7 +236,7 @@ impl Basic {
         }
         b
     }
-    
+
     /// Computes the natural logarithm (log) of the given `Basic` instance.
     pub fn log(symbol: &Basic) -> Self {
         let b = Basic::new();
@@ -479,18 +479,20 @@ impl Basic {
     // Conversion Functions
     // ===========================
 
-    pub fn to_f64(&self) -> f64 {
-        Self::real_double_get_d_safe(self.inner as *const basic_struct)
+    pub fn to_f64(&self) -> Option<f64> {
+        Some(Self::real_double_get_d_safe(
+            self.inner as *const basic_struct,
+        ))
     }
 
-    pub fn to_i64(&self) -> i64 {
+    pub fn to_i64(&self) -> Option<i64> {
         let result = unsafe { integer_get_si(self.inner as *const basic_struct) };
-        result
+        Some(result)
     }
 
-    pub fn to_u64(&self) -> u64 {
+    pub fn to_u64(&self) -> Option<u64> {
         let result = unsafe { integer_get_ui(self.inner as *const basic_struct) };
-        result
+        Some(result)
     }
 
     pub fn neg(&self) -> Self {
@@ -559,7 +561,9 @@ impl Basic {
         }
     }
 
+    // ===========================
     // solvers
+    // ===========================
 
     // Solves the univariate polynomial equation `self == 0` for the given symbol.
     // Returns a Vec of Basic instances representing the roots.
@@ -584,6 +588,22 @@ impl Basic {
             }
         }
         roots
+    }
+
+    // ===========================
+    // Calculus
+    // ===========================
+    // differentiate self(exp), WRT var
+    pub fn diff(&self, var: &Basic) -> Self {
+        let b = Basic::new();
+        unsafe {
+            basic_diff(
+                b.inner as *mut basic_struct,
+                self.inner as *const basic_struct,
+                var.inner as *const basic_struct,
+            );
+        }
+        b
     }
 }
 
@@ -653,19 +673,19 @@ impl From<f64> for Basic {
 
 impl Into<i64> for Basic {
     fn into(self) -> i64 {
-        self.to_i64()
+        self.to_i64().unwrap()
     }
 }
 
 impl Into<u64> for Basic {
     fn into(self) -> u64 {
-        self.to_u64()
+        self.to_u64().unwrap()
     }
 }
 
 impl Into<f64> for Basic {
     fn into(self) -> f64 {
-        self.to_f64()
+        self.to_f64().unwrap()
     }
 }
 

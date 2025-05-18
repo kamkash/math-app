@@ -2,12 +2,13 @@ use std::rc::Rc;
 
 use crate::gen_parsers::asciimath2lexer::AsciiMath2Lexer;
 use crate::gen_parsers::asciimath2parser::{
-    AsciiMath2Parser, AsciiMath2ParserContextType, BraceExpressionContext, BracketMatrixContext,
-    NoUnaryOperatorContext, ParenExpressionContext,
+    AsciiMath2Parser, AsciiMath2ParserContextType, D_by_dContext, Deriv_functionContext,
+    DerivativeContext, NoUnaryOperatorContext,
 };
 use antlr_rust::common_token_stream::CommonTokenStream;
 use antlr_rust::tree::{ParseTree, ParseTreeVisitorCompat, TerminalNode, Tree};
 use antlr_rust::InputStream;
+use antlr_rust::TidExt;
 use log::info;
 use symengine_rs::basic::Basic;
 
@@ -37,6 +38,7 @@ pub struct AsciiMathVisitor {
     pub block_expressions: Vec<SymEquation>,
     pub symbol_table: std::collections::HashMap<Rc<Basic>, Rc<Basic>>,
     pub result_table: std::collections::HashMap<Rc<Basic>, Rc<Basic>>,
+    visitor_stack: Vec<String>,
 }
 
 impl AsciiMathVisitor {
@@ -47,6 +49,7 @@ impl AsciiMathVisitor {
             block_expressions: Vec::new(),
             symbol_table: std::collections::HashMap::new(),
             result_table: std::collections::HashMap::new(),
+            visitor_stack: Vec::new(),
         }
     }
 
@@ -69,7 +72,7 @@ impl AsciiMathVisitor {
             .symbol_table
             .iter()
             .map(|(sym, expr)| {
-                let value = Basic::rc_subs(expr, self.symbol_table.iter().map(|(k, v)| (k, v)));
+                let value = Basic::rc_subs(expr, self.symbol_table.iter());
                 (Rc::clone(sym), Rc::new(value))
             })
             .collect();
@@ -110,6 +113,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
         &mut self,
         ctx: &crate::gen_parsers::asciimath2parser::ExpressionContext<'input>,
     ) -> Self::Return {
+        self.visitor_stack.clear();
         self.visit_children(ctx)
     }
 
@@ -125,33 +129,35 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
         ctx: &crate::gen_parsers::asciimath2parser::Relation_expressionContext<'input>,
     ) -> Self::Return {
         let res = self.visit_children(ctx);
-        let len = ctx.get_child_count();
-
-        if len == 3 {
-            info!("Equation: count {}, {}", len, ctx.get_text());
-            let mut left = ctx.get_child(0).unwrap().get_text().to_string();
-            let oper = ctx.get_child(1).unwrap().get_text().to_string();
-            let mut right = ctx.get_child(2).unwrap().get_text().to_string();
-            left = if left.is_empty() {
-                let count = self.equation_count;
-                self.equation_count += 1;
-                format!("_{}", count).to_string()
-            } else {
-                left
-            };
-            right = if right.is_empty() {
-                let count = self.equation_count;
-                self.equation_count += 1;
-                format!("_{}", count).to_string()
-            } else {
-                right
-            };
-            let symeq = SymEquation::new(
-                Rc::new(Basic::parse(&left).unwrap()),
-                Rc::new(Basic::parse(&right).unwrap()),
-                Relop::from(oper.as_str()),
-            );
-            self.block_expressions.push(symeq);
+        if self.visitor_stack.is_empty() {
+            // no one else processed this
+            let len = ctx.get_child_count();
+            if len == 3 {
+                info!("Equation: count {}, {}", len, ctx.get_text());
+                let mut left = ctx.get_child(0).unwrap().get_text().to_string();
+                let oper = ctx.get_child(1).unwrap().get_text().to_string();
+                let mut right = ctx.get_child(2).unwrap().get_text().to_string();
+                left = if left.is_empty() {
+                    let count = self.equation_count;
+                    self.equation_count += 1;
+                    format!("__{}__", count).to_string()
+                } else {
+                    left
+                };
+                right = if right.is_empty() {
+                    let count = self.equation_count;
+                    self.equation_count += 1;
+                    format!("__{}__", count).to_string()
+                } else {
+                    right
+                };
+                let symeq = SymEquation::new(
+                    Rc::new(Basic::parse(&left).unwrap()),
+                    Rc::new(Basic::parse(&right).unwrap()),
+                    Relop::from(oper.as_str()),
+                );
+                self.block_expressions.push(symeq);
+            }
         }
         res
     }
@@ -185,35 +191,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
         self.visit_children(ctx)
     }
 
-    fn visit_appliedDByDxFunction(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::AppliedDByDxFunctionContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_appliedDByDxPrefix(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::AppliedDByDxPrefixContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
     fn visit_noUnaryOperator(&mut self, ctx: &NoUnaryOperatorContext<'input>) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_d_dx_function(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::D_dx_functionContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_d_dx_prefix_operator(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::D_dx_prefix_operatorContext<'input>,
-    ) -> Self::Return {
         self.visit_children(ctx)
     }
 
@@ -280,39 +258,6 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
         self.visit_children(ctx)
     }
 
-    fn visit_parenColumnVector(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::ParenColumnVectorContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_parenMatrix(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::ParenMatrixContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_parenExpression(&mut self, ctx: &ParenExpressionContext<'input>) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_bracketMatrix(&mut self, ctx: &BracketMatrixContext<'input>) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_angleBracketRowVector(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::AngleBracketRowVectorContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_braceExpression(&mut self, ctx: &BraceExpressionContext<'input>) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
     fn visit_absExpression(
         &mut self,
         ctx: &crate::gen_parsers::asciimath2parser::AbsExpressionContext<'input>,
@@ -355,11 +300,27 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
         self.visit_children(ctx)
     }
 
-    fn visit_derivativeFunction(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::DerivativeFunctionContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
+    fn visit_derivative(&mut self, ctx: &DerivativeContext<'input>) -> Self::Return {
+        let len = ctx.get_child_count();
+        let res = self.visit_children(ctx);
+        for (index, child) in ctx.get_children().enumerate() {
+            info!("Child at index {}/{}: {:?}", index, len, child.get_text());
+        }
+        if len > 1 {
+            if let Some(fst_child) = ctx.get_child(0) {
+                let is_deriv = fst_child.is::<Deriv_functionContext>();
+                let is_dbyd = fst_child.is::<D_by_dContext>();
+                info!("First child is driv_function: {:?}", is_deriv);
+                info!("First child is d_by_d: {:?}", is_dbyd);
+                let exp_str = ctx.get_child(1).unwrap().get_text();
+                if is_dbyd {
+                    let exp = Basic::parse(&exp_str).unwrap();
+                    let deriv = Basic::diff(&exp, &Basic::symbol("x"));
+                    info!("Derivative: {:?}", deriv);
+                }
+            }
+        }
+        res
     }
 
     fn visit_partialFunction(
@@ -372,132 +333,6 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
     fn visit_fractionLeibniz(
         &mut self,
         ctx: &crate::gen_parsers::asciimath2parser::FractionLeibnizContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_limitExpression(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::LimitExpressionContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_matFunction(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::MatFunctionContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_detFunction(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::DetFunctionContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_transposeFunction(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::TransposeFunctionContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_identifierAtom(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::IdentifierAtomContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_numberAtom(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::NumberAtomContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_numberWithCommasAtom(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::NumberWithCommasAtomContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_currencyNumberAtom(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::CurrencyNumberAtomContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_greekLetterAtom(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::GreekLetterAtomContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_constantAtom(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::ConstantAtomContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_stringAtom(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::StringAtomContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_paren_element_for_column_vector(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::Paren_element_for_column_vectorContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_arguments(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::ArgumentsContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_text_argument(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::Text_argumentContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_wrt_argument(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::Wrt_argumentContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_matrix_content(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::Matrix_contentContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_matrix_row(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::Matrix_rowContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_constant_symbol(
-        &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::Constant_symbolContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }

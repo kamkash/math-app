@@ -100,7 +100,7 @@ fn test_basic_min() {
     );
     info!("Eval result of min: {}", result);
     assert_eq!(result.to_string(), "1.0");
-    let f: f64 = result.to_f64();
+    let f: f64 = result.to_f64().unwrap();
     info!("Result of min f64: {:?}", f);
 }
 
@@ -125,7 +125,7 @@ fn test_basic_max() {
     );
     info!("Eval result of max: {}", result);
     assert_eq!(result.to_string(), "30.0");
-    let f: f64 = result.to_f64();
+    let f: f64 = result.to_f64().unwrap();
     info!("Result of max f64: {:?}", f);
     assert_eq!(f, 30.0f64);
 }
@@ -140,7 +140,7 @@ fn test_evaluation_addition() {
     );
     assert_eq!(result.to_string(), "3.0");
     info!("Result of substitution: {}", result);
-    let f: f64 = result.to_f64();
+    let f: f64 = result.to_f64().unwrap();
     info!("Result of f64: {:?}", f);
     assert_eq!(f, 3.0f64);
 }
@@ -170,7 +170,7 @@ fn test_evaluation_compound_interest() {
         .into_iter(),
     );
     info!("Eval result of compound interest: {:.2}", result);
-    assert_eq!(result.to_f64(), (num_p * (1.0 + num_i).powf(num_n)));
+    assert_eq!(result.to_f64().unwrap(), (num_p * (1.0 + num_i).powf(num_n)));
 }
 
 #[test]
@@ -263,7 +263,7 @@ fn test_basic_eval_order() {
     let exp = Basic::parse(input).expect("Failed to parse expression");
     let result = Basic::subs(&exp, vec![(&symx, &Basic::real(x))].into_iter());
     info!("eval order exp = {}", result.to_string());
-    assert_eq!(result.to_f64(), fx);
+    assert_eq!(result.to_f64().unwrap(), fx);
 }
 
 #[test]
@@ -273,5 +273,20 @@ fn test_basic_funcs() {
     let pi_over_4 = Basic::real(std::f64::consts::FRAC_PI_4);
     let result = Basic::subs(&bsin, vec![(&angle, &pi_over_4)].into_iter());
     info!("sin(pi/4) = {}", result.to_string());
-    assert_eq!(result.to_f64(), std::f64::consts::FRAC_PI_4.sin());
+    assert_eq!(result.to_f64().unwrap(), std::f64::consts::FRAC_PI_4.sin());
 }
+
+#[test]
+fn test_basic_differentiation() {
+    let [x] = Basic::symbols(["x"]);
+    let expr = x.pow(&Basic::integer(3)).add(&x.mul(&Basic::integer(2)));
+    let derivative = Basic::diff(&expr, &x);
+    info!("Derivative of {}: {}", expr, derivative);
+    // assert_eq!(derivative.to_string(), "3*x**2 + 2");
+    assert_eq!(derivative, Basic::parse("3*x**2 + 2").unwrap());
+
+    let trig_expr = Basic::sin(&x).add(&Basic::cos(&x));
+    let trig_derivative = Basic::diff(&trig_expr, &x);
+    info!("Derivative of {}: {}", trig_expr, trig_derivative);
+    assert_eq!(trig_derivative, Basic::parse("cos(x) - sin(x)").unwrap());
+}   

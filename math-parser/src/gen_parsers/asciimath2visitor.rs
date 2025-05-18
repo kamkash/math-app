@@ -58,37 +58,11 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	fn visit_unaryPlusMinus(&mut self, ctx: &UnaryPlusMinusContext<'input>) { self.visit_children(ctx) }
 
 	/**
-	 * Visit a parse tree produced by the {@code appliedDByDxFunction}
-	 * labeled alternative in {@link AsciiMath2Parser#unary_op_expression}.
-	 * @param ctx the parse tree
-	 */
-	fn visit_appliedDByDxFunction(&mut self, ctx: &AppliedDByDxFunctionContext<'input>) { self.visit_children(ctx) }
-
-	/**
-	 * Visit a parse tree produced by the {@code appliedDByDxPrefix}
-	 * labeled alternative in {@link AsciiMath2Parser#unary_op_expression}.
-	 * @param ctx the parse tree
-	 */
-	fn visit_appliedDByDxPrefix(&mut self, ctx: &AppliedDByDxPrefixContext<'input>) { self.visit_children(ctx) }
-
-	/**
 	 * Visit a parse tree produced by the {@code noUnaryOperator}
 	 * labeled alternative in {@link AsciiMath2Parser#unary_op_expression}.
 	 * @param ctx the parse tree
 	 */
 	fn visit_noUnaryOperator(&mut self, ctx: &NoUnaryOperatorContext<'input>) { self.visit_children(ctx) }
-
-	/**
-	 * Visit a parse tree produced by {@link AsciiMath2Parser#d_dx_function}.
-	 * @param ctx the parse tree
-	 */
-	fn visit_d_dx_function(&mut self, ctx: &D_dx_functionContext<'input>) { self.visit_children(ctx) }
-
-	/**
-	 * Visit a parse tree produced by {@link AsciiMath2Parser#d_dx_prefix_operator}.
-	 * @param ctx the parse tree
-	 */
-	fn visit_d_dx_prefix_operator(&mut self, ctx: &D_dx_prefix_operatorContext<'input>) { self.visit_children(ctx) }
 
 	/**
 	 * Visit a parse tree produced by {@link AsciiMath2Parser#differential}.
@@ -139,20 +113,6 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	fn visit_explicitIdentifierCall(&mut self, ctx: &ExplicitIdentifierCallContext<'input>) { self.visit_children(ctx) }
 
 	/**
-	 * Visit a parse tree produced by the {@code explicitKeywordCall}
-	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
-	 * @param ctx the parse tree
-	 */
-	fn visit_explicitKeywordCall(&mut self, ctx: &ExplicitKeywordCallContext<'input>) { self.visit_children(ctx) }
-
-	/**
-	 * Visit a parse tree produced by the {@code simpleKeywordCall}
-	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
-	 * @param ctx the parse tree
-	 */
-	fn visit_simpleKeywordCall(&mut self, ctx: &SimpleKeywordCallContext<'input>) { self.visit_children(ctx) }
-
-	/**
 	 * Visit a parse tree produced by the {@code parenColumnVector}
 	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
 	 * @param ctx the parse tree
@@ -200,6 +160,20 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	 * @param ctx the parse tree
 	 */
 	fn visit_absExpression(&mut self, ctx: &AbsExpressionContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by the {@code explicitKeywordCall}
+	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_explicitKeywordCall(&mut self, ctx: &ExplicitKeywordCallContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by the {@code simpleKeywordCall}
+	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_simpleKeywordCall(&mut self, ctx: &SimpleKeywordCallContext<'input>) { self.visit_children(ctx) }
 
 	/**
 	 * Visit a parse tree produced by the {@code sqrtFunction}
@@ -371,6 +345,48 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	fn visit_matrix_row(&mut self, ctx: &Matrix_rowContext<'input>) { self.visit_children(ctx) }
 
 	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#keyword_func}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_keyword_func(&mut self, ctx: &Keyword_funcContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#simple_keyword_func}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_simple_keyword_func(&mut self, ctx: &Simple_keyword_funcContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#deriv_function}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_deriv_function(&mut self, ctx: &Deriv_functionContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#d_by_d}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_d_by_d(&mut self, ctx: &D_by_dContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#derivative}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_derivative(&mut self, ctx: &DerivativeContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#partial_derivative}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_partial_derivative(&mut self, ctx: &Partial_derivativeContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#function_call}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_function_call(&mut self, ctx: &Function_callContext<'input>) { self.visit_children(ctx) }
+
+	/**
 	 * Visit a parse tree produced by {@link AsciiMath2Parser#constant_symbol}.
 	 * @param ctx the parse tree
 	 */
@@ -445,45 +461,11 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 		}
 
 	/**
-	 * Visit a parse tree produced by the {@code appliedDByDxFunction}
-	 * labeled alternative in {@link AsciiMath2Parser#unary_op_expression}.
-	 * @param ctx the parse tree
-	 */
-		fn visit_appliedDByDxFunction(&mut self, ctx: &AppliedDByDxFunctionContext<'input>) -> Self::Return {
-			self.visit_children(ctx)
-		}
-
-	/**
-	 * Visit a parse tree produced by the {@code appliedDByDxPrefix}
-	 * labeled alternative in {@link AsciiMath2Parser#unary_op_expression}.
-	 * @param ctx the parse tree
-	 */
-		fn visit_appliedDByDxPrefix(&mut self, ctx: &AppliedDByDxPrefixContext<'input>) -> Self::Return {
-			self.visit_children(ctx)
-		}
-
-	/**
 	 * Visit a parse tree produced by the {@code noUnaryOperator}
 	 * labeled alternative in {@link AsciiMath2Parser#unary_op_expression}.
 	 * @param ctx the parse tree
 	 */
 		fn visit_noUnaryOperator(&mut self, ctx: &NoUnaryOperatorContext<'input>) -> Self::Return {
-			self.visit_children(ctx)
-		}
-
-	/**
-	 * Visit a parse tree produced by {@link AsciiMath2Parser#d_dx_function}.
-	 * @param ctx the parse tree
-	 */
-		fn visit_d_dx_function(&mut self, ctx: &D_dx_functionContext<'input>) -> Self::Return {
-			self.visit_children(ctx)
-		}
-
-	/**
-	 * Visit a parse tree produced by {@link AsciiMath2Parser#d_dx_prefix_operator}.
-	 * @param ctx the parse tree
-	 */
-		fn visit_d_dx_prefix_operator(&mut self, ctx: &D_dx_prefix_operatorContext<'input>) -> Self::Return {
 			self.visit_children(ctx)
 		}
 
@@ -550,24 +532,6 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 		}
 
 	/**
-	 * Visit a parse tree produced by the {@code explicitKeywordCall}
-	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
-	 * @param ctx the parse tree
-	 */
-		fn visit_explicitKeywordCall(&mut self, ctx: &ExplicitKeywordCallContext<'input>) -> Self::Return {
-			self.visit_children(ctx)
-		}
-
-	/**
-	 * Visit a parse tree produced by the {@code simpleKeywordCall}
-	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
-	 * @param ctx the parse tree
-	 */
-		fn visit_simpleKeywordCall(&mut self, ctx: &SimpleKeywordCallContext<'input>) -> Self::Return {
-			self.visit_children(ctx)
-		}
-
-	/**
 	 * Visit a parse tree produced by the {@code parenColumnVector}
 	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
 	 * @param ctx the parse tree
@@ -627,6 +591,24 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 	 * @param ctx the parse tree
 	 */
 		fn visit_absExpression(&mut self, ctx: &AbsExpressionContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by the {@code explicitKeywordCall}
+	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_explicitKeywordCall(&mut self, ctx: &ExplicitKeywordCallContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by the {@code simpleKeywordCall}
+	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_simpleKeywordCall(&mut self, ctx: &SimpleKeywordCallContext<'input>) -> Self::Return {
 			self.visit_children(ctx)
 		}
 
@@ -850,6 +832,62 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 		}
 
 	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#keyword_func}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_keyword_func(&mut self, ctx: &Keyword_funcContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#simple_keyword_func}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_simple_keyword_func(&mut self, ctx: &Simple_keyword_funcContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#deriv_function}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_deriv_function(&mut self, ctx: &Deriv_functionContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#d_by_d}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_d_by_d(&mut self, ctx: &D_by_dContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#derivative}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_derivative(&mut self, ctx: &DerivativeContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#partial_derivative}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_partial_derivative(&mut self, ctx: &Partial_derivativeContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#function_call}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_function_call(&mut self, ctx: &Function_callContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
 	 * Visit a parse tree produced by {@link AsciiMath2Parser#constant_symbol}.
 	 * @param ctx the parse tree
 	 */
@@ -903,28 +941,8 @@ where
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
-	fn visit_appliedDByDxFunction(&mut self, ctx: &AppliedDByDxFunctionContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_appliedDByDxFunction(self, ctx);
-        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
-	}
-
-	fn visit_appliedDByDxPrefix(&mut self, ctx: &AppliedDByDxPrefixContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_appliedDByDxPrefix(self, ctx);
-        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
-	}
-
 	fn visit_noUnaryOperator(&mut self, ctx: &NoUnaryOperatorContext<'input>){
 		let result = <Self as AsciiMath2VisitorCompat>::visit_noUnaryOperator(self, ctx);
-        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
-	}
-
-	fn visit_d_dx_function(&mut self, ctx: &D_dx_functionContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_d_dx_function(self, ctx);
-        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
-	}
-
-	fn visit_d_dx_prefix_operator(&mut self, ctx: &D_dx_prefix_operatorContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_d_dx_prefix_operator(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
@@ -963,16 +981,6 @@ where
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
-	fn visit_explicitKeywordCall(&mut self, ctx: &ExplicitKeywordCallContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_explicitKeywordCall(self, ctx);
-        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
-	}
-
-	fn visit_simpleKeywordCall(&mut self, ctx: &SimpleKeywordCallContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_simpleKeywordCall(self, ctx);
-        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
-	}
-
 	fn visit_parenColumnVector(&mut self, ctx: &ParenColumnVectorContext<'input>){
 		let result = <Self as AsciiMath2VisitorCompat>::visit_parenColumnVector(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
@@ -1005,6 +1013,16 @@ where
 
 	fn visit_absExpression(&mut self, ctx: &AbsExpressionContext<'input>){
 		let result = <Self as AsciiMath2VisitorCompat>::visit_absExpression(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_explicitKeywordCall(&mut self, ctx: &ExplicitKeywordCallContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_explicitKeywordCall(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_simpleKeywordCall(&mut self, ctx: &SimpleKeywordCallContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_simpleKeywordCall(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
@@ -1130,6 +1148,41 @@ where
 
 	fn visit_matrix_row(&mut self, ctx: &Matrix_rowContext<'input>){
 		let result = <Self as AsciiMath2VisitorCompat>::visit_matrix_row(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_keyword_func(&mut self, ctx: &Keyword_funcContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_keyword_func(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_simple_keyword_func(&mut self, ctx: &Simple_keyword_funcContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_simple_keyword_func(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_deriv_function(&mut self, ctx: &Deriv_functionContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_deriv_function(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_d_by_d(&mut self, ctx: &D_by_dContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_d_by_d(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_derivative(&mut self, ctx: &DerivativeContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_derivative(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_partial_derivative(&mut self, ctx: &Partial_derivativeContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_partial_derivative(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_function_call(&mut self, ctx: &Function_callContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_function_call(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
