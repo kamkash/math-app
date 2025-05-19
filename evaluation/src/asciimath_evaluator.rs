@@ -1,7 +1,8 @@
 use std::rc::Rc;
 
-use crate::gen_parsers::asciimath2lexer::AsciiMath2Lexer;
-use crate::gen_parsers::asciimath2parser::{
+use asciimath2lexer::AsciiMath2Lexer;
+use math_parser::gen_parsers::asciimath2lexer;
+use math_parser::gen_parsers::asciimath2parser::{
     AsciiMath2Parser, AsciiMath2ParserContextType, D_by_dContext, Deriv_functionContext,
     DerivativeContext, NoUnaryOperatorContext,
 };
@@ -12,7 +13,7 @@ use antlr_rust::TidExt;
 use log::info;
 use symengine_rs::basic::Basic;
 
-use crate::gen_parsers::asciimath2visitor::AsciiMath2VisitorCompat;
+use math_parser::gen_parsers::asciimath2visitor::AsciiMath2VisitorCompat;
 use crate::{Relop, SymEquation};
 
 pub fn evaluate_ascii_math_block(input: &str) -> Result<String, String> {
@@ -100,7 +101,7 @@ impl<'input> ParseTreeVisitorCompat<'input> for AsciiMathVisitor {
 impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
     fn visit_block(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::BlockContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::BlockContext<'input>,
     ) -> Self::Return {
         let res = self.visit_children(ctx);
         info!("block expressions: {:?}", self.block_expressions);
@@ -111,7 +112,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
 
     fn visit_expression(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::ExpressionContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::ExpressionContext<'input>,
     ) -> Self::Return {
         self.visitor_stack.clear();
         self.visit_children(ctx)
@@ -119,14 +120,14 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
 
     fn visit_logical_expression(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::Logical_expressionContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::Logical_expressionContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
 
     fn visit_relation_expression(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::Relation_expressionContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::Relation_expressionContext<'input>,
     ) -> Self::Return {
         let res = self.visit_children(ctx);
         if self.visitor_stack.is_empty() {
@@ -164,7 +165,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
 
     fn visit_relation_expression_no_rhs(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::Relation_expression_no_rhsContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::Relation_expression_no_rhsContext<'input>,
     ) -> Self::Return {
         info!("Relation expression no rhs: {:?}", ctx.get_text());
         self.visit_children(ctx)
@@ -172,21 +173,21 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
 
     fn visit_add_sub_expression(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::Add_sub_expressionContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::Add_sub_expressionContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
 
     fn visit_mult_div_implicit_expression(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::Mult_div_implicit_expressionContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::Mult_div_implicit_expressionContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
 
     fn visit_unaryPlusMinus(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::UnaryPlusMinusContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::UnaryPlusMinusContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
@@ -197,105 +198,105 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
 
     fn visit_differential(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::DifferentialContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::DifferentialContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
 
     fn visit_powerSubscriptExpression(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::PowerSubscriptExpressionContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::PowerSubscriptExpressionContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
 
     fn visit_subscriptPowerExpression(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::SubscriptPowerExpressionContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::SubscriptPowerExpressionContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
 
     fn visit_powerExpression(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::PowerExpressionContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::PowerExpressionContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
 
     fn visit_subscriptExpression(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::SubscriptExpressionContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::SubscriptExpressionContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
 
     fn visit_primeExpression(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::PrimeExpressionContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::PrimeExpressionContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
 
     fn visit_explicitIdentifierCall(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::ExplicitIdentifierCallContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::ExplicitIdentifierCallContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
 
     fn visit_explicitKeywordCall(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::ExplicitKeywordCallContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::ExplicitKeywordCallContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
 
     fn visit_simpleKeywordCall(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::SimpleKeywordCallContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::SimpleKeywordCallContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
 
     fn visit_absExpression(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::AbsExpressionContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::AbsExpressionContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
 
     fn visit_sqrtFunction(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::SqrtFunctionContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::SqrtFunctionContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
 
     fn visit_rootFunction(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::RootFunctionContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::RootFunctionContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
 
     fn visit_fracFunction(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::FracFunctionContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::FracFunctionContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
 
     fn visit_textFunction(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::TextFunctionContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::TextFunctionContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
 
     fn visit_integralExpression(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::IntegralExpressionContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::IntegralExpressionContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
@@ -325,14 +326,14 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
 
     fn visit_partialFunction(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::PartialFunctionContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::PartialFunctionContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
 
     fn visit_fractionLeibniz(
         &mut self,
-        ctx: &crate::gen_parsers::asciimath2parser::FractionLeibnizContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::FractionLeibnizContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }

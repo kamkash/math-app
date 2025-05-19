@@ -20,17 +20,17 @@ use antlr_rust::{recognizer, InputStream, Parser};
 use log::info;
 use symengine_rs::basic::Basic;
 
-use crate::gen_parsers::calculatorparser::{
+use math_parser::gen_parsers::calculatorparser::{
     calculatorParserContextType, AtomContext, BlockContext, ConstantContext, CurrencyContext,
     EquationContext, EquationContextAttrs, ExpressionContext, ExpressionContextAttrs, Func_Context,
     FuncnameContext, FunctionDefinitionContext, MultiplyingExpressionContext, PowExpressionContext,
     RelopContext, ScientificContext, SignedAtomContext, VariableContext,
 };
-use crate::gen_parsers::calculatorparser::{
+use math_parser::gen_parsers::calculatorparser::{
     MultiplyingExpressionContextAttrs, PowExpressionContextAttrs,
 };
-use crate::gen_parsers::calculatorvisitor::calculatorVisitorCompat;
-use crate::gen_parsers::{calculatorlexer::calculatorLexer, calculatorparser::calculatorParser};
+use math_parser::gen_parsers::calculatorvisitor::calculatorVisitorCompat;
+use math_parser::gen_parsers::{calculatorlexer::calculatorLexer, calculatorparser::calculatorParser};
 
 pub fn evaluate_ascii_math_block(input: &str) -> Result<String, String> {
     let input_stream = InputStream::new(input.into());
@@ -156,7 +156,7 @@ impl<'input> calculatorVisitorCompat<'input> for SymStringVisitor {
 
     fn visit_relational_expression(
         &mut self,
-        ctx: &crate::gen_parsers::calculatorparser::Relational_expressionContext<'input>,
+        ctx: &math_parser::gen_parsers::calculatorparser::Relational_expressionContext<'input>,
     ) -> Self::Return {
         self.visit_children(ctx)
     }

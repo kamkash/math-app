@@ -17,17 +17,17 @@ use antlr_rust::InputStream;
 use antlr_rust::TidExt;
 use log::info;
 
-use crate::gen_parsers::calculatorparser::{
+use math_parser::gen_parsers::calculatorparser::{
     calculatorParserContextType, AtomContext, BlockContext, ConstantContext, CurrencyContext,
     EquationContext, EquationContextAttrs, ExpressionContext, ExpressionContextAttrs, Func_Context,
     FuncnameContext, FunctionDefinitionContext, MultiplyingExpressionContext, PowExpressionContext,
     RelopContext, ScientificContext, SignedAtomContext, VariableContext,
 };
-use crate::gen_parsers::calculatorparser::{
+use math_parser::gen_parsers::calculatorparser::{
     MultiplyingExpressionContextAttrs, PowExpressionContextAttrs,
 };
-use crate::gen_parsers::calculatorvisitor::calculatorVisitorCompat;
-use crate::gen_parsers::{
+use math_parser::gen_parsers::calculatorvisitor::calculatorVisitorCompat;
+use math_parser::gen_parsers::{
     calculatorlexer::calculatorLexer, calculatorparser::calculatorParser,
 };
 use symengine_rs::basic::Basic;
@@ -113,7 +113,7 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
 
     fn visit_relational_expression(
         &mut self,
-        ctx: &crate::gen_parsers::calculatorparser::Relational_expressionContext<'input>,
+        ctx: &math_parser::gen_parsers::calculatorparser::Relational_expressionContext<'input>,
     ) -> Self::Return {
         let res = self.visit_children(ctx);
         let len = self.visitor_stack.len();
@@ -275,7 +275,7 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
 
     fn visit_multop(
         &mut self,
-        ctx: &crate::gen_parsers::calculatorparser::MultopContext<'input>,
+        ctx: &math_parser::gen_parsers::calculatorparser::MultopContext<'input>,
     ) -> Self::Return {
         let res = self.visit_children(ctx);
         let op_text = ctx.get_text();
@@ -289,7 +289,7 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
 
     fn visit_sumop(
         &mut self,
-        ctx: &crate::gen_parsers::calculatorparser::SumopContext<'input>,
+        ctx: &math_parser::gen_parsers::calculatorparser::SumopContext<'input>,
     ) -> Self::Return {
         let res = self.visit_children(ctx);
         let op_text = ctx.get_text();

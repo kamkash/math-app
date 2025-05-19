@@ -1,5 +1,5 @@
+use evaluation::calc_basic_string_evaluator::{self, SymStringVisitor};
 use log::info;
-use math_parser::calc_basic_string_evaluator::{self, SymStringVisitor};
 use test_log;
 
 use antlr_rust::tree::ParseTreeVisitorCompat;
@@ -37,7 +37,6 @@ fn test_symstring_eval_eq_func_expr() {
          f(x) = x^3 + 3*x^2 + 10
          x^3 + x^2 / 3 - 9 * x + 21
          x/3 = "
-         
     );
     let mut visitor = SymStringVisitor::new();
     let lexer = calculatorLexer::new(InputStream::new(input.as_str()));
@@ -47,7 +46,6 @@ fn test_symstring_eval_eq_func_expr() {
     visitor.visit(parse_tree.as_ref());
     info!("input: {}", input);
 }
-
 
 #[test_log::test]
 fn test_symstring_eval_error_handling() {
@@ -61,7 +59,6 @@ fn test_symstring_eval_error_handling() {
          x/3 = 
          x(1-x) = 
          "
-         
     );
     match calc_basic_string_evaluator::evaluate_ascii_math_block(input.as_str()) {
         Ok(result) => {
@@ -83,7 +80,6 @@ fn test_symstring_basic_eval() {
          x/3 = 
         10
          "
-         
     );
     match calc_basic_string_evaluator::evaluate_ascii_math_block(input.as_str()) {
         Ok(result) => {
