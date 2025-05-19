@@ -1,7 +1,18 @@
 [workspace]
+resolver = "2"
+
 members = [
     "src-tauri",
     "math-parser",
-    "symengine-rs"
-]
-resolver = "2"
+    "evaluation",
+    "symengine-rs",
+    "core",
+    "calculus",
+    "linear-algebra",
+    "statistics",
+    "algebra"]
+
+[workspace.package]
+version = "0.1.0"
+authors = ["kamkash <mrkamkash@gmail.com>"]
+edition = "2021"
