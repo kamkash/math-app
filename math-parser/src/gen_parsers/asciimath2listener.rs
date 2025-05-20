@@ -223,54 +223,6 @@ fn enter_parenExpression(&mut self, _ctx: &ParenExpressionContext<'input>) { }
  */
 fn exit_parenExpression(&mut self, _ctx: &ParenExpressionContext<'input>) { }
 /**
- * Enter a parse tree produced by the {@code parenColumnVector}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn enter_parenColumnVector(&mut self, _ctx: &ParenColumnVectorContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code parenColumnVector}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn exit_parenColumnVector(&mut self, _ctx: &ParenColumnVectorContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code parenMatrix}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn enter_parenMatrix(&mut self, _ctx: &ParenMatrixContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code parenMatrix}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn exit_parenMatrix(&mut self, _ctx: &ParenMatrixContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code bracketMatrix}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn enter_bracketMatrix(&mut self, _ctx: &BracketMatrixContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code bracketMatrix}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn exit_bracketMatrix(&mut self, _ctx: &BracketMatrixContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code angleBracketRowVector}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn enter_angleBracketRowVector(&mut self, _ctx: &AngleBracketRowVectorContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code angleBracketRowVector}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn exit_angleBracketRowVector(&mut self, _ctx: &AngleBracketRowVectorContext<'input>) { }
-/**
  * Enter a parse tree produced by the {@code braceExpression}
  * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
  * @param ctx the parse tree
@@ -426,6 +378,54 @@ fn enter_limitExpression(&mut self, _ctx: &LimitExpressionContext<'input>) { }
  * @param ctx the parse tree
  */
 fn exit_limitExpression(&mut self, _ctx: &LimitExpressionContext<'input>) { }
+/**
+ * Enter a parse tree produced by the {@code parenColumnVector}
+ * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+ * @param ctx the parse tree
+ */
+fn enter_parenColumnVector(&mut self, _ctx: &ParenColumnVectorContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code parenColumnVector}
+ * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+ * @param ctx the parse tree
+ */
+fn exit_parenColumnVector(&mut self, _ctx: &ParenColumnVectorContext<'input>) { }
+/**
+ * Enter a parse tree produced by the {@code parenMatrix}
+ * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+ * @param ctx the parse tree
+ */
+fn enter_parenMatrix(&mut self, _ctx: &ParenMatrixContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code parenMatrix}
+ * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+ * @param ctx the parse tree
+ */
+fn exit_parenMatrix(&mut self, _ctx: &ParenMatrixContext<'input>) { }
+/**
+ * Enter a parse tree produced by the {@code bracketMatrix}
+ * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+ * @param ctx the parse tree
+ */
+fn enter_bracketMatrix(&mut self, _ctx: &BracketMatrixContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code bracketMatrix}
+ * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+ * @param ctx the parse tree
+ */
+fn exit_bracketMatrix(&mut self, _ctx: &BracketMatrixContext<'input>) { }
+/**
+ * Enter a parse tree produced by the {@code angleBracketRowVector}
+ * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+ * @param ctx the parse tree
+ */
+fn enter_angleBracketRowVector(&mut self, _ctx: &AngleBracketRowVectorContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code angleBracketRowVector}
+ * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+ * @param ctx the parse tree
+ */
+fn exit_angleBracketRowVector(&mut self, _ctx: &AngleBracketRowVectorContext<'input>) { }
 /**
  * Enter a parse tree produced by the {@code matFunction}
  * labeled alternative in {@link AsciiMath2Parser#primary_expression}.

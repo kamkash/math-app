@@ -459,26 +459,17 @@ fn test_asciimath_eval_derivatives() {
 
 #[test_log::test]
 fn test_asciimath_integrals() {
-    let mut input = "int _ 0 ^ 1 (x^3 + 3 * x^2 - 10) dx".to_string();
+    let input = "int _ 0 ^ 1 (x^3 + 3 * x^2 - 10) dx
+                               int _ -oo ^ +oo (sin(t)^3 + cos(t) - t) dt
+                               int _ -oo ^ oo (sin(t)^3 + cos(t) - t) dt
+                               int _ -1 ^ 1 (sin(t)^3 + cos(t) - t) dt
+                               int _ -1 ^ +1 (sin(t)^3 + cos(t) - t) dt";
 
-    {
-        let mut visitor = AsciiMathVisitor::new();
-        let lexer = AsciiMath2Lexer::new(InputStream::new(input.as_str()));
-        let token_stream = CommonTokenStream::new(lexer);
-        let mut parser = AsciiMath2Parser::new(token_stream);
-        let parse_tree = parser.block().unwrap();
-        visitor.visit(parse_tree.as_ref());
-        info!("input: {}", input);
-    }
-
-    input = "int _ -oo ^ oo (sin(t)^3 + cos(2t) - t) dt".to_string();
-    {
-        let mut visitor = AsciiMathVisitor::new();
-        let lexer = AsciiMath2Lexer::new(InputStream::new(input.as_str()));
-        let token_stream = CommonTokenStream::new(lexer);
-        let mut parser = AsciiMath2Parser::new(token_stream);
-        let parse_tree = parser.block().unwrap();
-        visitor.visit(parse_tree.as_ref());
-        info!("input: {}", input);
-    }
+    let mut visitor = AsciiMathVisitor::new();
+    let lexer = AsciiMath2Lexer::new(InputStream::new(input));
+    let token_stream = CommonTokenStream::new(lexer);
+    let mut parser = AsciiMath2Parser::new(token_stream);
+    let parse_tree = parser.block().unwrap();
+    visitor.visit(parse_tree.as_ref());
+    info!("input: {}", input);
 }

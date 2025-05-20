@@ -35,11 +35,20 @@ unary_op_expression: (PLUS | MINUS) script_op_expression	# unaryPlusMinus
 	| script_op_expression									# noUnaryOperator;
 
 // differential: D_LOWERCASE (IDENTIFIER | GREEK_LETTER);   // can't get this to work
-differential: 'dx' | 'dy' | 'dz' | 'dt' | 'du' | 'dv' | 'dw' | 'dtheta' | 'dphi';
-
+differential:
+	'dx'
+	| 'dy'
+	| 'dz'
+	| 'dt'
+	| 'du'
+	| 'dv'
+	| 'dw'
+	| 'dtheta'
+	| 'dphi';
 integral_body: mult_div_implicit_expression;
-integral_upper_limit: HAT (NUMBER | SIGNED_INFINITY_CONST);
-integral_lower_limit: UNDERSCORE (NUMBER | SIGNED_INFINITY_CONST);
+integral_upper_limit: HAT ('oo' | '+oo' | '-oo' | NUMBER);
+integral_lower_limit:
+	UNDERSCORE ('oo' | '+oo' | '-oo' | NUMBER);
 
 script_op_expression:
 	primary_expression (
@@ -52,29 +61,29 @@ script_op_expression:
 
 // Primary expressions - the highest precedence
 primary_expression:
-	function_call				# explicitIdentifierCall
-	| LPAREN expression RPAREN	# parenExpression
-	| LPAREN paren_element_for_column_vector (
-		COMMA paren_element_for_column_vector
-	)* RPAREN										# parenColumnVector
-	| LPAREN matrix_content RPAREN					# parenMatrix
-	| LBRACKET matrix_content RBRACKET				# bracketMatrix
-	| L_ANGLE matrix_row R_ANGLE					# angleBracketRowVector
-	| LBRACE expression RBRACE						# braceExpression // e.g. {a+b}
-	| ABS expression ABS							# absExpression // |expression|
-	| IDENTIFIER (PRIME+)? LPAREN arguments RPAREN	# explicitIdentifierCall // f(x), f'(x)
-	| keyword_func									# explicitKeywordCall // sin(x), vec(x,y,z)
-	| simple_keyword_func							# simpleKeywordCall // e.g., sin x
-	| SQRT primary_expression						# sqrtFunction
-	| ROOT primary_expression primary_expression	# rootFunction
-	| FRAC primary_expression primary_expression	# fracFunction
-	| TEXT LPAREN text_argument RPAREN				# textFunction
+	function_call																			# explicitIdentifierCall
+	| LPAREN expression RPAREN																# parenExpression
+	| LBRACE expression RBRACE																# braceExpression // e.g. {a+b}
+	| ABS expression ABS																	# absExpression // |expression|
+	| IDENTIFIER (PRIME+)? LPAREN arguments RPAREN											# explicitIdentifierCall // f(x), f'(x)
+	| keyword_func																			# explicitKeywordCall // sin(x), vec(x,y,z)
+	| simple_keyword_func																	# simpleKeywordCall // e.g., sin x
+	| SQRT primary_expression																# sqrtFunction
+	| ROOT primary_expression primary_expression											# rootFunction
+	| FRAC primary_expression primary_expression											# fracFunction
+	| TEXT LPAREN text_argument RPAREN														# textFunction
 	| INTEGRAL (integral_lower_limit)? (integral_upper_limit)? integral_body differential	# integralExpression
 	| derivative																			# derivativeFunction
 	| partial_derivative																	# partialFunction
 	| differential FSLASH differential														# fractionLeibniz
 	| LIM UNDERSCORE primary_expression (TO | RARROW) primary_expression primary_expression	#
 		limitExpression
+	| LPAREN paren_element_for_column_vector (
+		COMMA paren_element_for_column_vector
+	)* RPAREN							# parenColumnVector
+	| LPAREN matrix_content RPAREN		# parenMatrix
+	| LBRACKET matrix_content RBRACKET	# bracketMatrix
+	| L_ANGLE matrix_row R_ANGLE		# angleBracketRowVector
 	| MAT LPAREN matrix_content RPAREN	# matFunction // mat((a,b];[c,d]))
 	| DET primary_expression			# detFunction
 	| TRANSPOSE primary_expression		# transposeFunction
@@ -350,8 +359,10 @@ fragment E2: 'e';
 
 fragment SIGN: '+' | '-';
 
+fragment RESERVED_WORDS: 'oo' | 'infty';
+
 // General Identifier
-IDENTIFIER: [a-zA-Z] [a-zA-Z0-9_]*;
+IDENTIFIER: [_]* [a-zA-Z] [a-zA-Z0-9_]*;
 
 fragment LETTERS: [a-zA-Z];
 LOWERCASE_LETTER: [a-z];

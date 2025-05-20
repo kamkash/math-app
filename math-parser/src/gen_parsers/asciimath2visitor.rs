@@ -138,34 +138,6 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	fn visit_parenExpression(&mut self, ctx: &ParenExpressionContext<'input>) { self.visit_children(ctx) }
 
 	/**
-	 * Visit a parse tree produced by the {@code parenColumnVector}
-	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
-	 * @param ctx the parse tree
-	 */
-	fn visit_parenColumnVector(&mut self, ctx: &ParenColumnVectorContext<'input>) { self.visit_children(ctx) }
-
-	/**
-	 * Visit a parse tree produced by the {@code parenMatrix}
-	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
-	 * @param ctx the parse tree
-	 */
-	fn visit_parenMatrix(&mut self, ctx: &ParenMatrixContext<'input>) { self.visit_children(ctx) }
-
-	/**
-	 * Visit a parse tree produced by the {@code bracketMatrix}
-	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
-	 * @param ctx the parse tree
-	 */
-	fn visit_bracketMatrix(&mut self, ctx: &BracketMatrixContext<'input>) { self.visit_children(ctx) }
-
-	/**
-	 * Visit a parse tree produced by the {@code angleBracketRowVector}
-	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
-	 * @param ctx the parse tree
-	 */
-	fn visit_angleBracketRowVector(&mut self, ctx: &AngleBracketRowVectorContext<'input>) { self.visit_children(ctx) }
-
-	/**
 	 * Visit a parse tree produced by the {@code braceExpression}
 	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
 	 * @param ctx the parse tree
@@ -255,6 +227,34 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	 * @param ctx the parse tree
 	 */
 	fn visit_limitExpression(&mut self, ctx: &LimitExpressionContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by the {@code parenColumnVector}
+	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_parenColumnVector(&mut self, ctx: &ParenColumnVectorContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by the {@code parenMatrix}
+	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_parenMatrix(&mut self, ctx: &ParenMatrixContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by the {@code bracketMatrix}
+	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_bracketMatrix(&mut self, ctx: &BracketMatrixContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by the {@code angleBracketRowVector}
+	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_angleBracketRowVector(&mut self, ctx: &AngleBracketRowVectorContext<'input>) { self.visit_children(ctx) }
 
 	/**
 	 * Visit a parse tree produced by the {@code matFunction}
@@ -583,42 +583,6 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 		}
 
 	/**
-	 * Visit a parse tree produced by the {@code parenColumnVector}
-	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
-	 * @param ctx the parse tree
-	 */
-		fn visit_parenColumnVector(&mut self, ctx: &ParenColumnVectorContext<'input>) -> Self::Return {
-			self.visit_children(ctx)
-		}
-
-	/**
-	 * Visit a parse tree produced by the {@code parenMatrix}
-	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
-	 * @param ctx the parse tree
-	 */
-		fn visit_parenMatrix(&mut self, ctx: &ParenMatrixContext<'input>) -> Self::Return {
-			self.visit_children(ctx)
-		}
-
-	/**
-	 * Visit a parse tree produced by the {@code bracketMatrix}
-	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
-	 * @param ctx the parse tree
-	 */
-		fn visit_bracketMatrix(&mut self, ctx: &BracketMatrixContext<'input>) -> Self::Return {
-			self.visit_children(ctx)
-		}
-
-	/**
-	 * Visit a parse tree produced by the {@code angleBracketRowVector}
-	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
-	 * @param ctx the parse tree
-	 */
-		fn visit_angleBracketRowVector(&mut self, ctx: &AngleBracketRowVectorContext<'input>) -> Self::Return {
-			self.visit_children(ctx)
-		}
-
-	/**
 	 * Visit a parse tree produced by the {@code braceExpression}
 	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
 	 * @param ctx the parse tree
@@ -732,6 +696,42 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 	 * @param ctx the parse tree
 	 */
 		fn visit_limitExpression(&mut self, ctx: &LimitExpressionContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by the {@code parenColumnVector}
+	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_parenColumnVector(&mut self, ctx: &ParenColumnVectorContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by the {@code parenMatrix}
+	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_parenMatrix(&mut self, ctx: &ParenMatrixContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by the {@code bracketMatrix}
+	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_bracketMatrix(&mut self, ctx: &BracketMatrixContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by the {@code angleBracketRowVector}
+	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_angleBracketRowVector(&mut self, ctx: &AngleBracketRowVectorContext<'input>) -> Self::Return {
 			self.visit_children(ctx)
 		}
 
@@ -1043,26 +1043,6 @@ where
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
-	fn visit_parenColumnVector(&mut self, ctx: &ParenColumnVectorContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_parenColumnVector(self, ctx);
-        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
-	}
-
-	fn visit_parenMatrix(&mut self, ctx: &ParenMatrixContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_parenMatrix(self, ctx);
-        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
-	}
-
-	fn visit_bracketMatrix(&mut self, ctx: &BracketMatrixContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_bracketMatrix(self, ctx);
-        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
-	}
-
-	fn visit_angleBracketRowVector(&mut self, ctx: &AngleBracketRowVectorContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_angleBracketRowVector(self, ctx);
-        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
-	}
-
 	fn visit_braceExpression(&mut self, ctx: &BraceExpressionContext<'input>){
 		let result = <Self as AsciiMath2VisitorCompat>::visit_braceExpression(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
@@ -1125,6 +1105,26 @@ where
 
 	fn visit_limitExpression(&mut self, ctx: &LimitExpressionContext<'input>){
 		let result = <Self as AsciiMath2VisitorCompat>::visit_limitExpression(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_parenColumnVector(&mut self, ctx: &ParenColumnVectorContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_parenColumnVector(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_parenMatrix(&mut self, ctx: &ParenMatrixContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_parenMatrix(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_bracketMatrix(&mut self, ctx: &BracketMatrixContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_bracketMatrix(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_angleBracketRowVector(&mut self, ctx: &AngleBracketRowVectorContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_angleBracketRowVector(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
