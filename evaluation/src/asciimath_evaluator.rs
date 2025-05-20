@@ -298,9 +298,16 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
         &mut self,
         ctx: &math_parser::gen_parsers::asciimath2parser::IntegralExpressionContext<'input>,
     ) -> Self::Return {
-        self.visit_children(ctx)
-    }
+        let res = self.visit_children(ctx);
+        let len = ctx.get_child_count();
+        info!("Integral expression: {} {:?}", len, ctx.get_text());
 
+        for child in ctx.get_children() {
+            info!("Child: {:?}", child.get_text());
+        }
+        res
+    }
+ 
     fn visit_derivative(&mut self, ctx: &DerivativeContext<'input>) -> Self::Return {
         let len = ctx.get_child_count();
         let res = self.visit_children(ctx);

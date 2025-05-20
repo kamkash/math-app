@@ -34,8 +34,12 @@ mult_div_implicit_expression:
 unary_op_expression: (PLUS | MINUS) script_op_expression	# unaryPlusMinus
 	| script_op_expression									# noUnaryOperator;
 
+// differential: D_LOWERCASE (IDENTIFIER | GREEK_LETTER);   // can't get this to work
+differential: 'dx' | 'dy' | 'dz' | 'dt' | 'du' | 'dv' | 'dw' | 'dtheta' | 'dphi';
 
-differential: D_LOWERCASE (IDENTIFIER | GREEK_LETTER);
+integral_body: mult_div_implicit_expression;
+integral_upper_limit: HAT (NUMBER | SIGNED_INFINITY_CONST);
+integral_lower_limit: UNDERSCORE (NUMBER | SIGNED_INFINITY_CONST);
 
 script_op_expression:
 	primary_expression (
@@ -48,26 +52,13 @@ script_op_expression:
 
 // Primary expressions - the highest precedence
 primary_expression:
-	function_call # explicitIdentifierCall
-
-	// Specific parenthesized structures first: 1. Column vectors like ((a),(b),(c)) where comma
-	// separates rows of parenthesized elements
+	function_call				# explicitIdentifierCall
+	| LPAREN expression RPAREN	# parenExpression
 	| LPAREN paren_element_for_column_vector (
 		COMMA paren_element_for_column_vector
-	)* RPAREN # parenColumnVector
-
-	// 2. Parentheses for matrices (e.g. (a,b; c,d) ) or row vectors (e.g. (a,b,c) ) This rule will
-	// also catch single expressions like (x) if not caught by parenExpression first or if
-	// paren_column_vector_row fails.
-	| LPAREN matrix_content RPAREN # parenMatrix
-
-	// 3. General parentheses for grouping any expression (fallback for simple grouping)
-	| LPAREN expression RPAREN # parenExpression
-
-	// Standard matrix with square brackets (can represent row or column vectors too)
-	| LBRACKET matrix_content RBRACKET # bracketMatrix
-
-	// Angle bracket vectors (typically row vectors like <x,y,z> or (:x,y,z:))
+	)* RPAREN										# parenColumnVector
+	| LPAREN matrix_content RPAREN					# parenMatrix
+	| LBRACKET matrix_content RBRACKET				# bracketMatrix
 	| L_ANGLE matrix_row R_ANGLE					# angleBracketRowVector
 	| LBRACE expression RBRACE						# braceExpression // e.g. {a+b}
 	| ABS expression ABS							# absExpression // |expression|
@@ -78,16 +69,12 @@ primary_expression:
 	| ROOT primary_expression primary_expression	# rootFunction
 	| FRAC primary_expression primary_expression	# fracFunction
 	| TEXT LPAREN text_argument RPAREN				# textFunction
-	| INTEGRAL (UNDERSCORE primary_expression)? (
-		HAT primary_expression
-	)? primary_expression (differential)?													# integralExpression
+	| INTEGRAL (integral_lower_limit)? (integral_upper_limit)? integral_body differential	# integralExpression
 	| derivative																			# derivativeFunction
 	| partial_derivative																	# partialFunction
 	| differential FSLASH differential														# fractionLeibniz
 	| LIM UNDERSCORE primary_expression (TO | RARROW) primary_expression primary_expression	#
 		limitExpression
-
-	// Explicit MAT constructor (if different from bracketMatrix/parenMatrix)
 	| MAT LPAREN matrix_content RPAREN	# matFunction // mat((a,b];[c,d]))
 	| DET primary_expression			# detFunction
 	| TRANSPOSE primary_expression		# transposeFunction
@@ -119,7 +106,9 @@ simple_keyword_func:
 
 deriv_function: DERIV;
 d_by_d: DBYD;
-derivative: (deriv_function | d_by_d) primary_expression (wrt_argument)?;
+derivative: (deriv_function | d_by_d) primary_expression (
+		wrt_argument
+	)?;
 
 partial_derivative: PARTIAL primary_expression (wrt_argument)?;
 
@@ -258,6 +247,7 @@ PI_CONST: 'pi' | '\u03C0';
 E_CONST: 'e';
 I_CONST: 'i';
 INFINITY_CONST: 'oo' | 'infty' | '\u221E';
+SIGNED_INFINITY_CONST: (PLUS | MINUS)? INFINITY_CONST;
 GAMMA_CONST: 'gamma' | '\u03B3';
 PHI_CONST: 'phi' | '\u03C6';
 TRUE_CONST: 'true';
@@ -361,7 +351,10 @@ fragment E2: 'e';
 fragment SIGN: '+' | '-';
 
 // General Identifier
-IDENTIFIER: [_]* [a-zA-Z] [a-zA-Z0-9_]*;
+IDENTIFIER: [a-zA-Z] [a-zA-Z0-9_]*;
+
+fragment LETTERS: [a-zA-Z];
+LOWERCASE_LETTER: [a-z];
 
 // Numbers
 NUMBER:

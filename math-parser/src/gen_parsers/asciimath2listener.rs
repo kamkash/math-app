@@ -109,6 +109,36 @@ fn enter_differential(&mut self, _ctx: &DifferentialContext<'input>) { }
  */
 fn exit_differential(&mut self, _ctx: &DifferentialContext<'input>) { }
 /**
+ * Enter a parse tree produced by {@link AsciiMath2Parser#integral_body}.
+ * @param ctx the parse tree
+ */
+fn enter_integral_body(&mut self, _ctx: &Integral_bodyContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link AsciiMath2Parser#integral_body}.
+ * @param ctx the parse tree
+ */
+fn exit_integral_body(&mut self, _ctx: &Integral_bodyContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link AsciiMath2Parser#integral_upper_limit}.
+ * @param ctx the parse tree
+ */
+fn enter_integral_upper_limit(&mut self, _ctx: &Integral_upper_limitContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link AsciiMath2Parser#integral_upper_limit}.
+ * @param ctx the parse tree
+ */
+fn exit_integral_upper_limit(&mut self, _ctx: &Integral_upper_limitContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link AsciiMath2Parser#integral_lower_limit}.
+ * @param ctx the parse tree
+ */
+fn enter_integral_lower_limit(&mut self, _ctx: &Integral_lower_limitContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link AsciiMath2Parser#integral_lower_limit}.
+ * @param ctx the parse tree
+ */
+fn exit_integral_lower_limit(&mut self, _ctx: &Integral_lower_limitContext<'input>) { }
+/**
  * Enter a parse tree produced by the {@code powerSubscriptExpression}
  * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
  * @param ctx the parse tree
@@ -181,6 +211,18 @@ fn enter_explicitIdentifierCall(&mut self, _ctx: &ExplicitIdentifierCallContext<
  */
 fn exit_explicitIdentifierCall(&mut self, _ctx: &ExplicitIdentifierCallContext<'input>) { }
 /**
+ * Enter a parse tree produced by the {@code parenExpression}
+ * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+ * @param ctx the parse tree
+ */
+fn enter_parenExpression(&mut self, _ctx: &ParenExpressionContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code parenExpression}
+ * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+ * @param ctx the parse tree
+ */
+fn exit_parenExpression(&mut self, _ctx: &ParenExpressionContext<'input>) { }
+/**
  * Enter a parse tree produced by the {@code parenColumnVector}
  * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
  * @param ctx the parse tree
@@ -204,18 +246,6 @@ fn enter_parenMatrix(&mut self, _ctx: &ParenMatrixContext<'input>) { }
  * @param ctx the parse tree
  */
 fn exit_parenMatrix(&mut self, _ctx: &ParenMatrixContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code parenExpression}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn enter_parenExpression(&mut self, _ctx: &ParenExpressionContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code parenExpression}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn exit_parenExpression(&mut self, _ctx: &ParenExpressionContext<'input>) { }
 /**
  * Enter a parse tree produced by the {@code bracketMatrix}
  * labeled alternative in {@link AsciiMath2Parser#primary_expression}.

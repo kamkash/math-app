@@ -442,7 +442,7 @@ fn test_asciimath_eval_algebraic_operations() {
 
 #[test_log::test]
 fn test_asciimath_eval_derivatives() {
-    let input = "d/dx(x^3+3x^2-10x+4)
+    let input = "d/dx(x^3+3x^2-10x+4)V
                 (d)/(d x)(sin(x)- 1/3 * x ^ 3) =
                 (d)/(dx)(e^(-(t)/(x))-k * x)
                 deriv(x^2+3x-10,x)=
@@ -455,4 +455,30 @@ fn test_asciimath_eval_derivatives() {
     let parse_tree = parser.block().unwrap();
     visitor.visit(parse_tree.as_ref());
     info!("input: {}", input);
+}
+
+#[test_log::test]
+fn test_asciimath_integrals() {
+    let mut input = "int _ 0 ^ 1 (x^3 + 3 * x^2 - 10) dx".to_string();
+
+    {
+        let mut visitor = AsciiMathVisitor::new();
+        let lexer = AsciiMath2Lexer::new(InputStream::new(input.as_str()));
+        let token_stream = CommonTokenStream::new(lexer);
+        let mut parser = AsciiMath2Parser::new(token_stream);
+        let parse_tree = parser.block().unwrap();
+        visitor.visit(parse_tree.as_ref());
+        info!("input: {}", input);
+    }
+
+    input = "int _ -oo ^ oo (sin(t)^3 + cos(2t) - t) dt".to_string();
+    {
+        let mut visitor = AsciiMathVisitor::new();
+        let lexer = AsciiMath2Lexer::new(InputStream::new(input.as_str()));
+        let token_stream = CommonTokenStream::new(lexer);
+        let mut parser = AsciiMath2Parser::new(token_stream);
+        let parse_tree = parser.block().unwrap();
+        visitor.visit(parse_tree.as_ref());
+        info!("input: {}", input);
+    }
 }
