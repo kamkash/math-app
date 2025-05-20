@@ -442,9 +442,9 @@ fn test_asciimath_eval_algebraic_operations() {
 
 #[test_log::test]
 fn test_asciimath_eval_derivatives() {
-    let input = "d/dx(x^3+3x^2-10x+4)V
+    let input = "d/dx(x^3+3x^2-10x+4)
                 (d)/(d x)(sin(x)- 1/3 * x ^ 3) =
-                (d)/(dx)(e^(-(t)/(x))-k * x)
+                (d)/(dx)(e^(-t/x)-(k * x))
                 deriv(x^2+3x-10,x)=
                 deriv(yx^2+3yx-10,y)=";
 
