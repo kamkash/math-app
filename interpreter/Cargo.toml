@@ -1,0 +1,17 @@
+[package]
+name = "interpreter"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+
+[dependencies]
+log = { workspace = true }
+test-log = { workspace = true }
+serde = { workspace = true }
+math-parser = { path = "../math-parser" }
+symengine-rs = { workspace = true }
+antlr-rust = { workspace = true }
+
+[dev-dependencies]
+math-parser = { path = "../math-parser" }
+symengine-rs = { workspace = true }

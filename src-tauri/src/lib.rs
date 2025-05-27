@@ -1,7 +1,7 @@
 use lazy_static::lazy_static;
 use libloading::{Library, Symbol};
 use log::{debug, error, info, warn};
-use evaluation::asciimath_evaluator;
+use interpreter::asciimath_evaluator;
 use std::ffi::CStr;
 use std::ffi::CString;
 use std::ffi::{c_char, c_int};

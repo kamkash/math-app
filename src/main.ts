@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import "mathlive";
 import "mathlive/fonts.css";
+import { convertLatexToMathMl } from 'mathlive';
 
 import {
   // convertAsciiMathToLatex,
@@ -20,6 +21,7 @@ function load_globals() {
 async function run_solver(name: string) {
   if (responseOutputEl && promptInputEl) {
     let prompt = convertLatexToAsciiMath(promptInputEl.value);
+    console.log(`MathML: ${convertLatexToMathMl(promptInputEl.value)}`);
     console.log("AsciiMath input", prompt);
     let res = await invoke("run_solver", {
       input: prompt,

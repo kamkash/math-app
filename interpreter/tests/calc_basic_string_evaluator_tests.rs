@@ -1,4 +1,4 @@
-use evaluation::calc_basic_string_evaluator::{self, SymStringVisitor};
+use interpreter::calc_basic_string_evaluator::{self, SymStringVisitor};
 use log::info;
 use test_log;
 

@@ -3,7 +3,7 @@ use std::rc::Rc;
 use antlr_rust::tree::ParseTreeVisitorCompat;
 use antlr_rust::{common_token_stream::CommonTokenStream, InputStream};
 use asciimath_evaluator::AsciiMathVisitor;
-use evaluation::asciimath_evaluator;
+use interpreter::asciimath_evaluator;
 use log::info;
 use math_parser::gen_parsers::asciimath2lexer::AsciiMath2Lexer;
 use math_parser::gen_parsers::asciimath2parser::AsciiMath2Parser;
@@ -88,8 +88,8 @@ fn test_asciimath_eval_expressions_no_rhs() {
                         q1 = 100000 / w1
                         q11 != 100000 / w11
                         z * 7 = t + 3.14
-                        t = (x)/(y)
-                        d=(x)/(y)
+                        t = x/y
+                        x^2=
                         ";
     let mut visitor = AsciiMathVisitor::new();
     let lexer = AsciiMath2Lexer::new(InputStream::new(input));

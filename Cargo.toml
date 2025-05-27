@@ -4,15 +4,22 @@ resolver = "2"
 members = [
     "src-tauri",
     "math-parser",
-    "evaluation",
+    "interpreter",
     "symengine-rs",
     "core",
     "calculus",
     "linear-algebra",
     "statistics",
-    "algebra"]
+    "algebra", "symbolic-engine"]
 
 [workspace.package]
 version = "0.1.0"
 authors = ["kamkash <mrkamkash@gmail.com>"]
 edition = "2021"
+
+[workspace.dependencies]
+log = "0.4.27"
+test-log = "0.2.17"
+antlr-rust = "0.3.0-beta"
+serde = { version = "1.0", features = ["derive"] }
+symengine-rs = { path = "./symengine-rs" }
