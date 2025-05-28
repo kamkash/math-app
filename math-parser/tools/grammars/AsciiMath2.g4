@@ -27,7 +27,7 @@ add_sub_expression:
 mult_div_implicit_expression:
 	unary_op_expression (
 		(STAR | FSLASH | TIMES | DIV) unary_op_expression
-		| unary_op_expression
+		
 	)*;
 
 // Unary operations
