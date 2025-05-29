@@ -1,6 +1,6 @@
 use antlr_rust::tree::ParseTreeVisitorCompat;
 use antlr_rust::{common_token_stream::CommonTokenStream, InputStream};
-use interpreter::calc_basic_evaluator::SymBasicCalcVisitor;
+use interpreter::calc_basic_interpreter::SymBasicCalcVisitor;
 use log::info;
 use math_parser::gen_parsers::{
     calculatorlexer::calculatorLexer, calculatorparser::calculatorParser,

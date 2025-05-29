@@ -2,9 +2,9 @@ use log::info;
 use symengine_rs::basic::Basic;
 
 use std::{fmt, rc::Rc};
-pub mod asciimath_evaluator;
-pub mod calc_basic_evaluator;
-pub mod calc_basic_string_evaluator;
+pub mod asciimath_basic_string_interpreter;
+pub mod calc_basic_interpreter;
+pub mod calc_basic_string_interpreter;
 
 pub struct SymEquation {
     pub left: Rc<Basic>,
@@ -145,7 +145,7 @@ impl fmt::Display for Relop {
 
 pub fn evaluate_ascii_math(input: &str) -> String {
     info!("evaluate_ascii_math {}", input);
-    let result = calc_basic_evaluator::evaluate_ascii_math_block(input);
+    let result = calc_basic_interpreter::evaluate_ascii_math_block(input);
     format!("{}", result.unwrap())
 }
 

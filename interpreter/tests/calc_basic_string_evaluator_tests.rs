@@ -1,4 +1,4 @@
-use interpreter::calc_basic_string_evaluator::{self, SymStringVisitor};
+use interpreter::calc_basic_string_interpreter::{self, SymStringVisitor};
 use log::info;
 use test_log;
 
@@ -60,7 +60,7 @@ fn test_symstring_eval_error_handling() {
          x(1-x) = 
          "
     );
-    match calc_basic_string_evaluator::evaluate_ascii_math_block(input.as_str()) {
+    match calc_basic_string_interpreter::evaluate_ascii_math_block(input.as_str()) {
         Ok(result) => {
             info!("input: {}", input);
             info!("result: {}", result);
@@ -81,7 +81,7 @@ fn test_symstring_basic_eval() {
         10
          "
     );
-    match calc_basic_string_evaluator::evaluate_ascii_math_block(input.as_str()) {
+    match calc_basic_string_interpreter::evaluate_ascii_math_block(input.as_str()) {
         Ok(result) => {
             info!("input: {}", input);
             info!("result: {}", result);

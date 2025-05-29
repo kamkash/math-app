@@ -2,8 +2,8 @@ use std::rc::Rc;
 
 use antlr_rust::tree::ParseTreeVisitorCompat;
 use antlr_rust::{common_token_stream::CommonTokenStream, InputStream};
-use asciimath_evaluator::AsciiMathVisitor;
-use interpreter::asciimath_evaluator;
+use asciimath_basic_string_interpreter::AsciiMathVisitor;
+use interpreter::asciimath_basic_string_interpreter;
 use log::info;
 use math_parser::gen_parsers::asciimath2lexer::AsciiMath2Lexer;
 use math_parser::gen_parsers::asciimath2parser::AsciiMath2Parser;

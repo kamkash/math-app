@@ -1,7 +1,7 @@
 use lazy_static::lazy_static;
 use libloading::{Library, Symbol};
 use log::{debug, error, info, warn};
-use interpreter::asciimath_evaluator;
+use interpreter::asciimath_basic_string_interpreter;
 use std::ffi::CStr;
 use std::ffi::CString;
 use std::ffi::{c_char, c_int};
@@ -191,7 +191,7 @@ pub fn echo_rust(estr: &str) -> Result<String, String> {
 
 // fixme:: error handling
 pub fn run_solver_rust(prompt: &str) -> Result<String, String> {
-    let res = asciimath_evaluator::evaluate_ascii_math_block(prompt)?;
+    let res = asciimath_basic_string_interpreter::evaluate_ascii_math_block(prompt)?;
     Ok(res)
 }
 
