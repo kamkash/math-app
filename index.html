@@ -10,25 +10,10 @@
 
 <body>
   <main class="container">
-    <form class="row" id="input-form">
+    <div class="row" id="input-form">
       <h3>Math Solver</h3>
-      <div class="toolbar">
-        <button id="reset_model">Reset Model</button>
-        <button id="reset_context">Reset context</button>
-        <button id="add_grammar">Add grammar</button>
-        <button id="greet">Greet</button>
-        <button id="solver">Solver</button>
-        <button type="submit">
-          <img src="/src/assets/go.svg" alt="Go" />
-          LLM
-        </button>
-      </div>
-      <math-field id="prompt-input" placeholder="\text{What's up}" smart-mode="on"></math-field>
-      <math-field id="response-output" smart-mode="on"></math-field>
-
-      <math-solver id="math-solver" />
-    </form>
+      <math-solver id="math-solver"> </math-solver>
+      <!-- <math-solver-old id="math-solver-old"> </math-solver-old> -->
+    </div>
   </main>
 </body>
-
-</html>

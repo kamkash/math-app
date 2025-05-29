@@ -1,84 +1,33 @@
-.container {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 1.2em;
-}
-
-.toolbar {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  text-align: center;
-}
-
-.toolbar button {
-  margin: 0 5px;
-  padding: 0.5em 1em;
-  background-color: #f6f6f6;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-button img {
-  vertical-align: middle; /* Ensures the image aligns properly */
-}
-
 h3 {
   margin: 0.3em;
 }
 
-form button {
-  margin: 0px;
-  font-size: 0.8em;
+#input-form {
+  display: flex;
+  flex-direction: column;
+  /* Optional: Add some space between the stacked elements */
+  gap: 1rem; 
 }
+
 
 .row {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center; /* Center-align items horizontally */
+  align-items: center;
+  /* Center-align items horizontally */
 }
 
-math-field {
-  font-family: "STIX Two Math", "Latin Modern Math", "Cambria Math",
-    "Noto Sans Math", "XITS Math", "Asana Math", serif;
-  /* font-size: 1.1em; */
-  padding: 10px;
-  margin: 10px;
-  width: 90%;
-  min-height: 150px;
-  overflow: auto; /* Enable scrolling */
-  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.7);
-  border-radius: 8px; /* Add rounded corners */
-  display: flex;
+.container {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 1.2em;
 }
-
-.row button {
-  width: auto; /* Let the button size itself */
-  margin-top: 1em;
-}
-
-input,
-button {
-  color: #0f0f0f;
-  background-color: #f6f6f6f0;
-
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  transition: border-color 0.25s;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-  outline: none;
-  padding: 0.5em 1em;
-}
-
-math-solver {
+math-solver,
+math-solver-old {
   display: block; /* Ensure it behaves as a block-level element */
-  width: 90%;     /* Similar to math-field siblings in the form */
+  width: 90%; /* Similar to math-field siblings in the form */
   min-height: 470px; /* Adjusted to accommodate internal content and padding */
-  margin: 10px;     /* Consistent margin with math-field siblings */
-  overflow: auto;   /* Add scrollbars if internal content overflows */
+  margin: 10px; /* Consistent margin with math-field siblings */
+  overflow: auto; /* Add scrollbars if internal content overflows */
   /* The parent form.row with 'align-items: center' will handle horizontal centering */
 }

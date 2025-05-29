@@ -112,57 +112,57 @@ function loadMainPageGlobals() {
   }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM content loaded (from shared-math-logic)");
-  loadMainPageGlobals();
+// window.addEventListener("DOMContentLoaded", () => {
+//   console.log("DOM content loaded (from shared-math-logic)");
+//   loadMainPageGlobals();
 
-  document
-    .querySelector("#input-form")
-    ?.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (mainPagePromptInputEl && mainPageResponseOutputEl) {
-        await run_llm_generate(mainPagePromptInputEl, mainPageResponseOutputEl);
-      }
-    });
+//   document
+//     .querySelector("#input-form")
+//     ?.addEventListener("submit", async (e) => {
+//       e.preventDefault();
+//       if (mainPagePromptInputEl && mainPageResponseOutputEl) {
+//         await run_llm_generate(mainPagePromptInputEl, mainPageResponseOutputEl);
+//       }
+//     });
 
-  document.querySelector("#solver")?.addEventListener("click", async (e) => {
-    e.preventDefault();
-    if (mainPagePromptInputEl && mainPageResponseOutputEl) {
-      await run_solver(
-        mainPagePromptInputEl,
-        mainPageResponseOutputEl,
-        "new solver from shared"
-      );
-    }
-  });
+//   document.querySelector("#solver")?.addEventListener("click", async (e) => {
+//     e.preventDefault();
+//     if (mainPagePromptInputEl && mainPageResponseOutputEl) {
+//       await run_solver(
+//         mainPagePromptInputEl,
+//         mainPageResponseOutputEl,
+//         "new solver from shared"
+//       );
+//     }
+//   });
 
-  document
-    .querySelector("#reset_context")
-    ?.addEventListener("click", async (e) => {
-      e.preventDefault();
-      await run_reset_context("new topic from shared");
-    });
+//   document
+//     .querySelector("#reset_context")
+//     ?.addEventListener("click", async (e) => {
+//       e.preventDefault();
+//       await run_reset_context("new topic from shared");
+//     });
 
-  document
-    .querySelector("#reset_model")
-    ?.addEventListener("click", async (e) => {
-      e.preventDefault();
-      await run_reset_model("new model from shared");
-    });
+//   document
+//     .querySelector("#reset_model")
+//     ?.addEventListener("click", async (e) => {
+//       e.preventDefault();
+//       await run_reset_model("new model from shared");
+//     });
 
-  document
-    .querySelector("#add_grammar")
-    ?.addEventListener("click", async (e) => {
-      e.preventDefault();
-      if (mainPagePromptInputEl && mainPageResponseOutputEl) {
-        await run_add_grammar(mainPagePromptInputEl, mainPageResponseOutputEl);
-      }
-    });
+//   document
+//     .querySelector("#add_grammar")
+//     ?.addEventListener("click", async (e) => {
+//       e.preventDefault();
+//       if (mainPagePromptInputEl && mainPageResponseOutputEl) {
+//         await run_add_grammar(mainPagePromptInputEl, mainPageResponseOutputEl);
+//       }
+//     });
 
-  document.querySelector("#greet")?.addEventListener("click", async (e) => {
-    e.preventDefault();
-    if (mainPagePromptInputEl && mainPageResponseOutputEl) {
-      await run_greet(mainPagePromptInputEl, mainPageResponseOutputEl);
-    }
-  });
-});
+//   document.querySelector("#greet")?.addEventListener("click", async (e) => {
+//     e.preventDefault();
+//     if (mainPagePromptInputEl && mainPageResponseOutputEl) {
+//       await run_greet(mainPagePromptInputEl, mainPageResponseOutputEl);
+//     }
+//   });
+// });

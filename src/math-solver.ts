@@ -49,8 +49,6 @@ class MathSolver extends HTMLElement {
     this.shadow.querySelector("#math-solver")?.addEventListener("click", async (e) => {
       e.preventDefault();
       if (this.promptInputEl && this.responseOutputEl) {
-        // The "name" parameter for run_solver was not used in the original invoke call.
-        // If specific naming is needed for the component, it can be passed here.
         await run_solver(this.promptInputEl, this.responseOutputEl);
       }
     });
