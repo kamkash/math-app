@@ -10,3 +10,6 @@
     7. llama.cpp based gguf model inference (math specialized models)
     8. AI based OCR image to math LaTex generator for handwriting recognition 
  
+
+ ## Possible UI
+ ![Design](./design.png)

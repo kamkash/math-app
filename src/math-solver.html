@@ -1,0 +1,118 @@
+<style>
+    :host {
+        font-family: 'Inter', Arial, sans-serif;
+        display: block;
+        width: 100%;
+        /* Make the shadow root fill the host element's width */
+        height: 100%;
+        /* Make the shadow root fill the host element's height */
+        box-sizing: border-box;
+        /* Include padding and border in the element's total width and height */
+        background: #f9fbfd;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        padding: 32px 24px 24px 24px;
+    }
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        margin-bottom: 32px;
+    }
+
+    .body {
+        display: flex;
+        /* Changed from 500px to 100% to allow toolbar to span full width */
+        width: 100%;
+    }
+    .title {
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .icon-row {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 10px;
+    }
+
+    .icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        vertical-align: middle;
+        background: none;
+        border: none;
+        cursor: pointer;
+        margin-top: 5px;
+    }
+
+    .input-area,
+    .output-area {
+        width: 100%;
+        min-height: 150px;
+        border: 2px solid #dbeafe;
+        border-radius: 12px;
+        background: #fff;
+        font-size: 1.2rem;
+        padding: 16px;
+        margin-top: 5px;
+        margin-bottom: 16px;
+        box-sizing: border-box;
+        color: #1e293b;
+        resize: none;
+    }
+
+    .toolbar {
+        width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        background: #f6f6f6;
+        border: 2px solid #dbeafe;
+        border-radius: 12px;
+        /* box-sizing: border-box; /* This was a duplicate, removed */
+        resize: none;
+    }
+
+    .input-area::placeholder {
+        color: #94a3b8;
+    }
+
+    .label {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #22223b;
+    }
+
+    math-field {
+        font-family: "STIX Two Math", "Latin Modern Math", "Cambria Math",
+            "Noto Sans Math", "XITS Math", "Asana Math", serif;
+    }
+</style>
+<div class="header">
+    <span class="title">Math Solver</span>
+</div>
+<div class="body">
+    <div class="toolbar">
+        <div class="icon-row">
+            <button id="math-solver" class="icon" title="Calculator" aria-label="Solve">
+                <img src="/src/assets/calculator.svg" alt="Solve" />
+            </button>
+            <button id="llm-solver" class="icon" title="Magic" aria-label="LLM">
+                <img src="/src/assets/magic_wand.svg" alt="LLM" />
+            </button>
+        </div>
+    </div>
+</div>
+<math-field id="prompt-input" class="input-area" placeholder="\text{Enter expressions to solve}"
+    smart-mode="on"></math-field>
+<div class="label">Solution</div>
+<math-field id="response-output" class="output-area" readonly smart-mode="on"></math-field>

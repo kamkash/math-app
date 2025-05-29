@@ -1,17 +1,17 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="/src/styles.css" />
-    <script type="module" src="/src/main.ts" defer></script>
+  <script type="module" src="/src/main.ts" defer></script>
 </head>
 
 <body>
   <main class="container">
     <form class="row" id="input-form">
-      <h3>symmath.app</h3>
-      <h3>Yet Another Semi Intelligent Symbolic Math App</h3>
+      <h3>Math Solver</h3>
       <div class="toolbar">
         <button id="reset_model">Reset Model</button>
         <button id="reset_context">Reset context</button>
@@ -23,8 +23,10 @@
           LLM
         </button>
       </div>
-      <math-field id="prompt-input" placeholder="\text{What's up}" smart-mode="on" ></math-field>
+      <math-field id="prompt-input" placeholder="\text{What's up}" smart-mode="on"></math-field>
       <math-field id="response-output" smart-mode="on"></math-field>
+
+      <math-solver id="math-solver" />
     </form>
   </main>
 </body>

@@ -73,3 +73,12 @@ button {
   outline: none;
   padding: 0.5em 1em;
 }
+
+math-solver {
+  display: block; /* Ensure it behaves as a block-level element */
+  width: 90%;     /* Similar to math-field siblings in the form */
+  min-height: 470px; /* Adjusted to accommodate internal content and padding */
+  margin: 10px;     /* Consistent margin with math-field siblings */
+  overflow: auto;   /* Add scrollbars if internal content overflows */
+  /* The parent form.row with 'align-items: center' will handle horizontal centering */
+}
