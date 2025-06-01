@@ -30,7 +30,9 @@ use math_parser::gen_parsers::calculatorparser::{
     MultiplyingExpressionContextAttrs, PowExpressionContextAttrs,
 };
 use math_parser::gen_parsers::calculatorvisitor::calculatorVisitorCompat;
-use math_parser::gen_parsers::{calculatorlexer::calculatorLexer, calculatorparser::calculatorParser};
+use math_parser::gen_parsers::{
+    calculatorlexer::calculatorLexer, calculatorparser::calculatorParser,
+};
 
 pub fn evaluate_ascii_math_block(input: &str) -> Result<String, String> {
     let input_stream = InputStream::new(input.into());
@@ -42,7 +44,7 @@ pub fn evaluate_ascii_math_block(input: &str) -> Result<String, String> {
     // If parsing succeeded, visit the parse tree
     match result {
         Ok(context) => {
-            let mut visitor = SymStringVisitor::new();
+            let mut visitor = CalcStringVisitor::new();
             let _ = visitor.visit(&*context);
             let result = format!("{:?}", visitor.result_table);
             Ok(result)
@@ -50,7 +52,7 @@ pub fn evaluate_ascii_math_block(input: &str) -> Result<String, String> {
         Err(e) => Err(format!("parser error {}", e).to_string()),
     }
 }
-pub struct SymStringVisitor {
+pub struct CalcStringVisitor {
     equation_count: u32,
     pub tmp_result: String,
     pub block_expressions: Vec<SymEquation>,
@@ -58,9 +60,9 @@ pub struct SymStringVisitor {
     pub result_table: std::collections::HashMap<Rc<Basic>, Rc<Basic>>,
 }
 
-impl SymStringVisitor {
+impl CalcStringVisitor {
     pub fn new() -> Self {
-        SymStringVisitor {
+       CalcStringVisitor {
             equation_count: 0,
             tmp_result: String::new(),
             block_expressions: Vec::new(),
@@ -96,7 +98,7 @@ impl SymStringVisitor {
     }
 }
 
-impl ParseTreeVisitorCompat<'_> for SymStringVisitor {
+impl ParseTreeVisitorCompat<'_> for CalcStringVisitor {
     type Node = calculatorParserContextType;
     type Return = String;
 
@@ -113,7 +115,7 @@ impl ParseTreeVisitorCompat<'_> for SymStringVisitor {
     }
 }
 
-impl<'input> calculatorVisitorCompat<'input> for SymStringVisitor {
+impl<'input> calculatorVisitorCompat<'input> for CalcStringVisitor {
     fn visit_block(&mut self, ctx: &BlockContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
         info!("block expressions: {:?}", self.block_expressions);

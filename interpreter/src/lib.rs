@@ -5,6 +5,7 @@ use std::{fmt, rc::Rc};
 pub mod asciimath_basic_string_interpreter;
 pub mod calc_basic_interpreter;
 pub mod calc_basic_string_interpreter;
+pub mod asciimath_basic_interpreter;
 
 pub struct SymEquation {
     pub left: Rc<Basic>,

@@ -1,23 +1,23 @@
 use std::rc::Rc;
 
+use antlr_rust::common_token_stream::CommonTokenStream;
+use antlr_rust::tree::{ParseTree, ParseTreeVisitorCompat, TerminalNode, Tree};
+use antlr_rust::InputStream;
+use antlr_rust::TidExt;
 use asciimath2lexer::AsciiMath2Lexer;
+use log::info;
 use math_parser::gen_parsers::asciimath2lexer;
 use math_parser::gen_parsers::asciimath2parser::{
     AsciiMath2Parser, AsciiMath2ParserContextType, D_by_dContext, Deriv_functionContext,
     DerivativeContext, NoUnaryOperatorContext,
 };
-use antlr_rust::common_token_stream::CommonTokenStream;
-use antlr_rust::tree::{ParseTree, ParseTreeVisitorCompat, TerminalNode, Tree};
-use antlr_rust::InputStream;
-use antlr_rust::TidExt;
-use log::info;
 use symengine_rs::basic::Basic;
 
-use math_parser::gen_parsers::asciimath2visitor::AsciiMath2VisitorCompat;
 use crate::{Relop, SymEquation};
+use math_parser::gen_parsers::asciimath2visitor::AsciiMath2VisitorCompat;
 
 pub fn evaluate_ascii_math_block(input: &str) -> Result<String, String> {
-    let mut visitor = AsciiMathVisitor::new();
+    let mut visitor = AsciiMathStringVisitor::new();
     let lexer = AsciiMath2Lexer::new(InputStream::new(input));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = AsciiMath2Parser::new(token_stream);
@@ -33,7 +33,7 @@ pub fn evaluate_ascii_math_block(input: &str) -> Result<String, String> {
     }
 }
 
-pub struct AsciiMathVisitor {
+pub struct AsciiMathStringVisitor {
     equation_count: u32,
     pub tmp_result: String,
     pub block_expressions: Vec<SymEquation>,
@@ -42,9 +42,9 @@ pub struct AsciiMathVisitor {
     visitor_stack: Vec<String>,
 }
 
-impl AsciiMathVisitor {
+impl AsciiMathStringVisitor {
     pub fn new() -> Self {
-        AsciiMathVisitor {
+        AsciiMathStringVisitor {
             equation_count: 0,
             tmp_result: String::new(),
             block_expressions: Vec::new(),
@@ -81,7 +81,7 @@ impl AsciiMathVisitor {
     }
 }
 
-impl<'input> ParseTreeVisitorCompat<'input> for AsciiMathVisitor {
+impl<'input> ParseTreeVisitorCompat<'input> for AsciiMathStringVisitor {
     type Node = AsciiMath2ParserContextType;
     type Return = String;
 
@@ -98,7 +98,7 @@ impl<'input> ParseTreeVisitorCompat<'input> for AsciiMathVisitor {
     }
 }
 
-impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
+impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathStringVisitor {
     fn visit_block(
         &mut self,
         ctx: &math_parser::gen_parsers::asciimath2parser::BlockContext<'input>,
@@ -180,7 +180,9 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
 
     fn visit_mult_div_implicit_expression(
         &mut self,
-        ctx: &math_parser::gen_parsers::asciimath2parser::Mult_div_implicit_expressionContext<'input>,
+        ctx: &math_parser::gen_parsers::asciimath2parser::Mult_div_implicit_expressionContext<
+            'input,
+        >,
     ) -> Self::Return {
         self.visit_children(ctx)
     }
@@ -203,26 +205,6 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
         self.visit_children(ctx)
     }
 
-    fn visit_powerSubscriptExpression(
-        &mut self,
-        ctx: &math_parser::gen_parsers::asciimath2parser::PowerSubscriptExpressionContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_subscriptPowerExpression(
-        &mut self,
-        ctx: &math_parser::gen_parsers::asciimath2parser::SubscriptPowerExpressionContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
-    fn visit_powerExpression(
-        &mut self,
-        ctx: &math_parser::gen_parsers::asciimath2parser::PowerExpressionContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
 
     fn visit_subscriptExpression(
         &mut self,
@@ -307,7 +289,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathVisitor {
         }
         res
     }
- 
+
     fn visit_derivative(&mut self, ctx: &DerivativeContext<'input>) -> Self::Return {
         let len = ctx.get_child_count();
         let res = self.visit_children(ctx);

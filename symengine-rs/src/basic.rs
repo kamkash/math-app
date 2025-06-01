@@ -1,7 +1,15 @@
 use crate::symengine_ffi::*;
+// use log::*;
 use std::ffi::{CStr, CString};
 use std::fmt;
 use std::rc::Rc;
+
+// Constants for operator symbols
+const ADD_OP: &str = "__ADD__";
+const SUB_OP: &str = "__SUB__";
+const MUL_OP: &str = "__MUL__";
+const DIV_OP: &str = "__DIV__";
+const POW_OP: &str = "__POW__";
 
 pub struct Basic {
     inner: *mut basic,
@@ -473,6 +481,95 @@ impl Basic {
     /// Returns true if this Basic is a Complex.
     pub fn is_complex(&self) -> bool {
         unsafe { is_a_Complex(self.inner as *const basic_struct) != 0 }
+    }
+
+    pub fn is_add_op(&self) -> bool {
+        if self.is_null() {
+            return false;
+        }
+        Basic::symbol(ADD_OP).equals(self)
+    }
+    pub fn is_sub_op(&self) -> bool {
+        if self.is_null() {
+            return false;
+        }
+        Basic::symbol(SUB_OP).equals(self)
+    }
+
+    pub fn is_mul_op(&self) -> bool {
+        if self.is_null() {
+            return false;
+        }
+        Basic::symbol(MUL_OP).equals(self)
+    }
+    pub fn is_div_op(&self) -> bool {
+        if self.is_null() {
+            return false;
+        }
+        Basic::symbol(DIV_OP).equals(self)
+    }
+
+    /// Returns true if this Basic expression is a power (Pow).
+    pub fn is_pow_op(&self) -> bool {
+        if self.is_null() {
+            return false;
+        }
+        Basic::symbol(POW_OP).equals(self)
+    }
+
+    pub fn is_op(&self) -> bool {
+        self.is_add_op()
+            || self.is_sub_op()
+            || self.is_mul_op()
+            || self.is_div_op()
+            || self.is_pow_op()
+    }
+
+    /// Returns the arguments of this Basic expression
+    /// Returns an empty Vec for atomic types (e.g., Symbol, Integer) or on error.
+    pub fn get_args(&self) -> Vec<Basic> {
+        let mut args_vec = Vec::new();
+        if self.is_null() {
+            return args_vec;
+        }
+        unsafe {
+            let c_vec_basic = vecbasic_new();
+            if c_vec_basic.is_null() {
+                return args_vec;
+            } // Allocation failed
+
+            basic_get_args(self.inner as *const basic_struct, c_vec_basic);
+            let n = vecbasic_size(c_vec_basic);
+            for i in 0..n {
+                let elem_basic = Basic::new();
+                vecbasic_get(c_vec_basic, i, elem_basic.inner as *mut basic_struct);
+                if !elem_basic.is_null() {
+                    args_vec.push(elem_basic);
+                }
+            }
+            vecbasic_free(c_vec_basic);
+        }
+        args_vec
+    }
+
+    pub fn div_op() -> Self {
+        Basic::symbol(DIV_OP)
+    }
+
+    pub fn mul_op() -> Self {
+        Basic::symbol(MUL_OP)
+    }
+
+    pub fn add_op() -> Self {
+        Basic::symbol(ADD_OP)
+    }
+
+    pub fn sub_op() -> Self {
+        Basic::symbol(SUB_OP)
+    }
+
+    pub fn pow_op() -> Self {
+        Basic::symbol(POW_OP)
     }
 
     // ===========================

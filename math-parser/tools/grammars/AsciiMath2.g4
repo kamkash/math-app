@@ -14,25 +14,26 @@ logical_expression:
 relation_expression:
 	relation_expression_no_rhs
 	| add_sub_expression (
-		(EQ | NEQ | LT | GT | LTE | GTE) add_sub_expression
+		relop add_sub_expression
 	)?;
 
 relation_expression_no_rhs: (add_sub_expression | function_call) EQ;
 
 add_sub_expression:
 	mult_div_implicit_expression (
-		(PLUS | MINUS | PM) mult_div_implicit_expression
+		sumop mult_div_implicit_expression
 	)*;
 
 mult_div_implicit_expression:
-	unary_op_expression (
-		(STAR | FSLASH | TIMES | DIV) unary_op_expression
-		
+	power_expression ( // Changed from unary_op_expression
+		multop power_expression // Changed from unary_op_expression
 	)*;
 
-// Unary operations
+power_expression: unary_op_expression (HAT primary_expression)*;
+
 unary_op_expression: (PLUS | MINUS) script_op_expression	# unaryPlusMinus
 	| script_op_expression									# noUnaryOperator;
+
 
 // differential: D_LOWERCASE (IDENTIFIER | GREEK_LETTER);   // can't get this to work
 differential:
@@ -51,12 +52,13 @@ integral_lower_limit:
 	UNDERSCORE ('oo' | '+oo' | '-oo' | NUMBER);
 
 script_op_expression:
-	primary_expression (
-		(HAT primary_expression (UNDERSCORE primary_expression)?)
-	)*															# powerSubscriptExpression
-	| (UNDERSCORE primary_expression (HAT primary_expression)?)	# subscriptPowerExpression
-	| HAT primary_expression									# powerExpression
-	| UNDERSCORE primary_expression								# subscriptExpression
+//	primary_expression (
+//		(HAT primary_expression (UNDERSCORE primary_expression)?) // e.g. x^2, x^2_1 or f^2_i
+//	)*															# powerSubscriptExpression
+//	| (UNDERSCORE primary_expression (HAT primary_expression)?)	# subscriptPowerExpression
+    primary_expression                                          # primaryExpression
+	|
+	UNDERSCORE primary_expression								# subscriptExpression
 	| PRIME														# primeExpression; // Allow multiple scripts like f'_1^2 but needs care
 
 // Primary expressions - the highest precedence
@@ -184,6 +186,29 @@ constant_symbol:
 	| NAN_CONST
 	| PHI_CONST;
 
+relop
+    : GT
+    | LT
+	| LTE
+	| GTE
+	| EQ
+    | NEQ
+    | DOUBLE_EQ
+    ;
+
+sumop
+    : PLUS
+    | MINUS
+    | PM
+    ;
+
+multop
+    : STAR
+    | FSLASH
+	| TIMES
+	| DIV
+    ;	
+
 // --- Lexer Rules (Tokens) --- (Ensure these are complete and correctly ordered, Keywords before
 // IDENTIFIER)
 
@@ -273,6 +298,7 @@ UNDERSCORE: '_';
 PRIME: '\'';
 BANG: '!';
 EQ: '=';
+DOUBLE_EQ: '==';
 NEQ: '!=' | '<>';
 LT: '<';
 GT: '>';

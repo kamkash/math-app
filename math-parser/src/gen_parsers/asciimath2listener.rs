@@ -75,6 +75,16 @@ fn enter_mult_div_implicit_expression(&mut self, _ctx: &Mult_div_implicit_expres
  */
 fn exit_mult_div_implicit_expression(&mut self, _ctx: &Mult_div_implicit_expressionContext<'input>) { }
 /**
+ * Enter a parse tree produced by {@link AsciiMath2Parser#power_expression}.
+ * @param ctx the parse tree
+ */
+fn enter_power_expression(&mut self, _ctx: &Power_expressionContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link AsciiMath2Parser#power_expression}.
+ * @param ctx the parse tree
+ */
+fn exit_power_expression(&mut self, _ctx: &Power_expressionContext<'input>) { }
+/**
  * Enter a parse tree produced by the {@code unaryPlusMinus}
  * labeled alternative in {@link AsciiMath2Parser#unary_op_expression}.
  * @param ctx the parse tree
@@ -139,41 +149,17 @@ fn enter_integral_lower_limit(&mut self, _ctx: &Integral_lower_limitContext<'inp
  */
 fn exit_integral_lower_limit(&mut self, _ctx: &Integral_lower_limitContext<'input>) { }
 /**
- * Enter a parse tree produced by the {@code powerSubscriptExpression}
+ * Enter a parse tree produced by the {@code primaryExpression}
  * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
  * @param ctx the parse tree
  */
-fn enter_powerSubscriptExpression(&mut self, _ctx: &PowerSubscriptExpressionContext<'input>) { }
+fn enter_primaryExpression(&mut self, _ctx: &PrimaryExpressionContext<'input>) { }
 /**
- * Exit a parse tree produced by the {@code powerSubscriptExpression}
+ * Exit a parse tree produced by the {@code primaryExpression}
  * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
  * @param ctx the parse tree
  */
-fn exit_powerSubscriptExpression(&mut self, _ctx: &PowerSubscriptExpressionContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code subscriptPowerExpression}
- * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
- * @param ctx the parse tree
- */
-fn enter_subscriptPowerExpression(&mut self, _ctx: &SubscriptPowerExpressionContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code subscriptPowerExpression}
- * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
- * @param ctx the parse tree
- */
-fn exit_subscriptPowerExpression(&mut self, _ctx: &SubscriptPowerExpressionContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code powerExpression}
- * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
- * @param ctx the parse tree
- */
-fn enter_powerExpression(&mut self, _ctx: &PowerExpressionContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code powerExpression}
- * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
- * @param ctx the parse tree
- */
-fn exit_powerExpression(&mut self, _ctx: &PowerExpressionContext<'input>) { }
+fn exit_primaryExpression(&mut self, _ctx: &PrimaryExpressionContext<'input>) { }
 /**
  * Enter a parse tree produced by the {@code subscriptExpression}
  * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
@@ -686,6 +672,36 @@ fn enter_constant_symbol(&mut self, _ctx: &Constant_symbolContext<'input>) { }
  * @param ctx the parse tree
  */
 fn exit_constant_symbol(&mut self, _ctx: &Constant_symbolContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link AsciiMath2Parser#relop}.
+ * @param ctx the parse tree
+ */
+fn enter_relop(&mut self, _ctx: &RelopContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link AsciiMath2Parser#relop}.
+ * @param ctx the parse tree
+ */
+fn exit_relop(&mut self, _ctx: &RelopContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link AsciiMath2Parser#sumop}.
+ * @param ctx the parse tree
+ */
+fn enter_sumop(&mut self, _ctx: &SumopContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link AsciiMath2Parser#sumop}.
+ * @param ctx the parse tree
+ */
+fn exit_sumop(&mut self, _ctx: &SumopContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link AsciiMath2Parser#multop}.
+ * @param ctx the parse tree
+ */
+fn enter_multop(&mut self, _ctx: &MultopContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link AsciiMath2Parser#multop}.
+ * @param ctx the parse tree
+ */
+fn exit_multop(&mut self, _ctx: &MultopContext<'input>) { }
 
 }
 

@@ -51,6 +51,12 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	fn visit_mult_div_implicit_expression(&mut self, ctx: &Mult_div_implicit_expressionContext<'input>) { self.visit_children(ctx) }
 
 	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#power_expression}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_power_expression(&mut self, ctx: &Power_expressionContext<'input>) { self.visit_children(ctx) }
+
+	/**
 	 * Visit a parse tree produced by the {@code unaryPlusMinus}
 	 * labeled alternative in {@link AsciiMath2Parser#unary_op_expression}.
 	 * @param ctx the parse tree
@@ -89,25 +95,11 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	fn visit_integral_lower_limit(&mut self, ctx: &Integral_lower_limitContext<'input>) { self.visit_children(ctx) }
 
 	/**
-	 * Visit a parse tree produced by the {@code powerSubscriptExpression}
+	 * Visit a parse tree produced by the {@code primaryExpression}
 	 * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
 	 * @param ctx the parse tree
 	 */
-	fn visit_powerSubscriptExpression(&mut self, ctx: &PowerSubscriptExpressionContext<'input>) { self.visit_children(ctx) }
-
-	/**
-	 * Visit a parse tree produced by the {@code subscriptPowerExpression}
-	 * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
-	 * @param ctx the parse tree
-	 */
-	fn visit_subscriptPowerExpression(&mut self, ctx: &SubscriptPowerExpressionContext<'input>) { self.visit_children(ctx) }
-
-	/**
-	 * Visit a parse tree produced by the {@code powerExpression}
-	 * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
-	 * @param ctx the parse tree
-	 */
-	fn visit_powerExpression(&mut self, ctx: &PowerExpressionContext<'input>) { self.visit_children(ctx) }
+	fn visit_primaryExpression(&mut self, ctx: &PrimaryExpressionContext<'input>) { self.visit_children(ctx) }
 
 	/**
 	 * Visit a parse tree produced by the {@code subscriptExpression}
@@ -410,6 +402,24 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	 */
 	fn visit_constant_symbol(&mut self, ctx: &Constant_symbolContext<'input>) { self.visit_children(ctx) }
 
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#relop}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_relop(&mut self, ctx: &RelopContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#sumop}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_sumop(&mut self, ctx: &SumopContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#multop}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_multop(&mut self, ctx: &MultopContext<'input>) { self.visit_children(ctx) }
+
 }
 
 pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= AsciiMath2ParserContextType>{
@@ -470,6 +480,14 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 		}
 
 	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#power_expression}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_power_expression(&mut self, ctx: &Power_expressionContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
 	 * Visit a parse tree produced by the {@code unaryPlusMinus}
 	 * labeled alternative in {@link AsciiMath2Parser#unary_op_expression}.
 	 * @param ctx the parse tree
@@ -520,29 +538,11 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 		}
 
 	/**
-	 * Visit a parse tree produced by the {@code powerSubscriptExpression}
+	 * Visit a parse tree produced by the {@code primaryExpression}
 	 * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
 	 * @param ctx the parse tree
 	 */
-		fn visit_powerSubscriptExpression(&mut self, ctx: &PowerSubscriptExpressionContext<'input>) -> Self::Return {
-			self.visit_children(ctx)
-		}
-
-	/**
-	 * Visit a parse tree produced by the {@code subscriptPowerExpression}
-	 * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
-	 * @param ctx the parse tree
-	 */
-		fn visit_subscriptPowerExpression(&mut self, ctx: &SubscriptPowerExpressionContext<'input>) -> Self::Return {
-			self.visit_children(ctx)
-		}
-
-	/**
-	 * Visit a parse tree produced by the {@code powerExpression}
-	 * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
-	 * @param ctx the parse tree
-	 */
-		fn visit_powerExpression(&mut self, ctx: &PowerExpressionContext<'input>) -> Self::Return {
+		fn visit_primaryExpression(&mut self, ctx: &PrimaryExpressionContext<'input>) -> Self::Return {
 			self.visit_children(ctx)
 		}
 
@@ -937,6 +937,30 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 			self.visit_children(ctx)
 		}
 
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#relop}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_relop(&mut self, ctx: &RelopContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#sumop}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_sumop(&mut self, ctx: &SumopContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#multop}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_multop(&mut self, ctx: &MultopContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
 }
 
 impl<'input,T> AsciiMath2Visitor<'input> for T
@@ -978,6 +1002,11 @@ where
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
+	fn visit_power_expression(&mut self, ctx: &Power_expressionContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_power_expression(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
 	fn visit_unaryPlusMinus(&mut self, ctx: &UnaryPlusMinusContext<'input>){
 		let result = <Self as AsciiMath2VisitorCompat>::visit_unaryPlusMinus(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
@@ -1008,18 +1037,8 @@ where
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
-	fn visit_powerSubscriptExpression(&mut self, ctx: &PowerSubscriptExpressionContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_powerSubscriptExpression(self, ctx);
-        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
-	}
-
-	fn visit_subscriptPowerExpression(&mut self, ctx: &SubscriptPowerExpressionContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_subscriptPowerExpression(self, ctx);
-        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
-	}
-
-	fn visit_powerExpression(&mut self, ctx: &PowerExpressionContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_powerExpression(self, ctx);
+	fn visit_primaryExpression(&mut self, ctx: &PrimaryExpressionContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_primaryExpression(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
@@ -1245,6 +1264,21 @@ where
 
 	fn visit_constant_symbol(&mut self, ctx: &Constant_symbolContext<'input>){
 		let result = <Self as AsciiMath2VisitorCompat>::visit_constant_symbol(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_relop(&mut self, ctx: &RelopContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_relop(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_sumop(&mut self, ctx: &SumopContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_sumop(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_multop(&mut self, ctx: &MultopContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_multop(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 

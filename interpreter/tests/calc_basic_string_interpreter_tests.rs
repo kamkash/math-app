@@ -1,4 +1,4 @@
-use interpreter::calc_basic_string_interpreter::{self, SymStringVisitor};
+use interpreter::calc_basic_string_interpreter::{self, CalcStringVisitor};
 use log::info;
 use test_log;
 
@@ -17,7 +17,7 @@ fn test_symstring_eval_equations() {
                         q1 = 100000 / w1
                         q11 = 100000 / w11
                         z * 7 = t + 3.14";
-    let mut visitor = SymStringVisitor::new();
+    let mut visitor = CalcStringVisitor::new();
     let lexer = calculatorLexer::new(InputStream::new(input));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = calculatorParser::new(token_stream);
@@ -38,7 +38,7 @@ fn test_symstring_eval_eq_func_expr() {
          x^3 + x^2 / 3 - 9 * x + 21
          x/3 = "
     );
-    let mut visitor = SymStringVisitor::new();
+    let mut visitor = CalcStringVisitor::new();
     let lexer = calculatorLexer::new(InputStream::new(input.as_str()));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = calculatorParser::new(token_stream);

@@ -32,7 +32,7 @@ use math_parser::gen_parsers::{
 };
 use symengine_rs::basic::Basic;
 
-pub struct SymBasicCalcVisitor {
+pub struct CalcBasicVisitor {
     pub tmp_result: Rc<Basic>,
     pub visitor_stack: Vec<Rc<Basic>>,
     pub block_expressions: Vec<SymEquation>,
@@ -40,9 +40,9 @@ pub struct SymBasicCalcVisitor {
     pub result_table: std::collections::HashMap<Rc<Basic>, Rc<Basic>>,
 }
 
-impl SymBasicCalcVisitor {
+impl CalcBasicVisitor {
     pub fn new() -> Self {
-        SymBasicCalcVisitor {
+        CalcBasicVisitor {
             tmp_result: Rc::new(Basic::default()),
             visitor_stack: Vec::new(),
             block_expressions: Vec::new(),
@@ -73,7 +73,7 @@ impl SymBasicCalcVisitor {
     }
 }
 
-impl ParseTreeVisitorCompat<'_> for SymBasicCalcVisitor {
+impl ParseTreeVisitorCompat<'_> for CalcBasicVisitor {
     type Node = calculatorParserContextType;
     type Return = Rc<Basic>;
 
@@ -86,7 +86,7 @@ impl ParseTreeVisitorCompat<'_> for SymBasicCalcVisitor {
     }
 }
 
-impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
+impl<'input> calculatorVisitorCompat<'input> for CalcBasicVisitor {
     fn visit_block(&mut self, ctx: &BlockContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
         self.build_symbol_table();
@@ -304,7 +304,7 @@ impl<'input> calculatorVisitorCompat<'input> for SymBasicCalcVisitor {
 
 pub fn evaluate_ascii_math_block(input: &str) -> Result<String, String> {
     info!("evaluate_ascii_math {}", input);
-    let mut visitor = SymBasicCalcVisitor::new();
+    let mut visitor = CalcBasicVisitor::new();
     let lexer = calculatorLexer::new(InputStream::new(input));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = calculatorParser::new(token_stream);

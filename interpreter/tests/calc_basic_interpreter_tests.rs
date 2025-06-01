@@ -1,6 +1,6 @@
 use antlr_rust::tree::ParseTreeVisitorCompat;
 use antlr_rust::{common_token_stream::CommonTokenStream, InputStream};
-use interpreter::calc_basic_interpreter::SymBasicCalcVisitor;
+use interpreter::calc_basic_interpreter::CalcBasicVisitor;
 use log::info;
 use math_parser::gen_parsers::{
     calculatorlexer::calculatorLexer, calculatorparser::calculatorParser,
@@ -19,7 +19,7 @@ fn test_evaluator_equations() {
                         q1 = 100,000 / w1
                         q11 != 100,000 / w11
                         z * 7 = t + 3.14";
-    let mut visitor = SymBasicCalcVisitor::new();
+    let mut visitor = CalcBasicVisitor::new();
     let lexer = calculatorLexer::new(InputStream::new(input));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = calculatorParser::new(token_stream);
@@ -44,7 +44,7 @@ fn test_evaluator_compound_interest() {
          n = {n}
          compound_interest = p * (1 + i) ^ n "
     );
-    let mut visitor = SymBasicCalcVisitor::new();
+    let mut visitor = CalcBasicVisitor::new();
     let lexer = calculatorLexer::new(InputStream::new(input.as_str()));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = calculatorParser::new(token_stream);
@@ -75,7 +75,7 @@ fn test_evaluator_polynomial() {
         "x = {x} 
          z = x^3 + 3*x^2 - 9"
     );
-    let mut visitor = SymBasicCalcVisitor::new();
+    let mut visitor = CalcBasicVisitor::new();
     let lexer = calculatorLexer::new(InputStream::new(input.as_str()));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = calculatorParser::new(token_stream);
@@ -101,7 +101,7 @@ fn test_evaluator_polynomial_order_bad_result() {
         "x = {x} 
          z = x^3 + x^2 / 3 - 9 * x + 21"
     );
-    let mut visitor = SymBasicCalcVisitor::new();
+    let mut visitor = CalcBasicVisitor::new();
     let lexer = calculatorLexer::new(InputStream::new(input.as_str()));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = calculatorParser::new(token_stream);
@@ -140,7 +140,7 @@ fn test_symengine_eval_error_handling() {
          x(1-x) = 
          "
     );
-    let mut visitor = SymBasicCalcVisitor::new();
+    let mut visitor = CalcBasicVisitor::new();
     let lexer = calculatorLexer::new(InputStream::new(input.as_str()));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = calculatorParser::new(token_stream);

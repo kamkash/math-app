@@ -2,7 +2,7 @@ use std::rc::Rc;
 
 use antlr_rust::tree::ParseTreeVisitorCompat;
 use antlr_rust::{common_token_stream::CommonTokenStream, InputStream};
-use asciimath_basic_string_interpreter::AsciiMathVisitor;
+use asciimath_basic_string_interpreter::AsciiMathStringVisitor;
 use interpreter::asciimath_basic_string_interpreter;
 use log::info;
 use math_parser::gen_parsers::asciimath2lexer::AsciiMath2Lexer;
@@ -19,7 +19,7 @@ fn test_asciimath_eval_expressions() {
                         q1 = 100000 / w1
                         q11 != 100000 / w11
                         z * 7 = t + 3.14";
-    let mut visitor = AsciiMathVisitor::new();
+    let mut visitor = AsciiMathStringVisitor::new();
     let lexer = AsciiMath2Lexer::new(InputStream::new(input));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = AsciiMath2Parser::new(token_stream);
@@ -33,7 +33,7 @@ fn test_asciimath_eval_expressions_parentheses() {
     let input = "p = 100000.00
                         i = 10.00
                         f=(p)/(i)";
-    let mut visitor = AsciiMathVisitor::new();
+    let mut visitor = AsciiMathStringVisitor::new();
     let lexer = AsciiMath2Lexer::new(InputStream::new(input));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = AsciiMath2Parser::new(token_stream);
@@ -58,7 +58,7 @@ fn test_asciimath_compound_interest() {
          n = {n}
          compound_interest = p * (1 + i) ^ n "
     );
-    let mut visitor = AsciiMathVisitor::new();
+    let mut visitor = AsciiMathStringVisitor::new();
     let lexer = AsciiMath2Lexer::new(InputStream::new(input.as_str()));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = AsciiMath2Parser::new(token_stream);
@@ -91,7 +91,7 @@ fn test_asciimath_eval_expressions_no_rhs() {
                         t = x/y
                         x^2=
                         ";
-    let mut visitor = AsciiMathVisitor::new();
+    let mut visitor = AsciiMathStringVisitor::new();
     let lexer = AsciiMath2Lexer::new(InputStream::new(input));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = AsciiMath2Parser::new(token_stream);
@@ -112,7 +112,7 @@ fn test_asciimath_eval_trig_expressions() {
          yp = sin(2 * x)^2 + cos(x^2)^2",
         x
     );
-    let mut visitor = AsciiMathVisitor::new();
+    let mut visitor = AsciiMathStringVisitor::new();
     let lexer = AsciiMath2Lexer::new(InputStream::new(input.as_str()));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = AsciiMath2Parser::new(token_stream);
@@ -131,7 +131,7 @@ fn test_asciimath_eval_trig_expressions() {
 
 #[test_log::test]
 fn test_asciimath_eval_individual_trig_functions() {
-    let mut visitor = AsciiMathVisitor::new();
+    let mut visitor = AsciiMathStringVisitor::new();
     let mut input_lines: Vec<String> = Vec::new();
     let mut checks: Vec<(&str, f64)> = Vec::new();
 
@@ -328,7 +328,7 @@ fn test_asciimath_eval_individual_trig_functions() {
 
 #[test_log::test]
 fn test_asciimath_eval_algebraic_operations() {
-    let mut visitor = AsciiMathVisitor::new();
+    let mut visitor = AsciiMathStringVisitor::new();
     let mut input_lines: Vec<String> = Vec::new();
     let mut checks: Vec<(&str, f64)> = Vec::new();
 
@@ -448,7 +448,7 @@ fn test_asciimath_eval_derivatives() {
                 deriv(x^2+3x-10,x)=
                 deriv(yx^2+3yx-10,y)=";
 
-    let mut visitor = AsciiMathVisitor::new();
+    let mut visitor = AsciiMathStringVisitor::new();
     let lexer = AsciiMath2Lexer::new(InputStream::new(input));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = AsciiMath2Parser::new(token_stream);
@@ -465,7 +465,7 @@ fn test_asciimath_integrals() {
                                int _ -1 ^ 1 (sin(t)^3 + cos(t) - t) dt
                                int _ -1 ^ +1 (sin(t)^3 + cos(t) - t) dt";
 
-    let mut visitor = AsciiMathVisitor::new();
+    let mut visitor = AsciiMathStringVisitor::new();
     let lexer = AsciiMath2Lexer::new(InputStream::new(input));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = AsciiMath2Parser::new(token_stream);

@@ -56,7 +56,6 @@ fn test_basic_operations() {
 
     assert!(r1.equals(&r1));
     assert!(!r1.equals(&r2));
-
     assert_eq!(r1.to_string(), "sin(x)");
     assert_eq!(r2.to_string(), "cos(x)");
     assert_eq!(r3.to_string(), "-z");
@@ -290,3 +289,28 @@ fn test_basic_differentiation() {
     info!("Derivative of {}: {}", trig_expr, trig_derivative);
     assert_eq!(trig_derivative, Basic::parse("cos(x) - sin(x)").unwrap());
 }   
+
+#[test]
+fn test_basic_mul_add_ops() {
+    let mul_expr = Basic::mul_op();
+    let div_expr = Basic::div_op();
+    let add_expr = Basic::add_op();
+    let sub_expr = Basic::sub_op();
+    let pow_exp = Basic::pow_op();
+
+    info!("Multiplication: {} {} {}", mul_expr, mul_expr.get_type(), mul_expr.is_mul_op());
+    info!("Division: {} {} {}", div_expr, div_expr.get_type(), div_expr.is_div_op());
+    info!("Addition: {} {} {}", add_expr, add_expr.get_type(), add_expr.is_add_op());
+    info!("Subtraction: {} {} {}", sub_expr, sub_expr.get_type(), sub_expr.is_sub_op());
+
+    assert!(mul_expr.is_mul_op());
+    assert!(div_expr.is_div_op());
+    assert!(add_expr.is_add_op());
+    assert!(sub_expr.is_sub_op());
+    assert!(pow_exp.is_pow_op());
+    assert!(!sub_expr.is_add_op());
+    assert!(!add_expr.is_sub_op());
+    assert!(!mul_expr.is_div_op());
+    assert!(!div_expr.is_mul_op());
+   
+}
