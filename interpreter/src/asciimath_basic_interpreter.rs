@@ -128,21 +128,25 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
     ) -> Self::Return {
         let res = self.visit_children(ctx);
         let len = ctx.get_child_count();
+        let stack_len = self.visitor_stack.len();
+        let remove_at = stack_len - len;
         if len > 1 {
             dbg!(&self.visitor_stack);
-            let mut right = self.visitor_stack.pop().unwrap();
+            let mut left = self.visitor_stack.remove(remove_at);
+            dbg!(&left);
             for _ in 0..(len - 1) / 2 {
-                let op = self.visitor_stack.pop().unwrap();
+                let op = self.visitor_stack.remove(remove_at);
+                dbg!(&op);
                 assert!(op.is_op());
                 if op.is_add_op() {
-                    let left = self.visitor_stack.pop().unwrap();
-                    right = Rc::new(left.add(&right));
+                    let right = self.visitor_stack.remove(remove_at);
+                    left = Rc::new(left.add(&right));
                 } else {
-                    let left = self.visitor_stack.pop().unwrap();
-                    right = Rc::new(left.sub(&right));
+                    let right = self.visitor_stack.remove(remove_at);
+                    left = Rc::new(left.sub(&right));
                 }
             }
-            self.visitor_stack.push(right);
+            self.visitor_stack.push(left);
         }
         res
     }

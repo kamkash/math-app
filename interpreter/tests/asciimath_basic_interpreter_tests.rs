@@ -1,5 +1,3 @@
-use std::rc::Rc;
-
 use antlr_rust::tree::ParseTreeVisitorCompat;
 use antlr_rust::{common_token_stream::CommonTokenStream, InputStream};
 use interpreter::asciimath_basic_interpreter::AsciiMathBasicVisitor;
@@ -67,10 +65,16 @@ fn test_asciimath_basic_visitor_eval() {
     info!("Symbol table: {:?}", visitor.symbol_table);
     info!("Result table: {:?}", visitor.result_table);
     info!("fx: {}", fx);
-
-    assert_ne!(
-        visitor.result_table.get(&Basic::symbol("z")),
-        Some(&Rc::new(Basic::real(fx))),
+    let epsilon = 1e-8;
+    let actual = visitor
+        .result_table
+        .get(&Basic::symbol("z"))
+        .and_then(|b| b.to_f64())
+        .unwrap();
+    assert!(
+        (actual - fx).abs() < epsilon,
+        "actual: {}, expected: {}",
+        actual,
+        fx
     );
-
 }
