@@ -13,9 +13,7 @@ logical_expression:
 
 relation_expression:
 	relation_expression_no_rhs
-	| add_sub_expression (
-		relop add_sub_expression
-	)?;
+	| add_sub_expression ( relop add_sub_expression)?;
 
 relation_expression_no_rhs: (add_sub_expression | function_call) EQ;
 
@@ -25,15 +23,15 @@ add_sub_expression:
 	)*;
 
 mult_div_implicit_expression:
-	power_expression ( // Changed from unary_op_expression
+	power_expression (
+		// Changed from unary_op_expression
 		multop power_expression // Changed from unary_op_expression
 	)*;
 
-power_expression: unary_op_expression (HAT primary_expression)*;
+power_expression: unary_op_expression (powop primary_expression)*;
 
 unary_op_expression: (PLUS | MINUS) script_op_expression	# unaryPlusMinus
 	| script_op_expression									# noUnaryOperator;
-
 
 // differential: D_LOWERCASE (IDENTIFIER | GREEK_LETTER);   // can't get this to work
 differential:
@@ -52,14 +50,12 @@ integral_lower_limit:
 	UNDERSCORE ('oo' | '+oo' | '-oo' | NUMBER);
 
 script_op_expression:
-//	primary_expression (
-//		(HAT primary_expression (UNDERSCORE primary_expression)?) // e.g. x^2, x^2_1 or f^2_i
-//	)*															# powerSubscriptExpression
-//	| (UNDERSCORE primary_expression (HAT primary_expression)?)	# subscriptPowerExpression
-    primary_expression                                          # primaryExpression
-	|
-	UNDERSCORE primary_expression								# subscriptExpression
-	| PRIME														# primeExpression; // Allow multiple scripts like f'_1^2 but needs care
+	// primary_expression ( (HAT primary_expression (UNDERSCORE primary_expression)?) // e.g. x^2,
+	// x^2_1 or f^2_i )* # powerSubscriptExpression | (UNDERSCORE primary_expression (HAT
+	// primary_expression)?) # subscriptPowerExpression
+	primary_expression				# primaryExpression
+	| UNDERSCORE primary_expression	# subscriptExpression
+	| PRIME							# primeExpression; // Allow multiple scripts like f'_1^2 but needs care
 
 // Primary expressions - the highest precedence
 primary_expression:
@@ -74,7 +70,8 @@ primary_expression:
 	| ROOT primary_expression primary_expression											# rootFunction
 	| FRAC primary_expression primary_expression											# fracFunction
 	| TEXT LPAREN text_argument RPAREN														# textFunction
-	| INTEGRAL (integral_lower_limit)? (integral_upper_limit)? integral_body differential	# integralExpression
+	| INTEGRAL (integral_lower_limit)? (integral_upper_limit)? integral_body differential	#
+		integralExpression
 	| derivative																			# derivativeFunction
 	| partial_derivative																	# partialFunction
 	| differential FSLASH differential														# fractionLeibniz
@@ -186,28 +183,13 @@ constant_symbol:
 	| NAN_CONST
 	| PHI_CONST;
 
-relop
-    : GT
-    | LT
-	| LTE
-	| GTE
-	| EQ
-    | NEQ
-    | DOUBLE_EQ
-    ;
+relop: GT | LT | LTE | GTE | EQ | NEQ | DOUBLE_EQ;
 
-sumop
-    : PLUS
-    | MINUS
-    | PM
-    ;
+sumop: PLUS | MINUS | PM;
 
-multop
-    : STAR
-    | FSLASH
-	| TIMES
-	| DIV
-    ;	
+multop: STAR | FSLASH | TIMES | DIV;
+
+powop: HAT | POW;
 
 // --- Lexer Rules (Tokens) --- (Ensure these are complete and correctly ordered, Keywords before
 // IDENTIFIER)
@@ -293,7 +275,8 @@ PLUS: '+';
 MINUS: '-';
 STAR: '*';
 FSLASH: '/';
-HAT: '^';
+HAT: '^' ;
+POW: '**';
 UNDERSCORE: '_';
 PRIME: '\'';
 BANG: '!';

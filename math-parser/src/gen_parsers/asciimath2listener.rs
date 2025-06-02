@@ -702,6 +702,16 @@ fn enter_multop(&mut self, _ctx: &MultopContext<'input>) { }
  * @param ctx the parse tree
  */
 fn exit_multop(&mut self, _ctx: &MultopContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link AsciiMath2Parser#powop}.
+ * @param ctx the parse tree
+ */
+fn enter_powop(&mut self, _ctx: &PowopContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link AsciiMath2Parser#powop}.
+ * @param ctx the parse tree
+ */
+fn exit_powop(&mut self, _ctx: &PowopContext<'input>) { }
 
 }
 

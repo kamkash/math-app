@@ -9,7 +9,7 @@ use log::info;
 use math_parser::gen_parsers::asciimath2lexer;
 use math_parser::gen_parsers::asciimath2parser::{
     AsciiMath2Parser, AsciiMath2ParserContextType, IdentifierAtomContext, MultopContext,
-    NumberAtomContext, Power_expressionContext, RelopContext, SumopContext,
+    NumberAtomContext, Power_expressionContext, PowopContext, RelopContext, SumopContext,
 };
 use math_parser::gen_parsers::asciimath2visitor::AsciiMath2VisitorCompat;
 use symengine_rs::basic::Basic;
@@ -159,21 +159,23 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
     ) -> Self::Return {
         let res = self.visit_children(ctx);
         let len = ctx.get_child_count();
+        let stack_len = self.visitor_stack.len();
+        let remove_at = stack_len - len;
         if len > 1 {
             dbg!(&self.visitor_stack);
-            let mut right = self.visitor_stack.pop().unwrap();
+            let mut left = self.visitor_stack.remove(remove_at);
             for _ in 0..(len - 1) / 2 {
-                let op = self.visitor_stack.pop().unwrap();
+                let op = self.visitor_stack.remove(remove_at);
                 assert!(op.is_op());
                 if op.is_mul_op() {
-                    let left = self.visitor_stack.pop().unwrap();
-                    right = Rc::new(left.mul(&right));
+                    let right = self.visitor_stack.remove(remove_at);
+                    left = Rc::new(left.mul(&right));
                 } else {
-                    let left = self.visitor_stack.pop().unwrap();
-                    right = Rc::new(left.div(&right));
+                    let right = self.visitor_stack.remove(remove_at);
+                    left = Rc::new(left.div(&right));
                 }
             }
-            self.visitor_stack.push(right);
+            self.visitor_stack.push(left);
         }
         res
     }
@@ -181,14 +183,19 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
     fn visit_power_expression(&mut self, ctx: &Power_expressionContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
         let len = ctx.get_child_count();
+        let stack_len = self.visitor_stack.len();
+        let remove_at = stack_len - len;
         if len > 1 {
+            dbg!(ctx.get_text());
             dbg!(&self.visitor_stack);
-            let mut right = self.visitor_stack.pop().unwrap();
+            let mut left = self.visitor_stack.remove(remove_at);
             for _ in 0..(len - 1) / 2 {
-                let left = self.visitor_stack.pop().unwrap();
-                right = Rc::new(left.pow(&right));
+                let op = self.visitor_stack.remove(remove_at);
+                assert!(op.is_pow_op());
+                let right = self.visitor_stack.remove(remove_at);
+                left = Rc::new(left.pow(&right));
             }
-            self.visitor_stack.push(right);
+            self.visitor_stack.push(left);
         }
         res
     }
@@ -238,6 +245,15 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
             self.visitor_stack.push(Rc::new(Basic::mul_op()));
         } else {
             self.visitor_stack.push(Rc::new(Basic::div_op()));
+        }
+        res
+    }
+
+    fn visit_powop(&mut self, ctx: &PowopContext<'input>) -> Self::Return {
+        let res = self.visit_children(ctx);
+        let op_text = ctx.get_text();
+        if op_text == "^" || op_text == "**" {
+            self.visitor_stack.push(Rc::new(Basic::pow_op()));
         }
         res
     }

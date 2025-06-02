@@ -420,6 +420,12 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	 */
 	fn visit_multop(&mut self, ctx: &MultopContext<'input>) { self.visit_children(ctx) }
 
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#powop}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_powop(&mut self, ctx: &PowopContext<'input>) { self.visit_children(ctx) }
+
 }
 
 pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= AsciiMath2ParserContextType>{
@@ -961,6 +967,14 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 			self.visit_children(ctx)
 		}
 
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#powop}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_powop(&mut self, ctx: &PowopContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
 }
 
 impl<'input,T> AsciiMath2Visitor<'input> for T
@@ -1279,6 +1293,11 @@ where
 
 	fn visit_multop(&mut self, ctx: &MultopContext<'input>){
 		let result = <Self as AsciiMath2VisitorCompat>::visit_multop(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_powop(&mut self, ctx: &PowopContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_powop(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
