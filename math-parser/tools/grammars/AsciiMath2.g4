@@ -28,7 +28,8 @@ mult_div_implicit_expression:
 		multop power_expression // Changed from unary_op_expression
 	)*;
 
-power_expression: unary_op_expression (powop primary_expression)*;
+power_expression:
+	unary_op_expression (powop primary_expression)*;
 
 unary_op_expression: (PLUS | MINUS) script_op_expression	# unaryPlusMinus
 	| script_op_expression									# noUnaryOperator;
@@ -60,9 +61,9 @@ script_op_expression:
 // Primary expressions - the highest precedence
 primary_expression:
 	function_call																			# explicitIdentifierCall
-	| LPAREN expression RPAREN																# parenExpression
-	| LBRACE expression RBRACE																# braceExpression // e.g. {a+b}
-	| ABS expression ABS																	# absExpression // |expression|
+	| LPAREN logical_expression RPAREN														# parenExpression
+	| LBRACE logical_expression RBRACE														# braceExpression // e.g. {a+b}
+	| ABS logical_expression ABS															# absExpression // |expression|
 	| IDENTIFIER (PRIME+)? LPAREN arguments RPAREN											# explicitIdentifierCall // f(x), f'(x)
 	| keyword_func																			# explicitKeywordCall // sin(x), vec(x,y,z)
 	| simple_keyword_func																	# simpleKeywordCall // e.g., sin x
@@ -174,8 +175,7 @@ BUILTIN_KEYWORD_FUNC_NAME:
 // constructor.;
 constant_symbol:
 	PI_CONST
-	// | E_CONST
-	// | I_CONST
+	// | E_CONST | I_CONST
 	| INFINITY_CONST
 	| GAMMA_CONST
 	| TRUE_CONST
@@ -260,8 +260,7 @@ TRANSPOSE:
 
 // Constant Keywords
 PI_CONST: 'pi' | '\u03C0';
-// E_CONST: 'e';
-// I_CONST: 'i';
+// E_CONST: 'e'; I_CONST: 'i';
 INFINITY_CONST: 'oo' | 'infty' | '\u221E';
 SIGNED_INFINITY_CONST: (PLUS | MINUS)? INFINITY_CONST;
 GAMMA_CONST: 'gamma' | '\u03B3';
@@ -275,7 +274,7 @@ PLUS: '+';
 MINUS: '-';
 STAR: '*';
 FSLASH: '/';
-HAT: '^' ;
+HAT: '^';
 POW: '**';
 UNDERSCORE: '_';
 PRIME: '\'';

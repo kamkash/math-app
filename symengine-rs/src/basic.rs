@@ -4,12 +4,74 @@ use std::ffi::{CStr, CString};
 use std::fmt;
 use std::rc::Rc;
 
-// Constants for operator symbols
-const ADD_OP: &str = "__ADD__";
-const SUB_OP: &str = "__SUB__";
-const MUL_OP: &str = "__MUL__";
-const DIV_OP: &str = "__DIV__";
-const POW_OP: &str = "__POW__";
+// Operator enum for idiomatic Rust usage
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum Operator {
+    Add,
+    Sub,
+    Mul,
+    Div,
+    Pow,
+}
+
+impl Operator {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Operator::Add => "__ADD__",
+            Operator::Sub => "__SUB__",
+            Operator::Mul => "__MUL__",
+            Operator::Div => "__DIV__",
+            Operator::Pow => "__POW__",
+        }
+    }
+    pub fn from_str(s: &str) -> Option<Self> {
+        match s {
+            "__ADD__" => Some(Operator::Add),
+            "__SUB__" => Some(Operator::Sub),
+            "__MUL__" => Some(Operator::Mul),
+            "__DIV__" => Some(Operator::Div),
+            "__POW__" => Some(Operator::Pow),
+            _ => None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum LogicalOperator {
+    Eq,       // '='
+    DoubleEq, // '=='
+    Neq,      // '!=' | '<>'
+    Lt,       // '<'
+    Gt,       // '>'
+    Lte,      // '<=' | 'le'
+    Gte,      // '>=' | 'ge'
+}
+
+impl LogicalOperator {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            LogicalOperator::Eq => "=",
+            LogicalOperator::DoubleEq => "==",
+            LogicalOperator::Neq => "!=", // canonical string
+            LogicalOperator::Lt => "<",
+            LogicalOperator::Gt => ">",
+            LogicalOperator::Lte => "<=",
+            LogicalOperator::Gte => ">=",
+        }
+    }
+    pub fn from_str(s: &str) -> Option<Self> {
+        match s {
+            "=" => Some(LogicalOperator::Eq),
+            "==" => Some(LogicalOperator::DoubleEq),
+            "!=" | "<>" => Some(LogicalOperator::Neq),
+            "<" => Some(LogicalOperator::Lt),
+            ">" => Some(LogicalOperator::Gt),
+            "<=" | "le" => Some(LogicalOperator::Lte),
+            ">=" | "ge" => Some(LogicalOperator::Gte),
+            _ => None,
+        }
+    }
+}
 
 pub struct Basic {
     inner: *mut basic,
@@ -458,6 +520,27 @@ impl Basic {
         }
     }
 
+    // operators
+    pub fn div_op() -> Self {
+        Basic::symbol(Operator::Div.as_str())
+    }
+
+    pub fn mul_op() -> Self {
+        Basic::symbol(Operator::Mul.as_str())
+    }
+
+    pub fn add_op() -> Self {
+        Basic::symbol(Operator::Add.as_str())
+    }
+
+    pub fn sub_op() -> Self {
+        Basic::symbol(Operator::Sub.as_str())
+    }
+
+    pub fn pow_op() -> Self {
+        Basic::symbol(Operator::Pow.as_str())
+    }
+
     /// Returns true if this Basic is a Number.
     pub fn is_number(&self) -> bool {
         unsafe { is_a_Number(self.inner as *const basic_struct) != 0 }
@@ -487,26 +570,26 @@ impl Basic {
         if self.is_null() {
             return false;
         }
-        Basic::symbol(ADD_OP).equals(self)
+        Basic::symbol(Operator::Add.as_str()).equals(self)
     }
     pub fn is_sub_op(&self) -> bool {
         if self.is_null() {
             return false;
         }
-        Basic::symbol(SUB_OP).equals(self)
+        Basic::symbol(Operator::Sub.as_str()).equals(self)
     }
 
     pub fn is_mul_op(&self) -> bool {
         if self.is_null() {
             return false;
         }
-        Basic::symbol(MUL_OP).equals(self)
+        Basic::symbol(Operator::Mul.as_str()).equals(self)
     }
     pub fn is_div_op(&self) -> bool {
         if self.is_null() {
             return false;
         }
-        Basic::symbol(DIV_OP).equals(self)
+        Basic::symbol(Operator::Div.as_str()).equals(self)
     }
 
     /// Returns true if this Basic expression is a power (Pow).
@@ -514,7 +597,7 @@ impl Basic {
         if self.is_null() {
             return false;
         }
-        Basic::symbol(POW_OP).equals(self)
+        Basic::symbol(Operator::Pow.as_str()).equals(self)
     }
 
     pub fn is_op(&self) -> bool {
@@ -525,51 +608,73 @@ impl Basic {
             || self.is_pow_op()
     }
 
-    /// Returns the arguments of this Basic expression
-    /// Returns an empty Vec for atomic types (e.g., Symbol, Integer) or on error.
-    pub fn get_args(&self) -> Vec<Basic> {
-        let mut args_vec = Vec::new();
-        if self.is_null() {
-            return args_vec;
-        }
-        unsafe {
-            let c_vec_basic = vecbasic_new();
-            if c_vec_basic.is_null() {
-                return args_vec;
-            } // Allocation failed
+    // ===========================
+    // Logical Operations
+    // ===========================
 
-            basic_get_args(self.inner as *const basic_struct, c_vec_basic);
-            let n = vecbasic_size(c_vec_basic);
-            for i in 0..n {
-                let elem_basic = Basic::new();
-                vecbasic_get(c_vec_basic, i, elem_basic.inner as *mut basic_struct);
-                if !elem_basic.is_null() {
-                    args_vec.push(elem_basic);
-                }
-            }
-            vecbasic_free(c_vec_basic);
-        }
-        args_vec
+    /// Create a Basic representing a logical operator symbol
+    pub fn logical_op(op: LogicalOperator) -> Self {
+        Basic::symbol(op.as_str())
     }
 
-    pub fn div_op() -> Self {
-        Basic::symbol(DIV_OP)
+    /// Returns true if this Basic is a logical operator
+    pub fn is_logical_op(&self) -> bool {
+        [
+            LogicalOperator::Eq,
+            LogicalOperator::DoubleEq,
+            LogicalOperator::Neq,
+            LogicalOperator::Lt,
+            LogicalOperator::Gt,
+            LogicalOperator::Lte,
+            LogicalOperator::Gte,
+        ]
+        .iter()
+        .any(|&op| Basic::symbol(op.as_str()).equals(self))
     }
 
-    pub fn mul_op() -> Self {
-        Basic::symbol(MUL_OP)
+    pub fn is_eq_op(&self) -> bool {
+        Basic::symbol(LogicalOperator::Eq.as_str()).equals(self)
+    }
+    pub fn is_double_eq_op(&self) -> bool {
+        Basic::symbol(LogicalOperator::DoubleEq.as_str()).equals(self)
+    }
+    pub fn is_neq_op(&self) -> bool {
+        Basic::symbol(LogicalOperator::Neq.as_str()).equals(self)
+    }
+    pub fn is_lt_op(&self) -> bool {
+        Basic::symbol(LogicalOperator::Lt.as_str()).equals(self)
+    }
+    pub fn is_gt_op(&self) -> bool {
+        Basic::symbol(LogicalOperator::Gt.as_str()).equals(self)
+    }
+    pub fn is_lte_op(&self) -> bool {
+        Basic::symbol(LogicalOperator::Lte.as_str()).equals(self)
+    }
+    pub fn is_gte_op(&self) -> bool {
+        Basic::symbol(LogicalOperator::Gte.as_str()).equals(self)
     }
 
-    pub fn add_op() -> Self {
-        Basic::symbol(ADD_OP)
+    /// Convenience constructors for each logical operator
+    pub fn eq_op() -> Self {
+        Basic::symbol(LogicalOperator::Eq.as_str())
     }
-
-    pub fn sub_op() -> Self {
-        Basic::symbol(SUB_OP)
+    pub fn double_eq_op() -> Self {
+        Basic::symbol(LogicalOperator::DoubleEq.as_str())
     }
-
-    pub fn pow_op() -> Self {
-        Basic::symbol(POW_OP)
+    pub fn neq_op() -> Self {
+        Basic::symbol(LogicalOperator::Neq.as_str())
+    }
+    pub fn lt_op() -> Self {
+        Basic::symbol(LogicalOperator::Lt.as_str())
+    }
+    pub fn gt_op() -> Self {
+        Basic::symbol(LogicalOperator::Gt.as_str())
+    }
+    pub fn lte_op() -> Self {
+        Basic::symbol(LogicalOperator::Lte.as_str())
+    }
+    pub fn gte_op() -> Self {
+        Basic::symbol(LogicalOperator::Gte.as_str())
     }
 
     // ===========================

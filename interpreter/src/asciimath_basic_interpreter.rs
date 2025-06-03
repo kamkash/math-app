@@ -93,7 +93,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         ctx: &math_parser::gen_parsers::asciimath2parser::ExpressionContext<'input>,
     ) -> Self::Return {
         let res = self.visit_children(ctx);
-        dbg!(&self.visitor_stack);
+        // dbg!(&self.visitor_stack);
         let len = self.visitor_stack.len();
         if len == 2 {
             let right = self.visitor_stack.pop().unwrap();
@@ -101,6 +101,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
             let equation = SymEquation::new(Rc::clone(&left), Rc::clone(&right), Relop::Equal);
             self.block_expressions.push(equation);
         }
+        self.visitor_stack.clear();
         res
     }
 
@@ -129,12 +130,12 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         &mut self,
         ctx: &math_parser::gen_parsers::asciimath2parser::Add_sub_expressionContext<'input>,
     ) -> Self::Return {
-        dbg!(ctx.get_text());
+        // dbg!(ctx.get_text());
         let res = self.visit_children(ctx);
         let len = ctx.get_child_count();
         let stack_len = self.visitor_stack.len();
         if len > 1 {
-            dbg!(&self.visitor_stack);
+            // dbg!(&self.visitor_stack);
             let remove_at = stack_len - len;
             let mut left = self.visitor_stack.remove(remove_at);
             for _ in 0..(len - 1) / 2 {
@@ -163,7 +164,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         let len = ctx.get_child_count();
         let stack_len = self.visitor_stack.len();
         if len > 1 {
-            dbg!(&self.visitor_stack);
+            // dbg!(&self.visitor_stack);
             let remove_at = stack_len - len;
             let mut left = self.visitor_stack.remove(remove_at);
             for _ in 0..(len - 1) / 2 {

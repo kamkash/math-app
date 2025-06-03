@@ -2869,7 +2869,7 @@ pub trait BraceExpressionContextAttrs<'input>: AsciiMath2ParserContext<'input>{
 	fn LBRACE(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
 		self.get_token(LBRACE, 0)
 	}
-	fn expression(&self) -> Option<Rc<ExpressionContextAll<'input>>> where Self:Sized{
+	fn logical_expression(&self) -> Option<Rc<Logical_expressionContextAll<'input>>> where Self:Sized{
 		self.child_of_type(0)
 	}
 	/// Retrieves first TerminalNode corresponding to token RBRACE
@@ -2944,7 +2944,7 @@ pub trait ParenExpressionContextAttrs<'input>: AsciiMath2ParserContext<'input>{
 	fn LPAREN(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
 		self.get_token(LPAREN, 0)
 	}
-	fn expression(&self) -> Option<Rc<ExpressionContextAll<'input>>> where Self:Sized{
+	fn logical_expression(&self) -> Option<Rc<Logical_expressionContextAll<'input>>> where Self:Sized{
 		self.child_of_type(0)
 	}
 	/// Retrieves first TerminalNode corresponding to token RPAREN
@@ -3242,7 +3242,7 @@ pub trait AbsExpressionContextAttrs<'input>: AsciiMath2ParserContext<'input>{
 	fn ABS(&self, i: usize) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
 		self.get_token(ABS, i)
 	}
-	fn expression(&self) -> Option<Rc<ExpressionContextAll<'input>>> where Self:Sized{
+	fn logical_expression(&self) -> Option<Rc<Logical_expressionContextAll<'input>>> where Self:Sized{
 		self.child_of_type(0)
 	}
 }
@@ -4843,9 +4843,9 @@ where
 					recog.base.set_state(156);
 					recog.base.match_token(LPAREN,&mut recog.err_handler)?;
 
-					/*InvokeRule expression*/
+					/*InvokeRule logical_expression*/
 					recog.base.set_state(157);
-					recog.expression()?;
+					recog.logical_expression()?;
 
 					recog.base.set_state(158);
 					recog.base.match_token(RPAREN,&mut recog.err_handler)?;
@@ -4861,9 +4861,9 @@ where
 					recog.base.set_state(160);
 					recog.base.match_token(LBRACE,&mut recog.err_handler)?;
 
-					/*InvokeRule expression*/
+					/*InvokeRule logical_expression*/
 					recog.base.set_state(161);
-					recog.expression()?;
+					recog.logical_expression()?;
 
 					recog.base.set_state(162);
 					recog.base.match_token(RBRACE,&mut recog.err_handler)?;
@@ -4879,9 +4879,9 @@ where
 					recog.base.set_state(164);
 					recog.base.match_token(ABS,&mut recog.err_handler)?;
 
-					/*InvokeRule expression*/
+					/*InvokeRule logical_expression*/
 					recog.base.set_state(165);
-					recog.expression()?;
+					recog.logical_expression()?;
 
 					recog.base.set_state(166);
 					recog.base.match_token(ABS,&mut recog.err_handler)?;
@@ -7715,11 +7715,11 @@ const _serializedATN:&'static str =
 	\u{9c}\x05\x1e\x10\x02\u{98}\u{99}\x07\x51\x02\x02\u{99}\u{9c}\x05\x1e\x10\
 	\x02\u{9a}\u{9c}\x07\x52\x02\x02\u{9b}\u{97}\x03\x02\x02\x02\u{9b}\u{98}\
 	\x03\x02\x02\x02\u{9b}\u{9a}\x03\x02\x02\x02\u{9c}\x1d\x03\x02\x02\x02\u{9d}\
-	\u{106}\x05\x38\x1d\x02\u{9e}\u{9f}\x07\x64\x02\x02\u{9f}\u{a0}\x05\x04\
-	\x03\x02\u{a0}\u{a1}\x07\x65\x02\x02\u{a1}\u{106}\x03\x02\x02\x02\u{a2}\
-	\u{a3}\x07\x68\x02\x02\u{a3}\u{a4}\x05\x04\x03\x02\u{a4}\u{a5}\x07\x69\x02\
+	\u{106}\x05\x38\x1d\x02\u{9e}\u{9f}\x07\x64\x02\x02\u{9f}\u{a0}\x05\x06\
+	\x04\x02\u{a0}\u{a1}\x07\x65\x02\x02\u{a1}\u{106}\x03\x02\x02\x02\u{a2}\
+	\u{a3}\x07\x68\x02\x02\u{a3}\u{a4}\x05\x06\x04\x02\u{a4}\u{a5}\x07\x69\x02\
 	\x02\u{a5}\u{106}\x03\x02\x02\x02\u{a6}\u{a7}\x07\x6a\x02\x02\u{a7}\u{a8}\
-	\x05\x04\x03\x02\u{a8}\u{a9}\x07\x6a\x02\x02\u{a9}\u{106}\x03\x02\x02\x02\
+	\x05\x06\x04\x02\u{a8}\u{a9}\x07\x6a\x02\x02\u{a9}\u{106}\x03\x02\x02\x02\
 	\u{aa}\u{b0}\x07\u{84}\x02\x02\u{ab}\u{ad}\x07\x52\x02\x02\u{ac}\u{ab}\x03\
 	\x02\x02\x02\u{ad}\u{ae}\x03\x02\x02\x02\u{ae}\u{ac}\x03\x02\x02\x02\u{ae}\
 	\u{af}\x03\x02\x02\x02\u{af}\u{b1}\x03\x02\x02\x02\u{b0}\u{ac}\x03\x02\x02\

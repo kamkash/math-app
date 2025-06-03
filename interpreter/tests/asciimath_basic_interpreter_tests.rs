@@ -19,6 +19,8 @@ fn test_asciimath_basic_visitor_eval() {
                 z = x^3 + x^2 / 3.0 - 9.0 * x + 21.0
                 y = x^2 + 2*x + 5
                 zz = x^3^3 + x^2 / 3.0 - 9.0 * x + 21.0
+                i * n = 
+                n > 10
                 ";
     let mut visitor = AsciiMathBasicVisitor::new();
     let lexer = AsciiMath2Lexer::new(InputStream::new(input));
