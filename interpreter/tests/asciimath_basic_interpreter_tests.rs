@@ -11,7 +11,6 @@ static EPSILON: f64 = 1e-8;
 
 #[test_log::test]
 fn test_asciimath_basic_visitor_eval() {
-    // Test for parsing and visiting the string: "y=x^2+2x+5"
     let x = 10.0f64;
     let fz = x.powf(3.0) + x.powf(2.0) / 3.0 - 9.0 * x + 21.0;
     let fy = x.powf(2.0) + 2.0 * x + 5.0;
@@ -19,8 +18,8 @@ fn test_asciimath_basic_visitor_eval() {
     let input = "x=10
                 z = x^3 + x^2 / 3.0 - 9.0 * x + 21.0
                 y = x^2 + 2*x + 5
-                zz =x^3^3 + x^2 / 3.0 - 9.0 * x + 21.0";
-
+                zz = x^3^3 + x^2 / 3.0 - 9.0 * x + 21.0
+                ";
     let mut visitor = AsciiMathBasicVisitor::new();
     let lexer = AsciiMath2Lexer::new(InputStream::new(input));
     let token_stream = CommonTokenStream::new(lexer);
@@ -69,4 +68,46 @@ fn test_asciimath_basic_visitor_eval() {
         zz_actual,
         fzz
     );
+
+}
+
+#[test_log::test]
+fn test_asciimath_basic_comp_interest_eval() {
+    let p = 100_000.0f64;
+    let i = 0.10f64;
+    let n = 5.0f64;
+    let compound_interest = p * (1.0 + i).powf(n);
+    let comp_input = format!(
+        "p = {p} 
+         i = {i}
+         n = {n}
+         compound_interest = p * (1 + i) ^ n 
+         "
+    );
+
+    info!("compound interest input: {}", comp_input);
+    let mut visitor = AsciiMathBasicVisitor::new();
+    let lexer = AsciiMath2Lexer::new(InputStream::new(comp_input.as_str()));
+    let token_stream = CommonTokenStream::new(lexer);
+    let mut parser = AsciiMath2Parser::new(token_stream);
+    let parse_tree = parser.block().unwrap();
+    visitor.visit(parse_tree.as_ref());
+
+    info!("visitor block result: {:?}", visitor.block_expressions);
+    info!("visitor symbol table: {:?}", visitor.symbol_table);
+    info!("visitor result table: {:?}", visitor.result_table);
+
+    let comp_interest_actual = visitor
+        .result_table
+        .get(&Basic::symbol("compound_interest"))
+        .and_then(|b| b.to_f64())
+        .unwrap();
+    info!("compound interest: {}", comp_interest_actual);
+    assert!(
+        (comp_interest_actual - compound_interest).abs() < EPSILON,
+        "actual: {}, expected: {}",
+        comp_interest_actual,
+        compound_interest
+    );
+
 }

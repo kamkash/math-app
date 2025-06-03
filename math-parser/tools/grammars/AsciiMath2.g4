@@ -174,8 +174,8 @@ BUILTIN_KEYWORD_FUNC_NAME:
 // constructor.;
 constant_symbol:
 	PI_CONST
-	| E_CONST
-	| I_CONST
+	// | E_CONST
+	// | I_CONST
 	| INFINITY_CONST
 	| GAMMA_CONST
 	| TRUE_CONST
@@ -260,8 +260,8 @@ TRANSPOSE:
 
 // Constant Keywords
 PI_CONST: 'pi' | '\u03C0';
-E_CONST: 'e';
-I_CONST: 'i';
+// E_CONST: 'e';
+// I_CONST: 'i';
 INFINITY_CONST: 'oo' | 'infty' | '\u221E';
 SIGNED_INFINITY_CONST: (PLUS | MINUS)? INFINITY_CONST;
 GAMMA_CONST: 'gamma' | '\u03B3';

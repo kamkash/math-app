@@ -92,7 +92,16 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         &mut self,
         ctx: &math_parser::gen_parsers::asciimath2parser::ExpressionContext<'input>,
     ) -> Self::Return {
-        self.visit_children(ctx)
+        let res = self.visit_children(ctx);
+        dbg!(&self.visitor_stack);
+        let len = self.visitor_stack.len();
+        if len == 2 {
+            let right = self.visitor_stack.pop().unwrap();
+            let left = self.visitor_stack.pop().unwrap();
+            let equation = SymEquation::new(Rc::clone(&left), Rc::clone(&right), Relop::Equal);
+            self.block_expressions.push(equation);
+        }
+        res
     }
 
     fn visit_logical_expression(
@@ -106,13 +115,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         &mut self,
         ctx: &math_parser::gen_parsers::asciimath2parser::Relation_expressionContext<'input>,
     ) -> Self::Return {
-        let res = self.visit_children(ctx);
-        assert!(self.visitor_stack.len() >= 2);
-        let right = self.visitor_stack.pop().unwrap();
-        let left = self.visitor_stack.pop().unwrap();
-        let equation = SymEquation::new(Rc::clone(&left), Rc::clone(&right), Relop::Equal);
-        self.block_expressions.push(equation);
-        res
+        self.visit_children(ctx)
     }
 
     fn visit_relation_expression_no_rhs(
@@ -126,17 +129,16 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         &mut self,
         ctx: &math_parser::gen_parsers::asciimath2parser::Add_sub_expressionContext<'input>,
     ) -> Self::Return {
+        dbg!(ctx.get_text());
         let res = self.visit_children(ctx);
         let len = ctx.get_child_count();
         let stack_len = self.visitor_stack.len();
-        let remove_at = stack_len - len;
         if len > 1 {
             dbg!(&self.visitor_stack);
+            let remove_at = stack_len - len;
             let mut left = self.visitor_stack.remove(remove_at);
-            dbg!(&left);
             for _ in 0..(len - 1) / 2 {
                 let op = self.visitor_stack.remove(remove_at);
-                dbg!(&op);
                 assert!(op.is_op());
                 if op.is_add_op() {
                     let right = self.visitor_stack.remove(remove_at);
@@ -160,9 +162,9 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         let res = self.visit_children(ctx);
         let len = ctx.get_child_count();
         let stack_len = self.visitor_stack.len();
-        let remove_at = stack_len - len;
         if len > 1 {
             dbg!(&self.visitor_stack);
+            let remove_at = stack_len - len;
             let mut left = self.visitor_stack.remove(remove_at);
             for _ in 0..(len - 1) / 2 {
                 let op = self.visitor_stack.remove(remove_at);
@@ -184,10 +186,9 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         let res = self.visit_children(ctx);
         let len = ctx.get_child_count();
         let stack_len = self.visitor_stack.len();
-        let remove_at = stack_len - len;
         if len > 1 {
-            dbg!(ctx.get_text());
             dbg!(&self.visitor_stack);
+            let remove_at = stack_len - len;
             let mut left = self.visitor_stack.remove(remove_at);
             for _ in 0..(len - 1) / 2 {
                 let op = self.visitor_stack.remove(remove_at);
