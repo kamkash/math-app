@@ -8,7 +8,7 @@ use std::result;
 use std::str::FromStr;
 use std::sync::Arc;
 
-use crate::{Relop, SymEquation};
+use crate::SymEquation;
 
 use antlr_rust::common_token_stream::CommonTokenStream;
 use antlr_rust::tree::ParseTree;
@@ -30,7 +30,7 @@ use math_parser::gen_parsers::calculatorvisitor::calculatorVisitorCompat;
 use math_parser::gen_parsers::{
     calculatorlexer::calculatorLexer, calculatorparser::calculatorParser,
 };
-use symengine_rs::basic::Basic;
+use symengine_rs::basic::{Basic, LogicalOperator};
 
 pub struct CalcBasicVisitor {
     pub tmp_result: Rc<Basic>,
@@ -106,7 +106,8 @@ impl<'input> calculatorVisitorCompat<'input> for CalcBasicVisitor {
         assert!(self.visitor_stack.len() >= 2);
         let right = self.visitor_stack.pop().unwrap();
         let left = self.visitor_stack.pop().unwrap();
-        let equation = SymEquation::new(Rc::clone(&left), Rc::clone(&right), Relop::Equal);
+        let equation =
+            SymEquation::new(Rc::clone(&left), Rc::clone(&right), Rc::new(Basic::eq_op()));
         self.block_expressions.push(equation);
         res
     }
@@ -120,7 +121,8 @@ impl<'input> calculatorVisitorCompat<'input> for CalcBasicVisitor {
         let left = Rc::clone(&self.visitor_stack[len - 1]);
         let right = Rc::clone(&self.visitor_stack[len - 2]);
         let relop_text = ctx.get_child(1).unwrap().get_text();
-        let relop = Relop::from(relop_text.as_str());
+        let log_oper = LogicalOperator::from_str_token(&relop_text);
+        let relop = Rc::new(Basic::logical_op(log_oper.unwrap()));
         let equation = SymEquation::new(left, right, relop);
         self.block_expressions.push(equation);
         res

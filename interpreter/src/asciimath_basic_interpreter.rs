@@ -1,6 +1,5 @@
 use std::rc::Rc;
 
-use crate::{Relop, SymEquation};
 use antlr_rust::common_token_stream::CommonTokenStream;
 use antlr_rust::tree::{ParseTree, ParseTreeVisitorCompat, TerminalNode, Tree};
 use antlr_rust::InputStream;
@@ -12,7 +11,9 @@ use math_parser::gen_parsers::asciimath2parser::{
     NumberAtomContext, Power_expressionContext, PowopContext, RelopContext, SumopContext,
 };
 use math_parser::gen_parsers::asciimath2visitor::AsciiMath2VisitorCompat;
-use symengine_rs::basic::Basic;
+use symengine_rs::basic::{Basic, LogicalOperator};
+
+use crate::SymEquation;
 
 pub struct AsciiMathBasicVisitor {
     pub tmp_result: Rc<Basic>,
@@ -95,10 +96,11 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         let res = self.visit_children(ctx);
         // dbg!(&self.visitor_stack);
         let len = self.visitor_stack.len();
-        if len == 2 {
+        if len == 3 {
             let right = self.visitor_stack.pop().unwrap();
+            let op = self.visitor_stack.pop().unwrap();
             let left = self.visitor_stack.pop().unwrap();
-            let equation = SymEquation::new(Rc::clone(&left), Rc::clone(&right), Relop::Equal);
+            let equation = SymEquation::new(Rc::clone(&left), Rc::clone(&right), op);
             self.block_expressions.push(equation);
         }
         self.visitor_stack.clear();
@@ -225,8 +227,14 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         res
     }
 
-    fn visit_relop(&mut self, ctx: &RelopContext<'input>) -> Self::Return {
-        self.visit_children(ctx)
+    fn visit_relop(&mut self, ctx: &RelopContext<'input>) -> Self::Return {        
+        let res = self.visit_children(ctx);
+        let op_text = ctx.get_text();
+        let rel_op = LogicalOperator::from_str_token(&op_text);
+        let basic_op = Rc::new(Basic::logical_op(rel_op.unwrap()));
+        dbg!(&basic_op);
+        self.visitor_stack.push(basic_op);
+        res
     }
 
     fn visit_sumop(&mut self, ctx: &SumopContext<'input>) -> Self::Return {

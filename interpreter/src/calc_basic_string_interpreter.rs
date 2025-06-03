@@ -8,7 +8,7 @@ use std::result;
 use std::str::FromStr;
 use std::sync::Arc;
 
-use crate::{Relop, SymEquation};
+use crate::SymEquation;
 
 use antlr_rust::common_token_stream::CommonTokenStream;
 use antlr_rust::errors::ANTLRError;
@@ -18,7 +18,7 @@ use antlr_rust::tree::{ParseTreeVisitorCompat, Tree};
 use antlr_rust::TidExt;
 use antlr_rust::{recognizer, InputStream, Parser};
 use log::info;
-use symengine_rs::basic::Basic;
+use symengine_rs::basic::{Basic, LogicalOperator};
 
 use math_parser::gen_parsers::calculatorparser::{
     calculatorParserContextType, AtomContext, BlockContext, ConstantContext, CurrencyContext,
@@ -62,7 +62,7 @@ pub struct CalcStringVisitor {
 
 impl CalcStringVisitor {
     pub fn new() -> Self {
-       CalcStringVisitor {
+        CalcStringVisitor {
             equation_count: 0,
             tmp_result: String::new(),
             block_expressions: Vec::new(),
@@ -147,10 +147,11 @@ impl<'input> calculatorVisitorCompat<'input> for CalcStringVisitor {
         } else {
             right
         };
+        let log_oper = LogicalOperator::from_str_token(&oper);
         let symeq = SymEquation::new(
             Rc::new(Basic::parse(&left).unwrap()),
             Rc::new(Basic::parse(&right).unwrap()),
-            Relop::from(oper.as_str()),
+            Rc::new(Basic::logical_op(log_oper.unwrap())),
         );
         self.block_expressions.push(symeq);
         res

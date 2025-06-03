@@ -10,11 +10,11 @@ pub mod asciimath_basic_interpreter;
 pub struct SymEquation {
     pub left: Rc<Basic>,
     pub right: Rc<Basic>,
-    pub relop: Relop,
+    pub relop: Rc<Basic>,
 }
 
 impl SymEquation {
-    pub fn new(left: Rc<Basic>, right: Rc<Basic>, relop: Relop) -> Self {
+    pub fn new(left: Rc<Basic>, right: Rc<Basic>, relop: Rc<Basic>) -> Self {
         SymEquation { left, right, relop }
     }
 }
@@ -95,52 +95,6 @@ impl From<&str> for ArithmeticOp {
             "~" => ArithmeticOp::BitwiseNot,
             _ => panic!("Unknown arithmetic operator: {}", s),
         }
-    }
-}
-
-pub enum Relop {
-    Equal,
-    DoubleEqual,
-    NotEqual,
-    LessThan,
-    GreaterThan,
-    LessThanOrEqual,
-    GreaterThanOrEqual,
-}
-
-impl From<&str> for Relop {
-    fn from(s: &str) -> Self {
-        match s {
-            "=" => Relop::Equal,
-            "==" => Relop::DoubleEqual,
-            "!=" => Relop::NotEqual,
-            "<" => Relop::LessThan,
-            ">" => Relop::GreaterThan,
-            "<=" => Relop::LessThanOrEqual,
-            ">=" => Relop::GreaterThanOrEqual,
-            _ => panic!("Unknown relational operator: {}", s),
-        }
-    }
-}
-
-impl fmt::Debug for Relop {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let s = match self {
-            Relop::DoubleEqual => "==",
-            Relop::Equal => "=",
-            Relop::NotEqual => "!=",
-            Relop::LessThan => "<",
-            Relop::GreaterThan => ">",
-            Relop::LessThanOrEqual => "<=",
-            Relop::GreaterThanOrEqual => ">=",
-        };
-        write!(f, "{}", s)
-    }
-}
-
-impl fmt::Display for Relop {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Debug::fmt(self, f)
     }
 }
 

@@ -50,16 +50,29 @@ pub enum LogicalOperator {
 impl LogicalOperator {
     pub fn as_str(&self) -> &'static str {
         match self {
-            LogicalOperator::Eq => "=",
-            LogicalOperator::DoubleEq => "==",
-            LogicalOperator::Neq => "!=", // canonical string
-            LogicalOperator::Lt => "<",
-            LogicalOperator::Gt => ">",
-            LogicalOperator::Lte => "<=",
-            LogicalOperator::Gte => ">=",
+            LogicalOperator::Eq => "__EQ__",
+            LogicalOperator::DoubleEq => "__EQEQ__",
+            LogicalOperator::Neq => "__NEQ__", // canonical string
+            LogicalOperator::Lt => "__LT__",
+            LogicalOperator::Gt => "__GT__",
+            LogicalOperator::Lte => "__LE__",
+            LogicalOperator::Gte => "__GE__",
         }
     }
     pub fn from_str(s: &str) -> Option<Self> {
+        match s {
+            "__EQ__" => Some(LogicalOperator::Eq),
+            "__EQEQ__" => Some(LogicalOperator::DoubleEq),
+            "__NE__" => Some(LogicalOperator::Neq),
+            "__LT__" => Some(LogicalOperator::Lt),
+            "__GT__" => Some(LogicalOperator::Gt),
+            "__LE__" => Some(LogicalOperator::Lte),
+            "__GE__" => Some(LogicalOperator::Gte),
+            _ => None,
+        }
+    }
+
+    pub fn from_str_token(s: &str) -> Option<Self> {
         match s {
             "=" => Some(LogicalOperator::Eq),
             "==" => Some(LogicalOperator::DoubleEq),

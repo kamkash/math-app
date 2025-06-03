@@ -11,9 +11,9 @@ use math_parser::gen_parsers::asciimath2parser::{
     AsciiMath2Parser, AsciiMath2ParserContextType, D_by_dContext, Deriv_functionContext,
     DerivativeContext, NoUnaryOperatorContext,
 };
-use symengine_rs::basic::Basic;
+use symengine_rs::basic::{Basic, LogicalOperator};
 
-use crate::{Relop, SymEquation};
+use crate::SymEquation;
 use math_parser::gen_parsers::asciimath2visitor::AsciiMath2VisitorCompat;
 
 pub fn evaluate_ascii_math_block(input: &str) -> Result<String, String> {
@@ -152,10 +152,11 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathStringVisitor {
                 } else {
                     right
                 };
+                let log_oper = LogicalOperator::from_str_token(&oper);
                 let symeq = SymEquation::new(
                     Rc::new(Basic::parse(&left).unwrap()),
                     Rc::new(Basic::parse(&right).unwrap()),
-                    Relop::from(oper.as_str()),
+                    Rc::new(Basic::logical_op(log_oper.unwrap())),
                 );
                 self.block_expressions.push(symeq);
             }
