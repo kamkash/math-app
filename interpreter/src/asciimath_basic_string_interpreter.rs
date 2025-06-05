@@ -179,9 +179,9 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathStringVisitor {
         self.visit_children(ctx)
     }
 
-    fn visit_mult_div_implicit_expression(
+    fn visit_mult_div_expression(
         &mut self,
-        ctx: &math_parser::gen_parsers::asciimath2parser::Mult_div_implicit_expressionContext<
+        ctx: &math_parser::gen_parsers::asciimath2parser::Mult_div_expressionContext<
             'input,
         >,
     ) -> Self::Return {

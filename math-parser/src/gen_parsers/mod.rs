@@ -1,3 +1,6 @@
+#![allow(clippy::all)]
+#![allow(warnings)]
+
 pub mod calculatorlexer;
 pub mod calculatorlistener;
 pub mod calculatorparser;

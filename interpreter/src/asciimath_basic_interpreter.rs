@@ -156,17 +156,15 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         res
     }
 
-    fn visit_mult_div_implicit_expression(
+    fn visit_mult_div_expression(
         &mut self,
-        ctx: &math_parser::gen_parsers::asciimath2parser::Mult_div_implicit_expressionContext<
-            'input,
-        >,
+        ctx: &math_parser::gen_parsers::asciimath2parser::Mult_div_expressionContext<'input>,
     ) -> Self::Return {
         let res = self.visit_children(ctx);
         let len = ctx.get_child_count();
         let stack_len = self.visitor_stack.len();
         if len > 1 {
-            // dbg!(&self.visitor_stack);
+            dbg!(&self.visitor_stack);
             let remove_at = stack_len - len;
             let mut left = self.visitor_stack.remove(remove_at);
             for _ in 0..(len - 1) / 2 {
@@ -190,7 +188,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         let len = ctx.get_child_count();
         let stack_len = self.visitor_stack.len();
         if len > 1 {
-            dbg!(&self.visitor_stack);
+            // dbg!(&self.visitor_stack);
             let remove_at = stack_len - len;
             let mut left = self.visitor_stack.remove(remove_at);
             for _ in 0..(len - 1) / 2 {
@@ -227,12 +225,11 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         res
     }
 
-    fn visit_relop(&mut self, ctx: &RelopContext<'input>) -> Self::Return {        
+    fn visit_relop(&mut self, ctx: &RelopContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
         let op_text = ctx.get_text();
         let rel_op = LogicalOperator::from_str_token(&op_text);
         let basic_op = Rc::new(Basic::logical_op(rel_op.unwrap()));
-        dbg!(&basic_op);
         self.visitor_stack.push(basic_op);
         res
     }
@@ -274,6 +271,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
 }
 
 pub fn evaluate_ascii_math_block(input: &str) -> Result<String, String> {
+    info!("evaluate_ascii_math_block: {}", input);
     let mut visitor = AsciiMathBasicVisitor::new();
     let lexer = AsciiMath2Lexer::new(InputStream::new(input));
     let token_stream = CommonTokenStream::new(lexer);

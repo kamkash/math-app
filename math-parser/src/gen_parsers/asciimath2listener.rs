@@ -65,15 +65,15 @@ fn enter_add_sub_expression(&mut self, _ctx: &Add_sub_expressionContext<'input>)
  */
 fn exit_add_sub_expression(&mut self, _ctx: &Add_sub_expressionContext<'input>) { }
 /**
- * Enter a parse tree produced by {@link AsciiMath2Parser#mult_div_implicit_expression}.
+ * Enter a parse tree produced by {@link AsciiMath2Parser#mult_div_expression}.
  * @param ctx the parse tree
  */
-fn enter_mult_div_implicit_expression(&mut self, _ctx: &Mult_div_implicit_expressionContext<'input>) { }
+fn enter_mult_div_expression(&mut self, _ctx: &Mult_div_expressionContext<'input>) { }
 /**
- * Exit a parse tree produced by {@link AsciiMath2Parser#mult_div_implicit_expression}.
+ * Exit a parse tree produced by {@link AsciiMath2Parser#mult_div_expression}.
  * @param ctx the parse tree
  */
-fn exit_mult_div_implicit_expression(&mut self, _ctx: &Mult_div_implicit_expressionContext<'input>) { }
+fn exit_mult_div_expression(&mut self, _ctx: &Mult_div_expressionContext<'input>) { }
 /**
  * Enter a parse tree produced by {@link AsciiMath2Parser#power_expression}.
  * @param ctx the parse tree

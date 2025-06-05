@@ -45,10 +45,10 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	fn visit_add_sub_expression(&mut self, ctx: &Add_sub_expressionContext<'input>) { self.visit_children(ctx) }
 
 	/**
-	 * Visit a parse tree produced by {@link AsciiMath2Parser#mult_div_implicit_expression}.
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#mult_div_expression}.
 	 * @param ctx the parse tree
 	 */
-	fn visit_mult_div_implicit_expression(&mut self, ctx: &Mult_div_implicit_expressionContext<'input>) { self.visit_children(ctx) }
+	fn visit_mult_div_expression(&mut self, ctx: &Mult_div_expressionContext<'input>) { self.visit_children(ctx) }
 
 	/**
 	 * Visit a parse tree produced by {@link AsciiMath2Parser#power_expression}.
@@ -478,10 +478,10 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 		}
 
 	/**
-	 * Visit a parse tree produced by {@link AsciiMath2Parser#mult_div_implicit_expression}.
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#mult_div_expression}.
 	 * @param ctx the parse tree
 	 */
-		fn visit_mult_div_implicit_expression(&mut self, ctx: &Mult_div_implicit_expressionContext<'input>) -> Self::Return {
+		fn visit_mult_div_expression(&mut self, ctx: &Mult_div_expressionContext<'input>) -> Self::Return {
 			self.visit_children(ctx)
 		}
 
@@ -1011,8 +1011,8 @@ where
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
-	fn visit_mult_div_implicit_expression(&mut self, ctx: &Mult_div_implicit_expressionContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_mult_div_implicit_expression(self, ctx);
+	fn visit_mult_div_expression(&mut self, ctx: &Mult_div_expressionContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_mult_div_expression(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 

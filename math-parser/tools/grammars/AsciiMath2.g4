@@ -13,23 +13,20 @@ logical_expression:
 
 relation_expression:
 	relation_expression_no_rhs
-	| add_sub_expression ( relop add_sub_expression)?;
+	| add_sub_expression (relop add_sub_expression)?;
 
 relation_expression_no_rhs: (add_sub_expression | function_call) EQ;
 
 add_sub_expression:
-	mult_div_implicit_expression (
-		sumop mult_div_implicit_expression
-	)*;
+	mult_div_expression (sumop mult_div_expression)*;
 
-mult_div_implicit_expression:
+mult_div_expression:
 	power_expression (
-		// Changed from unary_op_expression
-		multop power_expression // Changed from unary_op_expression
+		multop? power_expression
 	)*;
 
 power_expression:
-	unary_op_expression (powop primary_expression)*;
+	script_op_expression (powop primary_expression)*;
 
 unary_op_expression: (PLUS | MINUS) script_op_expression	# unaryPlusMinus
 	| script_op_expression									# noUnaryOperator;
@@ -45,15 +42,12 @@ differential:
 	| 'dw'
 	| 'dtheta'
 	| 'dphi';
-integral_body: mult_div_implicit_expression;
+integral_body: mult_div_expression;
 integral_upper_limit: HAT ('oo' | '+oo' | '-oo' | NUMBER);
 integral_lower_limit:
 	UNDERSCORE ('oo' | '+oo' | '-oo' | NUMBER);
 
 script_op_expression:
-	// primary_expression ( (HAT primary_expression (UNDERSCORE primary_expression)?) // e.g. x^2,
-	// x^2_1 or f^2_i )* # powerSubscriptExpression | (UNDERSCORE primary_expression (HAT
-	// primary_expression)?) # subscriptPowerExpression
 	primary_expression				# primaryExpression
 	| UNDERSCORE primary_expression	# subscriptExpression
 	| PRIME							# primeExpression; // Allow multiple scripts like f'_1^2 but needs care
@@ -377,8 +371,9 @@ LOWERCASE_LETTER: [a-z];
 
 // Numbers
 NUMBER:
-	MINUS? DIGITS ('.' DIGITS)? ([eE] MINUS? DIGITS)?
-	| MINUS? '.' DIGITS ( [eE] MINUS? DIGITS)?;
+	DIGITS ('.' DIGITS)? ([eE] MINUS? DIGITS)?
+	| '.' DIGITS ( [eE] MINUS? DIGITS)?;
+	
 fragment DIGITS: [0-9]+;
 
 NUMBER_WITH_COMMAS: DIGIT+ (',' DIGIT_THREE)* ('.' DIGIT+)?;
@@ -401,6 +396,3 @@ fragment NEWLINE: '\r'? '\n' | '\r';
 
 // Whitespace: Skipped by the parser WS: [ \t\r\n]+ -> skip;
 WS: [ \t]+ -> skip;
-
-// Comments (AsciiMath doesn't have a formal comment syntax, but if it were needed) LINE_COMMENT:
-// '//' ~[\r\n]* -> skip;

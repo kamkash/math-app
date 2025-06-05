@@ -17,6 +17,7 @@ libs/
 dist
 dist-ssr
 *.local
+.gen
 
 # Editor directories and files
 .vscode/
