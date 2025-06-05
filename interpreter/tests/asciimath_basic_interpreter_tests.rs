@@ -114,17 +114,17 @@ fn test_asciimath_basic_comp_interest_eval() {
 
 #[test_log::test]
 fn test_asciimath_basic_implicit_multiply() {
-    let exp_str = "x^2 + 3*x + 2";
+    let exp_str = "x^3 + 3x^2 - 5x + 2";
     let [x] = Basic::symbols(["x"]);
     let exp = Basic::parse(exp_str).unwrap();
     let inp = format!("{} = 10\ny = {}", x, exp_str);
 
-    let res = Basic::subs(&exp, vec![(&x, &Basic::real(10.0f64))].into_iter());
+    let expected = Basic::subs(&exp, vec![(&x, &Basic::real(10.0f64))].into_iter());
     info!("input: {}", inp);
-    info!("actual: {}", res);
+    info!("expected: {}", expected);
 
     let mut visitor = AsciiMathBasicVisitor::new();
-    let lexer = AsciiMath2Lexer::new(InputStream::new(exp_str));
+    let lexer = AsciiMath2Lexer::new(InputStream::new(inp.as_str()));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = AsciiMath2Parser::new(token_stream);
     let parse_tree = parser.block().unwrap();
@@ -133,4 +133,17 @@ fn test_asciimath_basic_implicit_multiply() {
     info!("visitor block result: {:?}", visitor.block_expressions);
     info!("visitor symbol table: {:?}", visitor.symbol_table);
     info!("visitor result table: {:?}", visitor.result_table);
+
+    let actual = visitor
+        .result_table
+        .get(&Basic::symbol("y"))
+        .and_then(|b| b.to_f64())
+        .unwrap();
+
+    assert!(
+        (actual - expected.to_f64().unwrap()).abs() < EPSILON,
+        "actual: {}, expected: {}",
+        actual,
+        expected
+    );
 }

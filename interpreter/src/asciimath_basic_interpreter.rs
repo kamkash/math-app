@@ -1,3 +1,4 @@
+use std::collections::VecDeque;
 use std::rc::Rc;
 
 use antlr_rust::common_token_stream::CommonTokenStream;
@@ -164,17 +165,39 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         let len = ctx.get_child_count();
         let stack_len = self.visitor_stack.len();
         if len > 1 {
-            dbg!(&self.visitor_stack);
+            // dbg!(&self.visitor_stack);
+            // implicit multiplication add mult operation
             let remove_at = stack_len - len;
-            let mut left = self.visitor_stack.remove(remove_at);
-            for _ in 0..(len - 1) / 2 {
-                let op = self.visitor_stack.remove(remove_at);
+            let mut mult_stack: VecDeque<Rc<Basic>> = VecDeque::new();
+            for index in 0..len {
+                let left_item = self.visitor_stack.remove(remove_at);
+                if index % 2 == 0 {
+                    mult_stack.push_front(left_item);
+                } else {
+                    if left_item.is_op() {
+                        mult_stack.push_front(left_item);
+                    } else {
+                        mult_stack.push_front(Rc::new(Basic::mul_op()));
+                        mult_stack.push_front(left_item);
+                    }
+                }
+            }
+            let mut left: Rc<Basic> = Rc::new(Basic::default());
+            let mut right: Rc<Basic>;
+            let mut op: Rc<Basic>;
+            while mult_stack.len() > 0 {
+                if left.is_default() {
+                    left = Rc::clone(&mult_stack.pop_back().unwrap());
+                    op = Rc::clone(&mult_stack.pop_back().unwrap());
+                    right = Rc::clone(&mult_stack.pop_back().unwrap());
+                } else {
+                    op = Rc::clone(&mult_stack.pop_back().unwrap());
+                    right = Rc::clone(&mult_stack.pop_back().unwrap());
+                }
                 assert!(op.is_op());
                 if op.is_mul_op() {
-                    let right = self.visitor_stack.remove(remove_at);
                     left = Rc::new(left.mul(&right));
                 } else {
-                    let right = self.visitor_stack.remove(remove_at);
                     left = Rc::new(left.div(&right));
                 }
             }

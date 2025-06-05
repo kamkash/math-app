@@ -621,6 +621,10 @@ impl Basic {
             || self.is_pow_op()
     }
 
+    pub fn is_default(&self) -> bool {
+        self.is_null() || self.inner.is_null()
+    }
+
     // ===========================
     // Logical Operations
     // ===========================
