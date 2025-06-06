@@ -166,7 +166,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         let stack_len = self.visitor_stack.len();
         if len > 1 {
             // dbg!(&self.visitor_stack);
-            // implicit multiplication add mult operation
+            // implicit multiplication add missing multop
             let remove_at = stack_len - len;
             let mut mult_stack: VecDeque<Rc<Basic>> = VecDeque::new();
             for index in 0..len {
@@ -285,6 +285,34 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         if op_text == "^" || op_text == "**" {
             self.visitor_stack.push(Rc::new(Basic::pow_op()));
         }
+        res
+    }
+
+    fn visit_explicitKeywordCall(
+        &mut self,
+        ctx: &math_parser::gen_parsers::asciimath2parser::ExplicitKeywordCallContext<'input>,
+    ) -> Self::Return {
+        let res = self.visit_children(ctx);
+        let func_name = ctx.get_child(0).unwrap().get_text();
+        // Arguments are typically after the function name and parenthesis
+        // This assumes the grammar is: func_name '(' arg1 [, arg2, ...] ')'
+        let arg_count = ctx.get_child_count();
+        // Find arguments between '(' and ')'
+        let mut args = Vec::new();
+        for i in 2..(arg_count - 1) {
+            // This is a simplification; you may need to adjust based on your grammar
+            let arg_text = ctx.get_child(i).unwrap().get_text();
+            // Try to find the corresponding Basic in the stack (last pushed)
+            if let Some(arg_basic) = self.visitor_stack.pop() {
+                args.push(arg_basic);
+            } else {
+                // Fallback: create a symbol
+                args.push(Rc::new(Basic::symbol(&arg_text)));
+            }
+        }
+        args.reverse(); // Because stack is LIFO
+        let func_basic = Rc::new(Basic::function(&func_name, &args));
+        self.visitor_stack.push(func_basic);
         res
     }
 

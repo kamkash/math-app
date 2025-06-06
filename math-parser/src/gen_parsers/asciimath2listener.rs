@@ -185,18 +185,6 @@ fn enter_primeExpression(&mut self, _ctx: &PrimeExpressionContext<'input>) { }
  */
 fn exit_primeExpression(&mut self, _ctx: &PrimeExpressionContext<'input>) { }
 /**
- * Enter a parse tree produced by the {@code explicitIdentifierCall}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn enter_explicitIdentifierCall(&mut self, _ctx: &ExplicitIdentifierCallContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code explicitIdentifierCall}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn exit_explicitIdentifierCall(&mut self, _ctx: &ExplicitIdentifierCallContext<'input>) { }
-/**
  * Enter a parse tree produced by the {@code parenExpression}
  * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
  * @param ctx the parse tree
@@ -208,6 +196,18 @@ fn enter_parenExpression(&mut self, _ctx: &ParenExpressionContext<'input>) { }
  * @param ctx the parse tree
  */
 fn exit_parenExpression(&mut self, _ctx: &ParenExpressionContext<'input>) { }
+/**
+ * Enter a parse tree produced by the {@code explicitKeywordCall}
+ * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+ * @param ctx the parse tree
+ */
+fn enter_explicitKeywordCall(&mut self, _ctx: &ExplicitKeywordCallContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code explicitKeywordCall}
+ * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+ * @param ctx the parse tree
+ */
+fn exit_explicitKeywordCall(&mut self, _ctx: &ExplicitKeywordCallContext<'input>) { }
 /**
  * Enter a parse tree produced by the {@code braceExpression}
  * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
@@ -232,18 +232,6 @@ fn enter_absExpression(&mut self, _ctx: &AbsExpressionContext<'input>) { }
  * @param ctx the parse tree
  */
 fn exit_absExpression(&mut self, _ctx: &AbsExpressionContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code explicitKeywordCall}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn enter_explicitKeywordCall(&mut self, _ctx: &ExplicitKeywordCallContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code explicitKeywordCall}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn exit_explicitKeywordCall(&mut self, _ctx: &ExplicitKeywordCallContext<'input>) { }
 /**
  * Enter a parse tree produced by the {@code simpleKeywordCall}
  * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
@@ -376,54 +364,6 @@ fn enter_parenColumnVector(&mut self, _ctx: &ParenColumnVectorContext<'input>) {
  * @param ctx the parse tree
  */
 fn exit_parenColumnVector(&mut self, _ctx: &ParenColumnVectorContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code parenMatrix}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn enter_parenMatrix(&mut self, _ctx: &ParenMatrixContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code parenMatrix}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn exit_parenMatrix(&mut self, _ctx: &ParenMatrixContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code bracketMatrix}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn enter_bracketMatrix(&mut self, _ctx: &BracketMatrixContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code bracketMatrix}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn exit_bracketMatrix(&mut self, _ctx: &BracketMatrixContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code angleBracketRowVector}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn enter_angleBracketRowVector(&mut self, _ctx: &AngleBracketRowVectorContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code angleBracketRowVector}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn exit_angleBracketRowVector(&mut self, _ctx: &AngleBracketRowVectorContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code matFunction}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn enter_matFunction(&mut self, _ctx: &MatFunctionContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code matFunction}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn exit_matFunction(&mut self, _ctx: &MatFunctionContext<'input>) { }
 /**
  * Enter a parse tree produced by the {@code detFunction}
  * labeled alternative in {@link AsciiMath2Parser#primary_expression}.

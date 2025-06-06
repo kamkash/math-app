@@ -227,6 +227,15 @@ impl Basic {
         b
     }
 
+    // ==========================
+    // function constructors
+    // ==========================
+
+    pub fn function(_name: &str, _args: &Vec<Rc<Basic>>) -> Self {
+        let b = Basic::new();
+        b
+    }
+
     // ===========================
     // Arithmetic Operations
     // ===========================

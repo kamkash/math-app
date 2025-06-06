@@ -83,6 +83,7 @@ fn test_asciimath_basic_comp_interest_eval() {
          i = {i}
          n = {n}
          compound_interest = p * (1 + i) ^ n 
+         comp2 = p(1 + i) ^ n
          "
     );
 
@@ -103,11 +104,22 @@ fn test_asciimath_basic_comp_interest_eval() {
         .get(&Basic::symbol("compound_interest"))
         .and_then(|b| b.to_f64())
         .unwrap();
+    let comp2_actual = visitor
+        .result_table
+        .get(&Basic::symbol("comp2"))
+        .and_then(|b| b.to_f64())
+        .unwrap();
     info!("compound interest: {}", comp_interest_actual);
     assert!(
         (comp_interest_actual - compound_interest).abs() < EPSILON,
         "actual: {}, expected: {}",
         comp_interest_actual,
+        compound_interest
+    );
+    assert!(
+        (comp2_actual - compound_interest).abs() < EPSILON,
+        "comp2_actual: {}, expected: {}",
+        comp2_actual,
         compound_interest
     );
 }

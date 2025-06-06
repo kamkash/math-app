@@ -54,12 +54,14 @@ script_op_expression:
 
 // Primary expressions - the highest precedence
 primary_expression:
-	function_call																			# explicitIdentifierCall
-	| LPAREN logical_expression RPAREN														# parenExpression
+	// function_call																			# explicitIdentifierCall
+	// | 
+	// | IDENTIFIER (PRIME+)? LPAREN arguments RPAREN											# explicitIdentifierCall // f(x), f'(x)
+	// | 
+	LPAREN logical_expression RPAREN														# parenExpression
+	| keyword_func																			# explicitKeywordCall // sin(x), vec(x,y,z)
 	| LBRACE logical_expression RBRACE														# braceExpression // e.g. {a+b}
 	| ABS logical_expression ABS															# absExpression // |expression|
-	| IDENTIFIER (PRIME+)? LPAREN arguments RPAREN											# explicitIdentifierCall // f(x), f'(x)
-	| keyword_func																			# explicitKeywordCall // sin(x), vec(x,y,z)
 	| simple_keyword_func																	# simpleKeywordCall // e.g., sin x
 	| SQRT primary_expression																# sqrtFunction
 	| ROOT primary_expression primary_expression											# rootFunction
@@ -75,10 +77,10 @@ primary_expression:
 	| LPAREN paren_element_for_column_vector (
 		COMMA paren_element_for_column_vector
 	)* RPAREN							# parenColumnVector
-	| LPAREN matrix_content RPAREN		# parenMatrix
-	| LBRACKET matrix_content RBRACKET	# bracketMatrix
-	| L_ANGLE matrix_row R_ANGLE		# angleBracketRowVector
-	| MAT LPAREN matrix_content RPAREN	# matFunction // mat((a,b];[c,d]))
+	// | LPAREN matrix_content RPAREN		# parenMatrix
+	// | LBRACKET matrix_content RBRACKET	# bracketMatrix
+	// | L_ANGLE matrix_row R_ANGLE		# angleBracketRowVector
+	// | MAT LPAREN matrix_content RPAREN	# matFunction // mat((a,b];[c,d]))
 	| DET primary_expression			# detFunction
 	| TRANSPOSE primary_expression		# transposeFunction
 	| IDENTIFIER						# identifierAtom

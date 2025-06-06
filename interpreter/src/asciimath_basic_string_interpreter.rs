@@ -221,12 +221,12 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathStringVisitor {
         self.visit_children(ctx)
     }
 
-    fn visit_explicitIdentifierCall(
-        &mut self,
-        ctx: &math_parser::gen_parsers::asciimath2parser::ExplicitIdentifierCallContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
+    // fn visit_explicitIdentifierCall(
+    //     &mut self,
+    //     ctx: &math_parser::gen_parsers::asciimath2parser::ExplicitIdentifierCallContext<'input>,
+    // ) -> Self::Return {
+    //     self.visit_children(ctx)
+    // }
 
     fn visit_explicitKeywordCall(
         &mut self,
@@ -242,12 +242,12 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathStringVisitor {
         self.visit_children(ctx)
     }
 
-    fn visit_absExpression(
-        &mut self,
-        ctx: &math_parser::gen_parsers::asciimath2parser::AbsExpressionContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
+    // fn visit_absExpression(
+    //     &mut self,
+    //     ctx: &math_parser::gen_parsers::asciimath2parser::AbsExpressionContext<'input>,
+    // ) -> Self::Return {
+    //     self.visit_children(ctx)
+    // }
 
     fn visit_sqrtFunction(
         &mut self,
