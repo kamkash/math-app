@@ -104,7 +104,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
             let equation = SymEquation::new(Rc::clone(&left), Rc::clone(&right), op);
             self.block_expressions.push(equation);
         }
-        self.visitor_stack.clear();
+        assert!(self.visitor_stack.is_empty());
         res
     }
 
@@ -292,14 +292,16 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         &mut self,
         ctx: &math_parser::gen_parsers::asciimath2parser::ExplicitKeywordCallContext<'input>,
     ) -> Self::Return {
+        // dbg!(ctx.get_text());
         let res = self.visit_children(ctx);
+        let child_count = ctx.get_child_count();
+        // dbg!(&self.visitor_stack);
         let func_name = ctx.get_child(0).unwrap().get_text();
         // Arguments are typically after the function name and parenthesis
         // This assumes the grammar is: func_name '(' arg1 [, arg2, ...] ')'
-        let arg_count = ctx.get_child_count();
         // Find arguments between '(' and ')'
         let mut args = Vec::new();
-        for i in 2..(arg_count - 1) {
+        for i in 2..(child_count - 1) {
             // This is a simplification; you may need to adjust based on your grammar
             let arg_text = ctx.get_child(i).unwrap().get_text();
             // Try to find the corresponding Basic in the stack (last pushed)

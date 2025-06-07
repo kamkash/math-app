@@ -151,13 +151,6 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	fn visit_simpleKeywordCall(&mut self, ctx: &SimpleKeywordCallContext<'input>) { self.visit_children(ctx) }
 
 	/**
-	 * Visit a parse tree produced by the {@code sqrtFunction}
-	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
-	 * @param ctx the parse tree
-	 */
-	fn visit_sqrtFunction(&mut self, ctx: &SqrtFunctionContext<'input>) { self.visit_children(ctx) }
-
-	/**
 	 * Visit a parse tree produced by the {@code rootFunction}
 	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
 	 * @param ctx the parse tree
@@ -318,18 +311,6 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	 * @param ctx the parse tree
 	 */
 	fn visit_matrix_row(&mut self, ctx: &Matrix_rowContext<'input>) { self.visit_children(ctx) }
-
-	/**
-	 * Visit a parse tree produced by {@link AsciiMath2Parser#keyword_func}.
-	 * @param ctx the parse tree
-	 */
-	fn visit_keyword_func(&mut self, ctx: &Keyword_funcContext<'input>) { self.visit_children(ctx) }
-
-	/**
-	 * Visit a parse tree produced by {@link AsciiMath2Parser#simple_keyword_func}.
-	 * @param ctx the parse tree
-	 */
-	fn visit_simple_keyword_func(&mut self, ctx: &Simple_keyword_funcContext<'input>) { self.visit_children(ctx) }
 
 	/**
 	 * Visit a parse tree produced by {@link AsciiMath2Parser#deriv_function}.
@@ -581,15 +562,6 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 		}
 
 	/**
-	 * Visit a parse tree produced by the {@code sqrtFunction}
-	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
-	 * @param ctx the parse tree
-	 */
-		fn visit_sqrtFunction(&mut self, ctx: &SqrtFunctionContext<'input>) -> Self::Return {
-			self.visit_children(ctx)
-		}
-
-	/**
 	 * Visit a parse tree produced by the {@code rootFunction}
 	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
 	 * @param ctx the parse tree
@@ -800,22 +772,6 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 		}
 
 	/**
-	 * Visit a parse tree produced by {@link AsciiMath2Parser#keyword_func}.
-	 * @param ctx the parse tree
-	 */
-		fn visit_keyword_func(&mut self, ctx: &Keyword_funcContext<'input>) -> Self::Return {
-			self.visit_children(ctx)
-		}
-
-	/**
-	 * Visit a parse tree produced by {@link AsciiMath2Parser#simple_keyword_func}.
-	 * @param ctx the parse tree
-	 */
-		fn visit_simple_keyword_func(&mut self, ctx: &Simple_keyword_funcContext<'input>) -> Self::Return {
-			self.visit_children(ctx)
-		}
-
-	/**
 	 * Visit a parse tree produced by {@link AsciiMath2Parser#deriv_function}.
 	 * @param ctx the parse tree
 	 */
@@ -1011,11 +967,6 @@ where
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
-	fn visit_sqrtFunction(&mut self, ctx: &SqrtFunctionContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_sqrtFunction(self, ctx);
-        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
-	}
-
 	fn visit_rootFunction(&mut self, ctx: &RootFunctionContext<'input>){
 		let result = <Self as AsciiMath2VisitorCompat>::visit_rootFunction(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
@@ -1133,16 +1084,6 @@ where
 
 	fn visit_matrix_row(&mut self, ctx: &Matrix_rowContext<'input>){
 		let result = <Self as AsciiMath2VisitorCompat>::visit_matrix_row(self, ctx);
-        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
-	}
-
-	fn visit_keyword_func(&mut self, ctx: &Keyword_funcContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_keyword_func(self, ctx);
-        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
-	}
-
-	fn visit_simple_keyword_func(&mut self, ctx: &Simple_keyword_funcContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_simple_keyword_func(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 

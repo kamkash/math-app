@@ -245,18 +245,6 @@ fn enter_simpleKeywordCall(&mut self, _ctx: &SimpleKeywordCallContext<'input>) {
  */
 fn exit_simpleKeywordCall(&mut self, _ctx: &SimpleKeywordCallContext<'input>) { }
 /**
- * Enter a parse tree produced by the {@code sqrtFunction}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn enter_sqrtFunction(&mut self, _ctx: &SqrtFunctionContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code sqrtFunction}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn exit_sqrtFunction(&mut self, _ctx: &SqrtFunctionContext<'input>) { }
-/**
  * Enter a parse tree produced by the {@code rootFunction}
  * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
  * @param ctx the parse tree
@@ -532,26 +520,6 @@ fn enter_matrix_row(&mut self, _ctx: &Matrix_rowContext<'input>) { }
  * @param ctx the parse tree
  */
 fn exit_matrix_row(&mut self, _ctx: &Matrix_rowContext<'input>) { }
-/**
- * Enter a parse tree produced by {@link AsciiMath2Parser#keyword_func}.
- * @param ctx the parse tree
- */
-fn enter_keyword_func(&mut self, _ctx: &Keyword_funcContext<'input>) { }
-/**
- * Exit a parse tree produced by {@link AsciiMath2Parser#keyword_func}.
- * @param ctx the parse tree
- */
-fn exit_keyword_func(&mut self, _ctx: &Keyword_funcContext<'input>) { }
-/**
- * Enter a parse tree produced by {@link AsciiMath2Parser#simple_keyword_func}.
- * @param ctx the parse tree
- */
-fn enter_simple_keyword_func(&mut self, _ctx: &Simple_keyword_funcContext<'input>) { }
-/**
- * Exit a parse tree produced by {@link AsciiMath2Parser#simple_keyword_func}.
- * @param ctx the parse tree
- */
-fn exit_simple_keyword_func(&mut self, _ctx: &Simple_keyword_funcContext<'input>) { }
 /**
  * Enter a parse tree produced by {@link AsciiMath2Parser#deriv_function}.
  * @param ctx the parse tree

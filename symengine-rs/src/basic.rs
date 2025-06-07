@@ -231,9 +231,17 @@ impl Basic {
     // function constructors
     // ==========================
 
-    pub fn function(_name: &str, _args: &Vec<Rc<Basic>>) -> Self {
-        let b = Basic::new();
-        b
+    pub fn function(name: &str, args: &Vec<Rc<Basic>>) -> Self {
+        match name {
+            "sin" => Basic::sin(&args[0]), 
+            "cos" => Basic::cos(&args[0]), 
+            "tan" => Basic::tan(&args[0]), 
+            "exp" => Basic::exp(&args[0]), 
+            "log" => Basic::log(&args[0]), 
+            "sqrt" => Basic::sqrt(&args[0]),
+            _ => Basic::symbol(name),           // Fallback to symbol for unknown functions
+            
+        }
     }
 
     // ===========================

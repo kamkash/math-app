@@ -21,9 +21,7 @@ add_sub_expression:
 	mult_div_expression (sumop mult_div_expression)*;
 
 mult_div_expression:
-	power_expression (
-		multop? power_expression
-	)*;
+	power_expression (multop? power_expression)*;
 
 power_expression:
 	script_op_expression (powop primary_expression)*;
@@ -54,16 +52,13 @@ script_op_expression:
 
 // Primary expressions - the highest precedence
 primary_expression:
-	// function_call																			# explicitIdentifierCall
-	// | 
-	// | IDENTIFIER (PRIME+)? LPAREN arguments RPAREN											# explicitIdentifierCall // f(x), f'(x)
-	// | 
+	// function_call # explicitIdentifierCall | | IDENTIFIER (PRIME+)? LPAREN arguments RPAREN #
+	// explicitIdentifierCall // f(x), f'(x) |
 	LPAREN logical_expression RPAREN														# parenExpression
-	| keyword_func																			# explicitKeywordCall // sin(x), vec(x,y,z)
+	| BUILTIN_KEYWORD_FUNC_NAME LPAREN arguments RPAREN										# explicitKeywordCall // sin(x), vec(x,y,z)
 	| LBRACE logical_expression RBRACE														# braceExpression // e.g. {a+b}
 	| ABS logical_expression ABS															# absExpression // |expression|
-	| simple_keyword_func																	# simpleKeywordCall // e.g., sin x
-	| SQRT primary_expression																# sqrtFunction
+	| BUILTIN_KEYWORD_FUNC_NAME primary_expression											# simpleKeywordCall // e.g., sin x
 	| ROOT primary_expression primary_expression											# rootFunction
 	| FRAC primary_expression primary_expression											# fracFunction
 	| TEXT LPAREN text_argument RPAREN														# textFunction
@@ -76,25 +71,26 @@ primary_expression:
 		limitExpression
 	| LPAREN paren_element_for_column_vector (
 		COMMA paren_element_for_column_vector
-	)* RPAREN							# parenColumnVector
-	// | LPAREN matrix_content RPAREN		# parenMatrix
-	// | LBRACKET matrix_content RBRACKET	# bracketMatrix
-	// | L_ANGLE matrix_row R_ANGLE		# angleBracketRowVector
-	// | MAT LPAREN matrix_content RPAREN	# matFunction // mat((a,b];[c,d]))
-	| DET primary_expression			# detFunction
-	| TRANSPOSE primary_expression		# transposeFunction
-	| IDENTIFIER						# identifierAtom
-	| NUMBER							# numberAtom
-	| NUMBER_WITH_COMMAS				# numberWithCommasAtom
-	| CURRENCY_NUMBER					# currencyNumberAtom
-	| GREEK_LETTER						# greekLetterAtom
-	| constant_symbol					# constantAtom
-	| STRING							# stringAtom;
+	)* RPAREN # parenColumnVector
+	// | LPAREN matrix_content RPAREN # parenMatrix | LBRACKET matrix_content RBRACKET #
+	// bracketMatrix | L_ANGLE matrix_row R_ANGLE # angleBracketRowVector | MAT LPAREN
+	// matrix_content RPAREN # matFunction // mat((a,b];[c,d]))
+	| DET primary_expression		# detFunction
+	| TRANSPOSE primary_expression	# transposeFunction
+	| IDENTIFIER					# identifierAtom
+	| NUMBER						# numberAtom
+	| NUMBER_WITH_COMMAS			# numberWithCommasAtom
+	| CURRENCY_NUMBER				# currencyNumberAtom
+	| GREEK_LETTER					# greekLetterAtom
+	| constant_symbol				# constantAtom
+	| STRING						# stringAtom;
 
 // Rule for elements of the specific ((a),(b)) column vector style
 paren_element_for_column_vector: LPAREN expression RPAREN;
 
-arguments: expression (COMMA expression)*;
+arguments: (logical_expression | unary_op_expression) (
+		COMMA (expression | unary_op_expression)
+	)*;
 text_argument: STRING | expression;
 wrt_argument: COMMA expression;
 
@@ -103,11 +99,6 @@ matrix_content: matrix_row (SEMICOLON matrix_row)*;
 
 matrix_row:
 	expression (COMMA expression)*; // Represents a single row with comma-separated elements
-
-keyword_func: BUILTIN_KEYWORD_FUNC_NAME LPAREN arguments RPAREN;
-
-simple_keyword_func:
-	BUILTIN_KEYWORD_FUNC_NAME primary_expression;
 
 deriv_function: DERIV;
 d_by_d: DBYD;
@@ -127,9 +118,18 @@ function_call:
 
 // For functions like sin, cos, log, and now vec
 BUILTIN_KEYWORD_FUNC_NAME:
-	SIN
+	SQRT
+	| SIN
 	| COS
 	| TAN
+	| LOG
+	| LN
+	| EXP
+	| FLOOR
+	| CEIL
+	| ROUND
+	| MIN
+	| MAX
 	| CSC
 	| SEC
 	| COT
@@ -151,24 +151,14 @@ BUILTIN_KEYWORD_FUNC_NAME:
 	| ACSCH
 	| ASECH
 	| ACOTH
-	| LOG
-	| LN
-	| EXP
-	| FLOOR
-	| CEIL
-	| ROUND
-	| MIN
-	| MAX
 	| ABS_FUNC
 	| NORM
 	| CARD
 	| SUM
 	| PROD // if used as name(args)
-	| VEC // Added VEC here
+	| VEC
 	| SOLVE;
-// Note: SQRT, FRAC, ROOT, TEXT, DET, TRANSPOSE are handled by their own specific rules in
-// primary_expression MAT is also a specific rule (matFunction) if it's a keyword based
-// constructor.;
+
 constant_symbol:
 	PI_CONST
 	// | E_CONST | I_CONST
@@ -241,8 +231,6 @@ ABS_FUNC: 'abs'; // abs as a function name
 SUM: 'sum' | '\u2211';
 PROD: 'prod' | '\u220F';
 VEC: 'vec'; // Token for the vec function
-
-// Other keywords used as prefix operators or specific structures
 SQRT: 'sqrt' | '\u221A';
 ROOT: 'root';
 FRAC: 'frac';
@@ -375,7 +363,7 @@ LOWERCASE_LETTER: [a-z];
 NUMBER:
 	DIGITS ('.' DIGITS)? ([eE] MINUS? DIGITS)?
 	| '.' DIGITS ( [eE] MINUS? DIGITS)?;
-	
+
 fragment DIGITS: [0-9]+;
 
 NUMBER_WITH_COMMAS: DIGIT+ (',' DIGIT_THREE)* ('.' DIGIT+)?;
