@@ -1,6 +1,7 @@
 use itertools::Itertools;
 use log::*;
 use symengine_rs::basic::Basic; // Import Itertools for the `sorted` method
+use test_log::test;
 
 #[test]
 fn test_basic_symbol() {
@@ -90,12 +91,11 @@ fn test_basic_min() {
     // evaluate
     let result = Basic::subs(
         &minimum,
-        vec![
+        &[
             (&x, &Basic::real(1f64)),
             (&y, &Basic::real(2f64)),
             (&z, &Basic::real(3f64)),
-        ]
-        .into_iter(),
+        ],
     );
     info!("Eval result of min: {}", result);
     assert_eq!(result.to_string(), "1.0");
@@ -120,7 +120,7 @@ fn test_basic_max() {
     // Evaluate
     let result = Basic::subs(
         &maximum_two,
-        vec![(&x, &Basic::real(10f64)), (&y, &Basic::real(30f64))].into_iter(),
+        &[(&x, &Basic::real(10f64)), (&y, &Basic::real(30f64))],
     );
     info!("Eval result of max: {}", result);
     assert_eq!(result.to_string(), "30.0");
@@ -131,17 +131,41 @@ fn test_basic_max() {
 
 #[test]
 fn test_evaluation_addition() {
-    let [x, y]  = Basic::symbols(["x", "y"]);
+    let [x, y] = Basic::symbols(["x", "y"]);
     let expr = x.add(&y);
     let result = Basic::subs(
         &expr,
-        vec![(&x, &Basic::real(1f64)), (&y, &Basic::real(2f64))].into_iter(),
+        &mut vec![(&x, &Basic::real(1f64)), (&y, &Basic::real(2f64))],
     );
     assert_eq!(result.to_string(), "3.0");
     info!("Result of substitution: {}", result);
     let f: f64 = result.to_f64().unwrap();
     info!("Result of f64: {:?}", f);
     assert_eq!(f, 3.0f64);
+}
+
+#[test_log::test]
+fn test_evaluation_constants() {
+    let [x, y] = Basic::symbols(["x", "y"]);
+    let pi_expr = Basic::pi();
+    let e_expr = Basic::e();
+    let expr = x.mul(&pi_expr).add(&y);
+    let expr1 = x.mul(&e_expr).add(&y);
+    let result = Basic::subs(
+        &expr,
+        &[(&x, &Basic::real(2.0f64)), (&y, &Basic::real(0.5f64))],
+    );
+    let result1 = Basic::subs(
+        &expr1,
+        &[(&x, &Basic::real(2.0f64)), (&y, &Basic::real(0.5f64))],
+    );
+    info!("Pi expression: {:?}", pi_expr);
+    info!("Pi value: {:?}", pi_expr.evalf(1, true));
+    info!("e value: {:?}", e_expr.evalf(1, true));
+    info!("result expression: {:?}", result);
+    info!("result1 expression: {:?}", result1);
+    info!("Result f64: {:?}", result.evalf(1, true));
+    info!("Result1 f64: {:?}", result1.evalf(1, true));
 }
 
 #[test]
@@ -161,15 +185,14 @@ fn test_evaluation_compound_interest() {
 
     let result = Basic::subs(
         &compound_interest,
-        vec![
+        &[
             (&p, &Basic::real(num_p)),
             (&i, &Basic::real(num_i)),
             (&n, &Basic::real(num_n)),
-        ]
-        .into_iter(),
+        ],
     );
     info!("Eval result of compound interest: {:.2}", result);
-    assert_eq!(result.to_f64().unwrap(), (num_p * (1.0 + num_i).powf(num_n)));
+    assert_eq!(result.to_f64().unwrap(), num_p * (1.0 + num_i).powf(num_n));
 }
 
 #[test]
@@ -260,19 +283,26 @@ fn test_basic_eval_order() {
 
     let [symx] = Basic::symbols(["x"]);
     let exp = Basic::parse(input).expect("Failed to parse expression");
-    let result = Basic::subs(&exp, vec![(&symx, &Basic::real(x))].into_iter());
+    let result = Basic::subs(&exp, &[(&symx, &Basic::real(x))]);
     info!("eval order exp = {}", result.to_string());
     assert_eq!(result.to_f64().unwrap(), fx);
 }
 
 #[test]
 fn test_basic_funcs() {
-    let [angle] = Basic::symbols(["angle"]);
-    let bsin = Basic::sin(&angle);
+    let [angle, x] = Basic::symbols(["angle", "x"]);
     let pi_over_4 = Basic::real(std::f64::consts::FRAC_PI_4);
-    let result = Basic::subs(&bsin, vec![(&angle, &pi_over_4)].into_iter());
-    info!("sin(pi/4) = {}", result.to_string());
+    let x_val = Basic::real(100.0);
+    let value_table = vec![(&angle, &pi_over_4), (&x, &x_val)];
+
+    let bsin = Basic::sin(&angle);
+    let blog = Basic::log(&x);
+
+    let mut result = Basic::subs(&bsin, &value_table);
     assert_eq!(result.to_f64().unwrap(), std::f64::consts::FRAC_PI_4.sin());
+
+    result = Basic::subs(&blog, &value_table);
+    assert_eq!(result.to_f64().unwrap(), x_val.to_f64().unwrap().ln());
 }
 
 #[test]
@@ -285,10 +315,11 @@ fn test_basic_differentiation() {
     assert_eq!(derivative, Basic::parse("3*x**2 + 2").unwrap());
 
     let trig_expr = Basic::sin(&x).add(&Basic::cos(&x));
+    dbg!(trig_expr.to_string());
     let trig_derivative = Basic::diff(&trig_expr, &x);
     info!("Derivative of {}: {}", trig_expr, trig_derivative);
     assert_eq!(trig_derivative, Basic::parse("cos(x) - sin(x)").unwrap());
-}   
+}
 
 #[test]
 fn test_basic_mul_add_ops() {
@@ -298,10 +329,30 @@ fn test_basic_mul_add_ops() {
     let sub_expr = Basic::sub_op();
     let pow_exp = Basic::pow_op();
 
-    info!("Multiplication: {} {} {}", mul_expr, mul_expr.get_type(), mul_expr.is_mul_op());
-    info!("Division: {} {} {}", div_expr, div_expr.get_type(), div_expr.is_div_op());
-    info!("Addition: {} {} {}", add_expr, add_expr.get_type(), add_expr.is_add_op());
-    info!("Subtraction: {} {} {}", sub_expr, sub_expr.get_type(), sub_expr.is_sub_op());
+    info!(
+        "Multiplication: {} {} {}",
+        mul_expr,
+        mul_expr.get_type(),
+        mul_expr.is_mul_op()
+    );
+    info!(
+        "Division: {} {} {}",
+        div_expr,
+        div_expr.get_type(),
+        div_expr.is_div_op()
+    );
+    info!(
+        "Addition: {} {} {}",
+        add_expr,
+        add_expr.get_type(),
+        add_expr.is_add_op()
+    );
+    info!(
+        "Subtraction: {} {} {}",
+        sub_expr,
+        sub_expr.get_type(),
+        sub_expr.is_sub_op()
+    );
 
     assert!(mul_expr.is_mul_op());
     assert!(div_expr.is_div_op());
@@ -312,5 +363,4 @@ fn test_basic_mul_add_ops() {
     assert!(!add_expr.is_sub_op());
     assert!(!mul_expr.is_div_op());
     assert!(!div_expr.is_mul_op());
-   
 }

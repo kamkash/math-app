@@ -145,7 +145,7 @@ fn test_asciimath_basic_implicit_multiply() {
     let exp = Basic::parse(exp_str).unwrap();
     let inp = format!("{} = 10\ny = {}", x, exp_str);
 
-    let expected = Basic::subs(&exp, vec![(&x, &Basic::real(10.0f64))].into_iter());
+    let expected = Basic::subs(&exp, &[(&x, &Basic::real(10.0f64))]);
     info!("input: {}", inp);
     info!("expected: {}", expected);
 
@@ -289,10 +289,14 @@ fn test_asciimath_basic_eval_algebraic_operations() {
 }
 
 #[test_log::test]
-fn test_asciimath_basic_explicit_functions() {
+fn test_asciimath_basic_builtin_functions() {
     let mut input_lines: Vec<String> = Vec::new();
     let mut checks: Vec<(&str, f64)> = Vec::new();
 
+    input_lines.push("ang = 45.0".to_string());
+    checks.push(("ang", 45.0f64));
+    input_lines.push("w = sin(ang)".to_string());
+    checks.push(("w", (45.0f64).sin()));
     input_lines.push("z = sin(10.0)".to_string());
     checks.push(("z", (10.0f64).sin()));
     input_lines.push("z1 = sin(10.0)^2 + cos(10.0)^2".to_string());
@@ -301,10 +305,12 @@ fn test_asciimath_basic_explicit_functions() {
     checks.push(("z2", (144.0f64).sqrt()));
     input_lines.push("z3 = log(100.0)".to_string());
     checks.push(("z3", (100.0f64).ln()));
+    input_lines.push("z4 = pi / 2.0".to_string());
+    checks.push(("z4", std::f64::consts::PI / 2.0));
 
     let final_input = input_lines.join("\n");
     info!(
-        "Full input block for algebraic operations:\n{}",
+        "Full input block for algebraic operations:\n {:?}",
         final_input
     );
 
@@ -314,8 +320,13 @@ fn test_asciimath_basic_explicit_functions() {
     let mut parser = AsciiMath2Parser::new(token_stream);
     let parse_tree = parser.block().unwrap();
     visitor.visit(parse_tree.as_ref());
+
+    info!(
+        "Visitor block expressions for builtin function tests: {:?}",
+        visitor.block_expressions
+    );
+
     let tolerance = 1e-9; // Adjusted tolerance for f64 comparisons
-                          // for (var_name, expected_f64_val) in checks {
     for (i, (var_name, expected_f64_val)) in checks.iter().enumerate() {
         info!(
             "Checking: in {}, {} = {}",

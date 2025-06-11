@@ -51,132 +51,136 @@ use std::any::{Any,TypeId};
 		pub const T__9:isize=10; 
 		pub const T__10:isize=11; 
 		pub const T__11:isize=12; 
-		pub const BUILTIN_KEYWORD_FUNC_NAME:isize=13; 
-		pub const INTEGRAL:isize=14; 
-		pub const DERIV:isize=15; 
-		pub const DBYD:isize=16; 
-		pub const PARTIAL:isize=17; 
-		pub const LIM:isize=18; 
-		pub const SOLVE:isize=19; 
-		pub const SIN:isize=20; 
-		pub const COS:isize=21; 
-		pub const TAN:isize=22; 
-		pub const CSC:isize=23; 
-		pub const SEC:isize=24; 
-		pub const COT:isize=25; 
-		pub const ASIN:isize=26; 
-		pub const ACOS:isize=27; 
-		pub const ATAN:isize=28; 
-		pub const ACSC:isize=29; 
-		pub const ASEC:isize=30; 
-		pub const ACOT:isize=31; 
-		pub const SINH:isize=32; 
-		pub const COSH:isize=33; 
-		pub const TANH:isize=34; 
-		pub const CSCH:isize=35; 
-		pub const SECH:isize=36; 
-		pub const COTH:isize=37; 
-		pub const ASINH:isize=38; 
-		pub const ACOSH:isize=39; 
-		pub const ATANH:isize=40; 
-		pub const ACSCH:isize=41; 
-		pub const ASECH:isize=42; 
-		pub const ACOTH:isize=43; 
-		pub const LOG:isize=44; 
-		pub const LN:isize=45; 
-		pub const EXP:isize=46; 
-		pub const FLOOR:isize=47; 
-		pub const CEIL:isize=48; 
-		pub const ROUND:isize=49; 
-		pub const MIN:isize=50; 
-		pub const MAX:isize=51; 
-		pub const NORM:isize=52; 
-		pub const CARD:isize=53; 
-		pub const ABS_FUNC:isize=54; 
-		pub const SUM:isize=55; 
-		pub const PROD:isize=56; 
-		pub const VEC:isize=57; 
-		pub const SQRT:isize=58; 
-		pub const ROOT:isize=59; 
-		pub const FRAC:isize=60; 
-		pub const TEXT:isize=61; 
-		pub const MAT:isize=62; 
-		pub const DET:isize=63; 
-		pub const TRANSPOSE:isize=64; 
-		pub const PI_CONST:isize=65; 
-		pub const INFINITY_CONST:isize=66; 
-		pub const SIGNED_INFINITY_CONST:isize=67; 
-		pub const GAMMA_CONST:isize=68; 
-		pub const PHI_CONST:isize=69; 
-		pub const TRUE_CONST:isize=70; 
-		pub const FALSE_CONST:isize=71; 
-		pub const NAN_CONST:isize=72; 
-		pub const PLUS:isize=73; 
-		pub const MINUS:isize=74; 
-		pub const STAR:isize=75; 
-		pub const FSLASH:isize=76; 
-		pub const HAT:isize=77; 
-		pub const POW:isize=78; 
-		pub const UNDERSCORE:isize=79; 
-		pub const PRIME:isize=80; 
-		pub const BANG:isize=81; 
-		pub const EQ:isize=82; 
-		pub const DOUBLE_EQ:isize=83; 
-		pub const NEQ:isize=84; 
-		pub const LT:isize=85; 
-		pub const GT:isize=86; 
-		pub const LTE:isize=87; 
-		pub const GTE:isize=88; 
-		pub const TO:isize=89; 
-		pub const RARROW:isize=90; 
-		pub const LARROW:isize=91; 
-		pub const PM:isize=92; 
-		pub const TIMES:isize=93; 
-		pub const DIV:isize=94; 
-		pub const AND:isize=95; 
-		pub const OR:isize=96; 
-		pub const NOT:isize=97; 
-		pub const LPAREN:isize=98; 
-		pub const RPAREN:isize=99; 
-		pub const LBRACKET:isize=100; 
-		pub const RBRACKET:isize=101; 
-		pub const LBRACE:isize=102; 
-		pub const RBRACE:isize=103; 
-		pub const ABS:isize=104; 
-		pub const L_ANGLE:isize=105; 
-		pub const R_ANGLE:isize=106; 
-		pub const COMMA:isize=107; 
-		pub const SEMICOLON:isize=108; 
-		pub const ALPHA_G:isize=109; 
-		pub const BETA_G:isize=110; 
-		pub const DELTA_G:isize=111; 
-		pub const EPSILON_G:isize=112; 
-		pub const ZETA_G:isize=113; 
-		pub const ETA_G:isize=114; 
-		pub const THETA_G:isize=115; 
-		pub const IOTA_G:isize=116; 
-		pub const KAPPA_G:isize=117; 
-		pub const LAMBDA_G:isize=118; 
-		pub const MU_G:isize=119; 
-		pub const NU_G:isize=120; 
-		pub const XI_G:isize=121; 
-		pub const RHO_G:isize=122; 
-		pub const SIGMA_G:isize=123; 
-		pub const TAU_G:isize=124; 
-		pub const UPSILON_G:isize=125; 
-		pub const CHI_G:isize=126; 
-		pub const PSI_G:isize=127; 
-		pub const OMEGA_G:isize=128; 
-		pub const GREEK_LETTER:isize=129; 
-		pub const IDENTIFIER:isize=130; 
-		pub const LOWERCASE_LETTER:isize=131; 
-		pub const NUMBER:isize=132; 
-		pub const NUMBER_WITH_COMMAS:isize=133; 
-		pub const CURRENCY_NUMBER:isize=134; 
-		pub const SCIENTIFIC_NUMBER:isize=135; 
-		pub const STRING:isize=136; 
-		pub const SEPARATOR:isize=137; 
-		pub const WS:isize=138;
+		pub const T__12:isize=13; 
+		pub const T__13:isize=14; 
+		pub const T__14:isize=15; 
+		pub const BUILTIN_KEYWORD_FUNC_NAME:isize=16; 
+		pub const INTEGRAL:isize=17; 
+		pub const DERIV:isize=18; 
+		pub const DBYD:isize=19; 
+		pub const PARTIAL:isize=20; 
+		pub const LIM:isize=21; 
+		pub const SOLVE:isize=22; 
+		pub const SIN:isize=23; 
+		pub const COS:isize=24; 
+		pub const TAN:isize=25; 
+		pub const CSC:isize=26; 
+		pub const SEC:isize=27; 
+		pub const COT:isize=28; 
+		pub const ASIN:isize=29; 
+		pub const ACOS:isize=30; 
+		pub const ATAN:isize=31; 
+		pub const ACSC:isize=32; 
+		pub const ASEC:isize=33; 
+		pub const ACOT:isize=34; 
+		pub const SINH:isize=35; 
+		pub const COSH:isize=36; 
+		pub const TANH:isize=37; 
+		pub const CSCH:isize=38; 
+		pub const SECH:isize=39; 
+		pub const COTH:isize=40; 
+		pub const ASINH:isize=41; 
+		pub const ACOSH:isize=42; 
+		pub const ATANH:isize=43; 
+		pub const ACSCH:isize=44; 
+		pub const ASECH:isize=45; 
+		pub const ACOTH:isize=46; 
+		pub const LOG:isize=47; 
+		pub const LN:isize=48; 
+		pub const EXP:isize=49; 
+		pub const FLOOR:isize=50; 
+		pub const CEIL:isize=51; 
+		pub const ROUND:isize=52; 
+		pub const MIN:isize=53; 
+		pub const MAX:isize=54; 
+		pub const NORM:isize=55; 
+		pub const CARD:isize=56; 
+		pub const ABS_FUNC:isize=57; 
+		pub const SUM:isize=58; 
+		pub const PROD:isize=59; 
+		pub const VEC:isize=60; 
+		pub const SQRT:isize=61; 
+		pub const ROOT:isize=62; 
+		pub const FRAC:isize=63; 
+		pub const TEXT:isize=64; 
+		pub const MAT:isize=65; 
+		pub const DET:isize=66; 
+		pub const TRANSPOSE:isize=67; 
+		pub const PI_CONST:isize=68; 
+		pub const INFINITY_CONST:isize=69; 
+		pub const SIGNED_INFINITY_CONST:isize=70; 
+		pub const GAMMA_CONST:isize=71; 
+		pub const PHI_CONST:isize=72; 
+		pub const TRUE_CONST:isize=73; 
+		pub const FALSE_CONST:isize=74; 
+		pub const NAN_CONST:isize=75; 
+		pub const PLUS:isize=76; 
+		pub const MINUS:isize=77; 
+		pub const STAR:isize=78; 
+		pub const FSLASH:isize=79; 
+		pub const HAT:isize=80; 
+		pub const POW:isize=81; 
+		pub const UNDERSCORE:isize=82; 
+		pub const PRIME:isize=83; 
+		pub const BANG:isize=84; 
+		pub const EQ:isize=85; 
+		pub const DOUBLE_EQ:isize=86; 
+		pub const NEQ:isize=87; 
+		pub const LT:isize=88; 
+		pub const GT:isize=89; 
+		pub const LTE:isize=90; 
+		pub const GTE:isize=91; 
+		pub const TO:isize=92; 
+		pub const RARROW:isize=93; 
+		pub const LARROW:isize=94; 
+		pub const PM:isize=95; 
+		pub const TIMES:isize=96; 
+		pub const DIV:isize=97; 
+		pub const AND:isize=98; 
+		pub const OR:isize=99; 
+		pub const NOT:isize=100; 
+		pub const LPAREN:isize=101; 
+		pub const RPAREN:isize=102; 
+		pub const LBRACKET:isize=103; 
+		pub const RBRACKET:isize=104; 
+		pub const LBRACE:isize=105; 
+		pub const RBRACE:isize=106; 
+		pub const ABS:isize=107; 
+		pub const L_ANGLE:isize=108; 
+		pub const R_ANGLE:isize=109; 
+		pub const COMMA:isize=110; 
+		pub const SEMICOLON:isize=111; 
+		pub const ALPHA_G:isize=112; 
+		pub const BETA_G:isize=113; 
+		pub const DELTA_G:isize=114; 
+		pub const EPSILON_G:isize=115; 
+		pub const ZETA_G:isize=116; 
+		pub const ETA_G:isize=117; 
+		pub const THETA_G:isize=118; 
+		pub const IOTA_G:isize=119; 
+		pub const KAPPA_G:isize=120; 
+		pub const LAMBDA_G:isize=121; 
+		pub const MU_G:isize=122; 
+		pub const NU_G:isize=123; 
+		pub const XI_G:isize=124; 
+		pub const RHO_G:isize=125; 
+		pub const SIGMA_G:isize=126; 
+		pub const TAU_G:isize=127; 
+		pub const UPSILON_G:isize=128; 
+		pub const CHI_G:isize=129; 
+		pub const PSI_G:isize=130; 
+		pub const OMEGA_G:isize=131; 
+		pub const GREEK_LETTER:isize=132; 
+		pub const IDENTIFIER:isize=133; 
+		pub const LETTERS:isize=134; 
+		pub const LOWERCASE_LETTER:isize=135; 
+		pub const NUMBER:isize=136; 
+		pub const NUMBER_WITH_COMMAS:isize=137; 
+		pub const CURRENCY_NUMBER:isize=138; 
+		pub const SCIENTIFIC_NUMBER:isize=139; 
+		pub const STRING:isize=140; 
+		pub const SEPARATOR:isize=141; 
+		pub const WS:isize=142;
 	pub const RULE_block:usize = 0; 
 	pub const RULE_expression:usize = 1; 
 	pub const RULE_logical_expression:usize = 2; 
@@ -186,90 +190,95 @@ use std::any::{Any,TypeId};
 	pub const RULE_mult_div_expression:usize = 6; 
 	pub const RULE_power_expression:usize = 7; 
 	pub const RULE_unary_op_expression:usize = 8; 
-	pub const RULE_differential:usize = 9; 
-	pub const RULE_integral_body:usize = 10; 
-	pub const RULE_integral_upper_limit:usize = 11; 
-	pub const RULE_integral_lower_limit:usize = 12; 
-	pub const RULE_script_op_expression:usize = 13; 
-	pub const RULE_primary_expression:usize = 14; 
-	pub const RULE_paren_element_for_column_vector:usize = 15; 
-	pub const RULE_arguments:usize = 16; 
-	pub const RULE_text_argument:usize = 17; 
-	pub const RULE_wrt_argument:usize = 18; 
-	pub const RULE_matrix_content:usize = 19; 
-	pub const RULE_matrix_row:usize = 20; 
-	pub const RULE_deriv_function:usize = 21; 
-	pub const RULE_d_by_d:usize = 22; 
-	pub const RULE_derivative:usize = 23; 
-	pub const RULE_partial_derivative:usize = 24; 
-	pub const RULE_function_call:usize = 25; 
-	pub const RULE_constant_symbol:usize = 26; 
-	pub const RULE_relop:usize = 27; 
-	pub const RULE_sumop:usize = 28; 
-	pub const RULE_multop:usize = 29; 
-	pub const RULE_powop:usize = 30;
-	pub const ruleNames: [&'static str; 31] =  [
+	pub const RULE_differential_other:usize = 9; 
+	pub const RULE_differential:usize = 10; 
+	pub const RULE_integral_expression:usize = 11; 
+	pub const RULE_scripted_op_expression:usize = 12; 
+	pub const RULE_op_body:usize = 13; 
+	pub const RULE_integral_upper_limit:usize = 14; 
+	pub const RULE_integral_lower_limit:usize = 15; 
+	pub const RULE_primary_expression:usize = 16; 
+	pub const RULE_paren_element_for_column_vector:usize = 17; 
+	pub const RULE_arguments:usize = 18; 
+	pub const RULE_text_argument:usize = 19; 
+	pub const RULE_wrt_argument:usize = 20; 
+	pub const RULE_matrix_content:usize = 21; 
+	pub const RULE_matrix_row:usize = 22; 
+	pub const RULE_deriv_function:usize = 23; 
+	pub const RULE_d_by_d:usize = 24; 
+	pub const RULE_derivative:usize = 25; 
+	pub const RULE_partial_derivative:usize = 26; 
+	pub const RULE_function_call:usize = 27; 
+	pub const RULE_constant_symbol:usize = 28; 
+	pub const RULE_relop:usize = 29; 
+	pub const RULE_sumop:usize = 30; 
+	pub const RULE_multop:usize = 31; 
+	pub const RULE_powop:usize = 32;
+	pub const ruleNames: [&'static str; 33] =  [
 		"block", "expression", "logical_expression", "relation_expression", "relation_expression_no_rhs", 
 		"add_sub_expression", "mult_div_expression", "power_expression", "unary_op_expression", 
-		"differential", "integral_body", "integral_upper_limit", "integral_lower_limit", 
-		"script_op_expression", "primary_expression", "paren_element_for_column_vector", 
-		"arguments", "text_argument", "wrt_argument", "matrix_content", "matrix_row", 
-		"deriv_function", "d_by_d", "derivative", "partial_derivative", "function_call", 
-		"constant_symbol", "relop", "sumop", "multop", "powop"
+		"differential_other", "differential", "integral_expression", "scripted_op_expression", 
+		"op_body", "integral_upper_limit", "integral_lower_limit", "primary_expression", 
+		"paren_element_for_column_vector", "arguments", "text_argument", "wrt_argument", 
+		"matrix_content", "matrix_row", "deriv_function", "d_by_d", "derivative", 
+		"partial_derivative", "function_call", "constant_symbol", "relop", "sumop", 
+		"multop", "powop"
 	];
 
 
-	pub const _LITERAL_NAMES: [Option<&'static str>;129] = [
-		None, Some("'dx'"), Some("'dy'"), Some("'dz'"), Some("'dt'"), Some("'du'"), 
-		Some("'dv'"), Some("'dw'"), Some("'dtheta'"), Some("'dphi'"), Some("'oo'"), 
-		Some("'+oo'"), Some("'-oo'"), None, None, Some("'deriv'"), None, None, 
-		Some("'lim'"), Some("'solve'"), Some("'sin'"), Some("'cos'"), Some("'tan'"), 
-		Some("'csc'"), Some("'sec'"), Some("'cot'"), None, None, None, None, None, 
-		None, Some("'sinh'"), Some("'cosh'"), Some("'tanh'"), Some("'csch'"), 
-		Some("'sech'"), Some("'coth'"), None, None, None, None, None, None, Some("'log'"), 
-		Some("'ln'"), Some("'exp'"), Some("'floor'"), Some("'ceil'"), Some("'round'"), 
-		Some("'min'"), Some("'max'"), Some("'norm'"), Some("'card'"), Some("'abs'"), 
-		None, None, Some("'vec'"), None, Some("'root'"), Some("'frac'"), Some("'text'"), 
-		Some("'mat'"), Some("'det'"), None, None, None, None, None, None, Some("'true'"), 
-		Some("'false'"), Some("'NaN'"), Some("'+'"), Some("'-'"), Some("'*'"), 
-		Some("'/'"), Some("'^'"), Some("'**'"), Some("'_'"), Some("'''"), Some("'!'"), 
-		Some("'='"), Some("'=='"), None, Some("'<'"), Some("'>'"), None, None, 
-		Some("'to'"), None, None, None, None, None, Some("'and'"), Some("'or'"), 
-		Some("'not'"), Some("'('"), Some("')'"), Some("'['"), Some("']'"), Some("'{'"), 
-		Some("'}'"), Some("'|'"), None, None, Some("','"), Some("';'"), Some("'alpha'"), 
-		Some("'beta'"), Some("'delta'"), Some("'epsilon'"), Some("'zeta'"), Some("'eta'"), 
-		Some("'theta'"), Some("'iota'"), Some("'kappa'"), Some("'lambda'"), Some("'mu'"), 
-		Some("'nu'"), Some("'xi'"), Some("'rho'"), Some("'sigma'"), Some("'tau'"), 
-		Some("'upsilon'"), Some("'chi'"), Some("'psi'"), Some("'omega'")
+	pub const _LITERAL_NAMES: [Option<&'static str>;132] = [
+		None, Some("'du'"), Some("'dv'"), Some("'dw'"), Some("'dalpha'"), Some("'dgamma'"), 
+		Some("'d\u{03B1}'"), Some("'d\u{03B2}'"), Some("'d\u{03B3}'"), Some("'dx'"), 
+		Some("'dy'"), Some("'dz'"), Some("'dt'"), Some("'oo'"), Some("'+oo'"), 
+		Some("'-oo'"), None, None, Some("'deriv'"), None, None, Some("'lim'"), 
+		Some("'solve'"), Some("'sin'"), Some("'cos'"), Some("'tan'"), Some("'csc'"), 
+		Some("'sec'"), Some("'cot'"), None, None, None, None, None, None, Some("'sinh'"), 
+		Some("'cosh'"), Some("'tanh'"), Some("'csch'"), Some("'sech'"), Some("'coth'"), 
+		None, None, None, None, None, None, Some("'log'"), Some("'ln'"), Some("'exp'"), 
+		Some("'floor'"), Some("'ceil'"), Some("'round'"), Some("'min'"), Some("'max'"), 
+		Some("'norm'"), Some("'card'"), Some("'abs'"), None, None, Some("'vec'"), 
+		None, Some("'root'"), Some("'frac'"), Some("'text'"), Some("'mat'"), Some("'det'"), 
+		None, None, None, None, None, None, Some("'true'"), Some("'false'"), Some("'NaN'"), 
+		Some("'+'"), Some("'-'"), Some("'*'"), Some("'/'"), Some("'^'"), Some("'**'"), 
+		Some("'_'"), Some("'''"), Some("'!'"), Some("'='"), Some("'=='"), None, 
+		Some("'<'"), Some("'>'"), None, None, Some("'to'"), None, None, None, 
+		None, None, Some("'and'"), Some("'or'"), Some("'not'"), Some("'('"), Some("')'"), 
+		Some("'['"), Some("']'"), Some("'{'"), Some("'}'"), Some("'|'"), None, 
+		None, Some("','"), Some("';'"), Some("'alpha'"), Some("'beta'"), Some("'delta'"), 
+		Some("'epsilon'"), Some("'zeta'"), Some("'eta'"), Some("'theta'"), Some("'iota'"), 
+		Some("'kappa'"), Some("'lambda'"), Some("'mu'"), Some("'nu'"), Some("'xi'"), 
+		Some("'rho'"), Some("'sigma'"), Some("'tau'"), Some("'upsilon'"), Some("'chi'"), 
+		Some("'psi'"), Some("'omega'")
 	];
-	pub const _SYMBOLIC_NAMES: [Option<&'static str>;139]  = [
+	pub const _SYMBOLIC_NAMES: [Option<&'static str>;143]  = [
 		None, None, None, None, None, None, None, None, None, None, None, None, 
-		None, Some("BUILTIN_KEYWORD_FUNC_NAME"), Some("INTEGRAL"), Some("DERIV"), 
-		Some("DBYD"), Some("PARTIAL"), Some("LIM"), Some("SOLVE"), Some("SIN"), 
-		Some("COS"), Some("TAN"), Some("CSC"), Some("SEC"), Some("COT"), Some("ASIN"), 
-		Some("ACOS"), Some("ATAN"), Some("ACSC"), Some("ASEC"), Some("ACOT"), 
-		Some("SINH"), Some("COSH"), Some("TANH"), Some("CSCH"), Some("SECH"), 
-		Some("COTH"), Some("ASINH"), Some("ACOSH"), Some("ATANH"), Some("ACSCH"), 
-		Some("ASECH"), Some("ACOTH"), Some("LOG"), Some("LN"), Some("EXP"), Some("FLOOR"), 
-		Some("CEIL"), Some("ROUND"), Some("MIN"), Some("MAX"), Some("NORM"), Some("CARD"), 
-		Some("ABS_FUNC"), Some("SUM"), Some("PROD"), Some("VEC"), Some("SQRT"), 
-		Some("ROOT"), Some("FRAC"), Some("TEXT"), Some("MAT"), Some("DET"), Some("TRANSPOSE"), 
-		Some("PI_CONST"), Some("INFINITY_CONST"), Some("SIGNED_INFINITY_CONST"), 
-		Some("GAMMA_CONST"), Some("PHI_CONST"), Some("TRUE_CONST"), Some("FALSE_CONST"), 
-		Some("NAN_CONST"), Some("PLUS"), Some("MINUS"), Some("STAR"), Some("FSLASH"), 
-		Some("HAT"), Some("POW"), Some("UNDERSCORE"), Some("PRIME"), Some("BANG"), 
-		Some("EQ"), Some("DOUBLE_EQ"), Some("NEQ"), Some("LT"), Some("GT"), Some("LTE"), 
-		Some("GTE"), Some("TO"), Some("RARROW"), Some("LARROW"), Some("PM"), Some("TIMES"), 
-		Some("DIV"), Some("AND"), Some("OR"), Some("NOT"), Some("LPAREN"), Some("RPAREN"), 
+		None, None, None, None, Some("BUILTIN_KEYWORD_FUNC_NAME"), Some("INTEGRAL"), 
+		Some("DERIV"), Some("DBYD"), Some("PARTIAL"), Some("LIM"), Some("SOLVE"), 
+		Some("SIN"), Some("COS"), Some("TAN"), Some("CSC"), Some("SEC"), Some("COT"), 
+		Some("ASIN"), Some("ACOS"), Some("ATAN"), Some("ACSC"), Some("ASEC"), 
+		Some("ACOT"), Some("SINH"), Some("COSH"), Some("TANH"), Some("CSCH"), 
+		Some("SECH"), Some("COTH"), Some("ASINH"), Some("ACOSH"), Some("ATANH"), 
+		Some("ACSCH"), Some("ASECH"), Some("ACOTH"), Some("LOG"), Some("LN"), 
+		Some("EXP"), Some("FLOOR"), Some("CEIL"), Some("ROUND"), Some("MIN"), 
+		Some("MAX"), Some("NORM"), Some("CARD"), Some("ABS_FUNC"), Some("SUM"), 
+		Some("PROD"), Some("VEC"), Some("SQRT"), Some("ROOT"), Some("FRAC"), Some("TEXT"), 
+		Some("MAT"), Some("DET"), Some("TRANSPOSE"), Some("PI_CONST"), Some("INFINITY_CONST"), 
+		Some("SIGNED_INFINITY_CONST"), Some("GAMMA_CONST"), Some("PHI_CONST"), 
+		Some("TRUE_CONST"), Some("FALSE_CONST"), Some("NAN_CONST"), Some("PLUS"), 
+		Some("MINUS"), Some("STAR"), Some("FSLASH"), Some("HAT"), Some("POW"), 
+		Some("UNDERSCORE"), Some("PRIME"), Some("BANG"), Some("EQ"), Some("DOUBLE_EQ"), 
+		Some("NEQ"), Some("LT"), Some("GT"), Some("LTE"), Some("GTE"), Some("TO"), 
+		Some("RARROW"), Some("LARROW"), Some("PM"), Some("TIMES"), Some("DIV"), 
+		Some("AND"), Some("OR"), Some("NOT"), Some("LPAREN"), Some("RPAREN"), 
 		Some("LBRACKET"), Some("RBRACKET"), Some("LBRACE"), Some("RBRACE"), Some("ABS"), 
 		Some("L_ANGLE"), Some("R_ANGLE"), Some("COMMA"), Some("SEMICOLON"), Some("ALPHA_G"), 
 		Some("BETA_G"), Some("DELTA_G"), Some("EPSILON_G"), Some("ZETA_G"), Some("ETA_G"), 
 		Some("THETA_G"), Some("IOTA_G"), Some("KAPPA_G"), Some("LAMBDA_G"), Some("MU_G"), 
 		Some("NU_G"), Some("XI_G"), Some("RHO_G"), Some("SIGMA_G"), Some("TAU_G"), 
 		Some("UPSILON_G"), Some("CHI_G"), Some("PSI_G"), Some("OMEGA_G"), Some("GREEK_LETTER"), 
-		Some("IDENTIFIER"), Some("LOWERCASE_LETTER"), Some("NUMBER"), Some("NUMBER_WITH_COMMAS"), 
-		Some("CURRENCY_NUMBER"), Some("SCIENTIFIC_NUMBER"), Some("STRING"), Some("SEPARATOR"), 
-		Some("WS")
+		Some("IDENTIFIER"), Some("LETTERS"), Some("LOWERCASE_LETTER"), Some("NUMBER"), 
+		Some("NUMBER_WITH_COMMAS"), Some("CURRENCY_NUMBER"), Some("SCIENTIFIC_NUMBER"), 
+		Some("STRING"), Some("SEPARATOR"), Some("WS")
 	];
 	lazy_static!{
 	    static ref _shared_context_cache: Arc<PredictionContextCache> = Arc::new(PredictionContextCache::new());
@@ -478,16 +487,22 @@ impl<'input> BlockContextExt<'input>{
 
 pub trait BlockContextAttrs<'input>: AsciiMath2ParserContext<'input> + BorrowMut<BlockContextExt<'input>>{
 
+/// Retrieves first TerminalNode corresponding to token EOF
+/// Returns `None` if there is no child corresponding to token EOF
+fn EOF(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
+	self.get_token(EOF, 0)
+}
+fn integral_expression_all(&self) ->  Vec<Rc<Integral_expressionContextAll<'input>>> where Self:Sized{
+	self.children_of_type()
+}
+fn integral_expression(&self, i: usize) -> Option<Rc<Integral_expressionContextAll<'input>>> where Self:Sized{
+	self.child_of_type(i)
+}
 fn expression_all(&self) ->  Vec<Rc<ExpressionContextAll<'input>>> where Self:Sized{
 	self.children_of_type()
 }
 fn expression(&self, i: usize) -> Option<Rc<ExpressionContextAll<'input>>> where Self:Sized{
 	self.child_of_type(i)
-}
-/// Retrieves first TerminalNode corresponding to token EOF
-/// Returns `None` if there is no child corresponding to token EOF
-fn EOF(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
-	self.get_token(EOF, 0)
 }
 /// Retrieves all `TerminalNode`s corresponding to token SEPARATOR in current rule
 fn SEPARATOR_all(&self) -> Vec<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>>  where Self:Sized{
@@ -522,47 +537,85 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			/*InvokeRule expression*/
-			recog.base.set_state(62);
-			recog.expression()?;
-
-			recog.base.set_state(67);
+			recog.base.set_state(68);
 			recog.err_handler.sync(&mut recog.base)?;
-			_alt = recog.interpreter.adaptive_predict(0,&mut recog.base)?;
+			match  recog.interpreter.adaptive_predict(0,&mut recog.base)? {
+				1 =>{
+					{
+					/*InvokeRule integral_expression*/
+					recog.base.set_state(66);
+					recog.integral_expression()?;
+
+					}
+				}
+			,
+				2 =>{
+					{
+					/*InvokeRule expression*/
+					recog.base.set_state(67);
+					recog.expression()?;
+
+					}
+				}
+
+				_ => {}
+			}
+			recog.base.set_state(77);
+			recog.err_handler.sync(&mut recog.base)?;
+			_alt = recog.interpreter.adaptive_predict(2,&mut recog.base)?;
 			while { _alt!=2 && _alt!=INVALID_ALT } {
 				if _alt==1 {
 					{
 					{
-					recog.base.set_state(63);
+					recog.base.set_state(70);
 					recog.base.match_token(SEPARATOR,&mut recog.err_handler)?;
 
-					/*InvokeRule expression*/
-					recog.base.set_state(64);
-					recog.expression()?;
+					recog.base.set_state(73);
+					recog.err_handler.sync(&mut recog.base)?;
+					match  recog.interpreter.adaptive_predict(1,&mut recog.base)? {
+						1 =>{
+							{
+							/*InvokeRule integral_expression*/
+							recog.base.set_state(71);
+							recog.integral_expression()?;
 
+							}
+						}
+					,
+						2 =>{
+							{
+							/*InvokeRule expression*/
+							recog.base.set_state(72);
+							recog.expression()?;
+
+							}
+						}
+
+						_ => {}
+					}
 					}
 					} 
 				}
-				recog.base.set_state(69);
+				recog.base.set_state(79);
 				recog.err_handler.sync(&mut recog.base)?;
-				_alt = recog.interpreter.adaptive_predict(0,&mut recog.base)?;
+				_alt = recog.interpreter.adaptive_predict(2,&mut recog.base)?;
 			}
-			recog.base.set_state(73);
+			recog.base.set_state(83);
 			recog.err_handler.sync(&mut recog.base)?;
 			_la = recog.base.input.la(1);
 			while _la==SEPARATOR {
 				{
 				{
-				recog.base.set_state(70);
+				recog.base.set_state(80);
 				recog.base.match_token(SEPARATOR,&mut recog.err_handler)?;
 
 				}
 				}
-				recog.base.set_state(75);
+				recog.base.set_state(85);
 				recog.err_handler.sync(&mut recog.base)?;
 				_la = recog.base.input.la(1);
 			}
-			recog.base.set_state(76);
+			recog.base.set_state(86);
 			recog.base.match_token(EOF,&mut recog.err_handler)?;
 
 			}
@@ -658,7 +711,7 @@ where
 			recog.base.enter_outer_alt(None, 1);
 			{
 			/*InvokeRule logical_expression*/
-			recog.base.set_state(78);
+			recog.base.set_state(88);
 			recog.logical_expression()?;
 
 			}
@@ -679,7 +732,35 @@ where
 	}
 }
 //------------------- logical_expression ----------------
-pub type Logical_expressionContextAll<'input> = Logical_expressionContext<'input>;
+#[derive(Debug)]
+pub enum Logical_expressionContextAll<'input>{
+	RelationalExpressionContext(RelationalExpressionContext<'input>),
+Error(Logical_expressionContext<'input>)
+}
+antlr_rust::tid!{Logical_expressionContextAll<'a>}
+
+impl<'input> antlr_rust::parser_rule_context::DerefSeal for Logical_expressionContextAll<'input>{}
+
+impl<'input> AsciiMath2ParserContext<'input> for Logical_expressionContextAll<'input>{}
+
+impl<'input> Deref for Logical_expressionContextAll<'input>{
+	type Target = dyn Logical_expressionContextAttrs<'input> + 'input;
+	fn deref(&self) -> &Self::Target{
+		use Logical_expressionContextAll::*;
+		match self{
+			RelationalExpressionContext(inner) => inner,
+Error(inner) => inner
+		}
+	}
+}
+impl<'input,'a> Visitable<dyn AsciiMath2Visitor<'input> + 'a> for Logical_expressionContextAll<'input>{
+	fn accept(&self, visitor: &mut (dyn AsciiMath2Visitor<'input> + 'a)) { self.deref().accept(visitor) }
+}
+impl<'input,'a> Listenable<dyn AsciiMath2Listener<'input> + 'a> for Logical_expressionContextAll<'input>{
+    fn enter(&self, listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) { self.deref().enter(listener) }
+    fn exit(&self, listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) { self.deref().exit(listener) }
+}
+
 
 
 pub type Logical_expressionContext<'input> = BaseParserRuleContext<'input,Logical_expressionContextExt<'input>>;
@@ -692,20 +773,9 @@ ph:PhantomData<&'input str>
 impl<'input> AsciiMath2ParserContext<'input> for Logical_expressionContext<'input>{}
 
 impl<'input,'a> Listenable<dyn AsciiMath2Listener<'input> + 'a> for Logical_expressionContext<'input>{
-		fn enter(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
-			listener.enter_every_rule(self);
-			listener.enter_logical_expression(self);
-		}
-		fn exit(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
-			listener.exit_logical_expression(self);
-			listener.exit_every_rule(self);
-		}
 }
 
 impl<'input,'a> Visitable<dyn AsciiMath2Visitor<'input> + 'a> for Logical_expressionContext<'input>{
-	fn accept(&self,visitor: &mut (dyn AsciiMath2Visitor<'input> + 'a)) {
-		visitor.visit_logical_expression(self);
-	}
 }
 
 impl<'input> CustomRuleContext<'input> for Logical_expressionContextExt<'input>{
@@ -719,43 +789,107 @@ antlr_rust::tid!{Logical_expressionContextExt<'a>}
 impl<'input> Logical_expressionContextExt<'input>{
 	fn new(parent: Option<Rc<dyn AsciiMath2ParserContext<'input> + 'input > >, invoking_state: isize) -> Rc<Logical_expressionContextAll<'input>> {
 		Rc::new(
+		Logical_expressionContextAll::Error(
 			BaseParserRuleContext::new_parser_ctx(parent, invoking_state,Logical_expressionContextExt{
 				ph:PhantomData
 			}),
+		)
 		)
 	}
 }
 
 pub trait Logical_expressionContextAttrs<'input>: AsciiMath2ParserContext<'input> + BorrowMut<Logical_expressionContextExt<'input>>{
 
-fn relation_expression_all(&self) ->  Vec<Rc<Relation_expressionContextAll<'input>>> where Self:Sized{
-	self.children_of_type()
-}
-fn relation_expression(&self, i: usize) -> Option<Rc<Relation_expressionContextAll<'input>>> where Self:Sized{
-	self.child_of_type(i)
-}
-/// Retrieves all `TerminalNode`s corresponding to token AND in current rule
-fn AND_all(&self) -> Vec<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>>  where Self:Sized{
-	self.children_of_type()
-}
-/// Retrieves 'i's TerminalNode corresponding to token AND, starting from 0.
-/// Returns `None` if number of children corresponding to token AND is less or equal than `i`.
-fn AND(&self, i: usize) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
-	self.get_token(AND, i)
-}
-/// Retrieves all `TerminalNode`s corresponding to token OR in current rule
-fn OR_all(&self) -> Vec<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>>  where Self:Sized{
-	self.children_of_type()
-}
-/// Retrieves 'i's TerminalNode corresponding to token OR, starting from 0.
-/// Returns `None` if number of children corresponding to token OR is less or equal than `i`.
-fn OR(&self, i: usize) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
-	self.get_token(OR, i)
-}
 
 }
 
 impl<'input> Logical_expressionContextAttrs<'input> for Logical_expressionContext<'input>{}
+
+pub type RelationalExpressionContext<'input> = BaseParserRuleContext<'input,RelationalExpressionContextExt<'input>>;
+
+pub trait RelationalExpressionContextAttrs<'input>: AsciiMath2ParserContext<'input>{
+	fn relation_expression_all(&self) ->  Vec<Rc<Relation_expressionContextAll<'input>>> where Self:Sized{
+		self.children_of_type()
+	}
+	fn relation_expression(&self, i: usize) -> Option<Rc<Relation_expressionContextAll<'input>>> where Self:Sized{
+		self.child_of_type(i)
+	}
+	/// Retrieves all `TerminalNode`s corresponding to token AND in current rule
+	fn AND_all(&self) -> Vec<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>>  where Self:Sized{
+		self.children_of_type()
+	}
+	/// Retrieves 'i's TerminalNode corresponding to token AND, starting from 0.
+	/// Returns `None` if number of children corresponding to token AND is less or equal than `i`.
+	fn AND(&self, i: usize) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
+		self.get_token(AND, i)
+	}
+	/// Retrieves all `TerminalNode`s corresponding to token OR in current rule
+	fn OR_all(&self) -> Vec<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>>  where Self:Sized{
+		self.children_of_type()
+	}
+	/// Retrieves 'i's TerminalNode corresponding to token OR, starting from 0.
+	/// Returns `None` if number of children corresponding to token OR is less or equal than `i`.
+	fn OR(&self, i: usize) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
+		self.get_token(OR, i)
+	}
+}
+
+impl<'input> RelationalExpressionContextAttrs<'input> for RelationalExpressionContext<'input>{}
+
+pub struct RelationalExpressionContextExt<'input>{
+	base:Logical_expressionContextExt<'input>,
+	ph:PhantomData<&'input str>
+}
+
+antlr_rust::tid!{RelationalExpressionContextExt<'a>}
+
+impl<'input> AsciiMath2ParserContext<'input> for RelationalExpressionContext<'input>{}
+
+impl<'input,'a> Listenable<dyn AsciiMath2Listener<'input> + 'a> for RelationalExpressionContext<'input>{
+	fn enter(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
+		listener.enter_every_rule(self);
+		listener.enter_relationalExpression(self);
+	}
+	fn exit(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
+		listener.exit_relationalExpression(self);
+		listener.exit_every_rule(self);
+	}
+}
+
+impl<'input,'a> Visitable<dyn AsciiMath2Visitor<'input> + 'a> for RelationalExpressionContext<'input>{
+	fn accept(&self,visitor: &mut (dyn AsciiMath2Visitor<'input> + 'a)) {
+		visitor.visit_relationalExpression(self);
+	}
+}
+
+impl<'input> CustomRuleContext<'input> for RelationalExpressionContextExt<'input>{
+	type TF = LocalTokenFactory<'input>;
+	type Ctx = AsciiMath2ParserContextType;
+	fn get_rule_index(&self) -> usize { RULE_logical_expression }
+	//fn type_rule_index() -> usize where Self: Sized { RULE_logical_expression }
+}
+
+impl<'input> Borrow<Logical_expressionContextExt<'input>> for RelationalExpressionContext<'input>{
+	fn borrow(&self) -> &Logical_expressionContextExt<'input> { &self.base }
+}
+impl<'input> BorrowMut<Logical_expressionContextExt<'input>> for RelationalExpressionContext<'input>{
+	fn borrow_mut(&mut self) -> &mut Logical_expressionContextExt<'input> { &mut self.base }
+}
+
+impl<'input> Logical_expressionContextAttrs<'input> for RelationalExpressionContext<'input> {}
+
+impl<'input> RelationalExpressionContextExt<'input>{
+	fn new(ctx: &dyn Logical_expressionContextAttrs<'input>) -> Rc<Logical_expressionContextAll<'input>>  {
+		Rc::new(
+			Logical_expressionContextAll::RelationalExpressionContext(
+				BaseParserRuleContext::copy_from(ctx,RelationalExpressionContextExt{
+        			base: ctx.borrow().clone(),
+        			ph:PhantomData
+				})
+			)
+		)
+	}
+}
 
 impl<'input, I, H> AsciiMath2Parser<'input, I, H>
 where
@@ -773,21 +907,22 @@ where
 		let result: Result<(), ANTLRError> = (|| {
 
 			let mut _alt: isize;
-			//recog.base.enter_outer_alt(_localctx.clone(), 1);
-			recog.base.enter_outer_alt(None, 1);
+			let tmp = RelationalExpressionContextExt::new(&**_localctx);
+			recog.base.enter_outer_alt(Some(tmp.clone()), 1);
+			_localctx = tmp;
 			{
 			/*InvokeRule relation_expression*/
-			recog.base.set_state(80);
+			recog.base.set_state(90);
 			recog.relation_expression()?;
 
-			recog.base.set_state(85);
+			recog.base.set_state(95);
 			recog.err_handler.sync(&mut recog.base)?;
-			_alt = recog.interpreter.adaptive_predict(2,&mut recog.base)?;
+			_alt = recog.interpreter.adaptive_predict(4,&mut recog.base)?;
 			while { _alt!=2 && _alt!=INVALID_ALT } {
 				if _alt==1 {
 					{
 					{
-					recog.base.set_state(81);
+					recog.base.set_state(91);
 					_la = recog.base.input.la(1);
 					if { !(_la==AND || _la==OR) } {
 						recog.err_handler.recover_inline(&mut recog.base)?;
@@ -799,15 +934,15 @@ where
 						recog.base.consume(&mut recog.err_handler);
 					}
 					/*InvokeRule relation_expression*/
-					recog.base.set_state(82);
+					recog.base.set_state(92);
 					recog.relation_expression()?;
 
 					}
 					} 
 				}
-				recog.base.set_state(87);
+				recog.base.set_state(97);
 				recog.err_handler.sync(&mut recog.base)?;
-				_alt = recog.interpreter.adaptive_predict(2,&mut recog.base)?;
+				_alt = recog.interpreter.adaptive_predict(4,&mut recog.base)?;
 			}
 			}
 			Ok(())
@@ -907,15 +1042,15 @@ where
         let mut _localctx: Rc<Relation_expressionContextAll> = _localctx;
 		let result: Result<(), ANTLRError> = (|| {
 
-			recog.base.set_state(95);
+			recog.base.set_state(105);
 			recog.err_handler.sync(&mut recog.base)?;
-			match  recog.interpreter.adaptive_predict(4,&mut recog.base)? {
+			match  recog.interpreter.adaptive_predict(6,&mut recog.base)? {
 				1 =>{
 					//recog.base.enter_outer_alt(_localctx.clone(), 1);
 					recog.base.enter_outer_alt(None, 1);
 					{
 					/*InvokeRule relation_expression_no_rhs*/
-					recog.base.set_state(88);
+					recog.base.set_state(98);
 					recog.relation_expression_no_rhs()?;
 
 					}
@@ -926,20 +1061,20 @@ where
 					recog.base.enter_outer_alt(None, 2);
 					{
 					/*InvokeRule add_sub_expression*/
-					recog.base.set_state(89);
+					recog.base.set_state(99);
 					recog.add_sub_expression()?;
 
-					recog.base.set_state(93);
+					recog.base.set_state(103);
 					recog.err_handler.sync(&mut recog.base)?;
-					match  recog.interpreter.adaptive_predict(3,&mut recog.base)? {
+					match  recog.interpreter.adaptive_predict(5,&mut recog.base)? {
 						x if x == 1=>{
 							{
 							/*InvokeRule relop*/
-							recog.base.set_state(90);
+							recog.base.set_state(100);
 							recog.relop()?;
 
 							/*InvokeRule add_sub_expression*/
-							recog.base.set_state(91);
+							recog.base.set_state(101);
 							recog.add_sub_expression()?;
 
 							}
@@ -1051,13 +1186,13 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(99);
+			recog.base.set_state(109);
 			recog.err_handler.sync(&mut recog.base)?;
-			match  recog.interpreter.adaptive_predict(5,&mut recog.base)? {
+			match  recog.interpreter.adaptive_predict(7,&mut recog.base)? {
 				1 =>{
 					{
 					/*InvokeRule add_sub_expression*/
-					recog.base.set_state(97);
+					recog.base.set_state(107);
 					recog.add_sub_expression()?;
 
 					}
@@ -1066,7 +1201,7 @@ where
 				2 =>{
 					{
 					/*InvokeRule function_call*/
-					recog.base.set_state(98);
+					recog.base.set_state(108);
 					recog.function_call()?;
 
 					}
@@ -1074,7 +1209,7 @@ where
 
 				_ => {}
 			}
-			recog.base.set_state(101);
+			recog.base.set_state(111);
 			recog.base.match_token(EQ,&mut recog.err_handler)?;
 
 			}
@@ -1180,30 +1315,30 @@ where
 			recog.base.enter_outer_alt(None, 1);
 			{
 			/*InvokeRule mult_div_expression*/
-			recog.base.set_state(103);
+			recog.base.set_state(113);
 			recog.mult_div_expression()?;
 
-			recog.base.set_state(109);
+			recog.base.set_state(119);
 			recog.err_handler.sync(&mut recog.base)?;
-			_alt = recog.interpreter.adaptive_predict(6,&mut recog.base)?;
+			_alt = recog.interpreter.adaptive_predict(8,&mut recog.base)?;
 			while { _alt!=2 && _alt!=INVALID_ALT } {
 				if _alt==1 {
 					{
 					{
 					/*InvokeRule sumop*/
-					recog.base.set_state(104);
+					recog.base.set_state(114);
 					recog.sumop()?;
 
 					/*InvokeRule mult_div_expression*/
-					recog.base.set_state(105);
+					recog.base.set_state(115);
 					recog.mult_div_expression()?;
 
 					}
 					} 
 				}
-				recog.base.set_state(111);
+				recog.base.set_state(121);
 				recog.err_handler.sync(&mut recog.base)?;
-				_alt = recog.interpreter.adaptive_predict(6,&mut recog.base)?;
+				_alt = recog.interpreter.adaptive_predict(8,&mut recog.base)?;
 			}
 			}
 			Ok(())
@@ -1309,38 +1444,38 @@ where
 			recog.base.enter_outer_alt(None, 1);
 			{
 			/*InvokeRule power_expression*/
-			recog.base.set_state(112);
+			recog.base.set_state(122);
 			recog.power_expression()?;
 
-			recog.base.set_state(119);
+			recog.base.set_state(129);
 			recog.err_handler.sync(&mut recog.base)?;
-			_alt = recog.interpreter.adaptive_predict(8,&mut recog.base)?;
+			_alt = recog.interpreter.adaptive_predict(10,&mut recog.base)?;
 			while { _alt!=2 && _alt!=INVALID_ALT } {
 				if _alt==1 {
 					{
 					{
-					recog.base.set_state(114);
+					recog.base.set_state(124);
 					recog.err_handler.sync(&mut recog.base)?;
 					_la = recog.base.input.la(1);
-					if ((((_la - 75)) & !0x3f) == 0 && ((1usize << (_la - 75)) & ((1usize << (STAR - 75)) | (1usize << (FSLASH - 75)) | (1usize << (TIMES - 75)) | (1usize << (DIV - 75)))) != 0) {
+					if ((((_la - 78)) & !0x3f) == 0 && ((1usize << (_la - 78)) & ((1usize << (STAR - 78)) | (1usize << (FSLASH - 78)) | (1usize << (TIMES - 78)) | (1usize << (DIV - 78)))) != 0) {
 						{
 						/*InvokeRule multop*/
-						recog.base.set_state(113);
+						recog.base.set_state(123);
 						recog.multop()?;
 
 						}
 					}
 
 					/*InvokeRule power_expression*/
-					recog.base.set_state(116);
+					recog.base.set_state(126);
 					recog.power_expression()?;
 
 					}
 					} 
 				}
-				recog.base.set_state(121);
+				recog.base.set_state(131);
 				recog.err_handler.sync(&mut recog.base)?;
-				_alt = recog.interpreter.adaptive_predict(8,&mut recog.base)?;
+				_alt = recog.interpreter.adaptive_predict(10,&mut recog.base)?;
 			}
 			}
 			Ok(())
@@ -1409,19 +1544,16 @@ impl<'input> Power_expressionContextExt<'input>{
 
 pub trait Power_expressionContextAttrs<'input>: AsciiMath2ParserContext<'input> + BorrowMut<Power_expressionContextExt<'input>>{
 
-fn script_op_expression(&self) -> Option<Rc<Script_op_expressionContextAll<'input>>> where Self:Sized{
-	self.child_of_type(0)
+fn primary_expression_all(&self) ->  Vec<Rc<Primary_expressionContextAll<'input>>> where Self:Sized{
+	self.children_of_type()
+}
+fn primary_expression(&self, i: usize) -> Option<Rc<Primary_expressionContextAll<'input>>> where Self:Sized{
+	self.child_of_type(i)
 }
 fn powop_all(&self) ->  Vec<Rc<PowopContextAll<'input>>> where Self:Sized{
 	self.children_of_type()
 }
 fn powop(&self, i: usize) -> Option<Rc<PowopContextAll<'input>>> where Self:Sized{
-	self.child_of_type(i)
-}
-fn primary_expression_all(&self) ->  Vec<Rc<Primary_expressionContextAll<'input>>> where Self:Sized{
-	self.children_of_type()
-}
-fn primary_expression(&self, i: usize) -> Option<Rc<Primary_expressionContextAll<'input>>> where Self:Sized{
 	self.child_of_type(i)
 }
 
@@ -1447,31 +1579,31 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			/*InvokeRule script_op_expression*/
-			recog.base.set_state(122);
-			recog.script_op_expression()?;
+			/*InvokeRule primary_expression*/
+			recog.base.set_state(132);
+			recog.primary_expression()?;
 
-			recog.base.set_state(128);
+			recog.base.set_state(138);
 			recog.err_handler.sync(&mut recog.base)?;
-			_alt = recog.interpreter.adaptive_predict(9,&mut recog.base)?;
+			_alt = recog.interpreter.adaptive_predict(11,&mut recog.base)?;
 			while { _alt!=2 && _alt!=INVALID_ALT } {
 				if _alt==1 {
 					{
 					{
 					/*InvokeRule powop*/
-					recog.base.set_state(123);
+					recog.base.set_state(133);
 					recog.powop()?;
 
 					/*InvokeRule primary_expression*/
-					recog.base.set_state(124);
+					recog.base.set_state(134);
 					recog.primary_expression()?;
 
 					}
 					} 
 				}
-				recog.base.set_state(130);
+				recog.base.set_state(140);
 				recog.err_handler.sync(&mut recog.base)?;
-				_alt = recog.interpreter.adaptive_predict(9,&mut recog.base)?;
+				_alt = recog.interpreter.adaptive_predict(11,&mut recog.base)?;
 			}
 			}
 			Ok(())
@@ -1569,7 +1701,7 @@ impl<'input> Unary_op_expressionContextAttrs<'input> for Unary_op_expressionCont
 pub type NoUnaryOperatorContext<'input> = BaseParserRuleContext<'input,NoUnaryOperatorContextExt<'input>>;
 
 pub trait NoUnaryOperatorContextAttrs<'input>: AsciiMath2ParserContext<'input>{
-	fn script_op_expression(&self) -> Option<Rc<Script_op_expressionContextAll<'input>>> where Self:Sized{
+	fn primary_expression(&self) -> Option<Rc<Primary_expressionContextAll<'input>>> where Self:Sized{
 		self.child_of_type(0)
 	}
 }
@@ -1634,7 +1766,7 @@ impl<'input> NoUnaryOperatorContextExt<'input>{
 pub type UnaryPlusMinusContext<'input> = BaseParserRuleContext<'input,UnaryPlusMinusContextExt<'input>>;
 
 pub trait UnaryPlusMinusContextAttrs<'input>: AsciiMath2ParserContext<'input>{
-	fn script_op_expression(&self) -> Option<Rc<Script_op_expressionContextAll<'input>>> where Self:Sized{
+	fn primary_expression(&self) -> Option<Rc<Primary_expressionContextAll<'input>>> where Self:Sized{
 		self.child_of_type(0)
 	}
 	/// Retrieves first TerminalNode corresponding to token PLUS
@@ -1721,7 +1853,7 @@ where
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
 
-			recog.base.set_state(134);
+			recog.base.set_state(144);
 			recog.err_handler.sync(&mut recog.base)?;
 			match recog.base.input.la(1) {
 			 PLUS | MINUS 
@@ -1730,7 +1862,7 @@ where
 					recog.base.enter_outer_alt(Some(tmp.clone()), 1);
 					_localctx = tmp;
 					{
-					recog.base.set_state(131);
+					recog.base.set_state(141);
 					_la = recog.base.input.la(1);
 					if { !(_la==PLUS || _la==MINUS) } {
 						recog.err_handler.recover_inline(&mut recog.base)?;
@@ -1741,32 +1873,172 @@ where
 						recog.err_handler.report_match(&mut recog.base);
 						recog.base.consume(&mut recog.err_handler);
 					}
-					/*InvokeRule script_op_expression*/
-					recog.base.set_state(132);
-					recog.script_op_expression()?;
+					/*InvokeRule primary_expression*/
+					recog.base.set_state(142);
+					recog.primary_expression()?;
 
 					}
 				}
 
-			 T__0 | T__1 | T__2 | T__3 | T__4 | T__5 | T__6 | T__7 | T__8 | BUILTIN_KEYWORD_FUNC_NAME |
-			 INTEGRAL | DERIV | DBYD | PARTIAL | LIM | ROOT | FRAC | TEXT | DET |
-			 TRANSPOSE | PI_CONST | INFINITY_CONST | GAMMA_CONST | PHI_CONST | TRUE_CONST |
-			 FALSE_CONST | NAN_CONST | UNDERSCORE | PRIME | LPAREN | LBRACE | ABS |
-			 GREEK_LETTER | IDENTIFIER | NUMBER | NUMBER_WITH_COMMAS | CURRENCY_NUMBER |
-			 STRING 
+			 T__0 | T__1 | T__2 | T__3 | T__4 | T__5 | T__6 | T__7 | T__8 | T__9 |
+			 T__10 | T__11 | BUILTIN_KEYWORD_FUNC_NAME | DERIV | DBYD | PARTIAL |
+			 LIM | ROOT | FRAC | TEXT | DET | TRANSPOSE | PI_CONST | INFINITY_CONST |
+			 GAMMA_CONST | PHI_CONST | TRUE_CONST | FALSE_CONST | NAN_CONST | LPAREN |
+			 LBRACE | ABS | BETA_G | GREEK_LETTER | IDENTIFIER | NUMBER | NUMBER_WITH_COMMAS |
+			 CURRENCY_NUMBER | STRING 
 				=> {
 					let tmp = NoUnaryOperatorContextExt::new(&**_localctx);
 					recog.base.enter_outer_alt(Some(tmp.clone()), 2);
 					_localctx = tmp;
 					{
-					/*InvokeRule script_op_expression*/
-					recog.base.set_state(133);
-					recog.script_op_expression()?;
+					/*InvokeRule primary_expression*/
+					recog.base.set_state(143);
+					recog.primary_expression()?;
 
 					}
 				}
 
 				_ => Err(ANTLRError::NoAltError(NoViableAltError::new(&mut recog.base)))?
+			}
+			Ok(())
+		})();
+		match result {
+		Ok(_)=>{},
+        Err(e @ ANTLRError::FallThrough(_)) => return Err(e),
+		Err(ref re) => {
+				//_localctx.exception = re;
+				recog.err_handler.report_error(&mut recog.base, re);
+				recog.err_handler.recover(&mut recog.base, re)?;
+			}
+		}
+		recog.base.exit_rule();
+
+		Ok(_localctx)
+	}
+}
+//------------------- differential_other ----------------
+pub type Differential_otherContextAll<'input> = Differential_otherContext<'input>;
+
+
+pub type Differential_otherContext<'input> = BaseParserRuleContext<'input,Differential_otherContextExt<'input>>;
+
+#[derive(Clone)]
+pub struct Differential_otherContextExt<'input>{
+ph:PhantomData<&'input str>
+}
+
+impl<'input> AsciiMath2ParserContext<'input> for Differential_otherContext<'input>{}
+
+impl<'input,'a> Listenable<dyn AsciiMath2Listener<'input> + 'a> for Differential_otherContext<'input>{
+		fn enter(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
+			listener.enter_every_rule(self);
+			listener.enter_differential_other(self);
+		}
+		fn exit(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
+			listener.exit_differential_other(self);
+			listener.exit_every_rule(self);
+		}
+}
+
+impl<'input,'a> Visitable<dyn AsciiMath2Visitor<'input> + 'a> for Differential_otherContext<'input>{
+	fn accept(&self,visitor: &mut (dyn AsciiMath2Visitor<'input> + 'a)) {
+		visitor.visit_differential_other(self);
+	}
+}
+
+impl<'input> CustomRuleContext<'input> for Differential_otherContextExt<'input>{
+	type TF = LocalTokenFactory<'input>;
+	type Ctx = AsciiMath2ParserContextType;
+	fn get_rule_index(&self) -> usize { RULE_differential_other }
+	//fn type_rule_index() -> usize where Self: Sized { RULE_differential_other }
+}
+antlr_rust::tid!{Differential_otherContextExt<'a>}
+
+impl<'input> Differential_otherContextExt<'input>{
+	fn new(parent: Option<Rc<dyn AsciiMath2ParserContext<'input> + 'input > >, invoking_state: isize) -> Rc<Differential_otherContextAll<'input>> {
+		Rc::new(
+			BaseParserRuleContext::new_parser_ctx(parent, invoking_state,Differential_otherContextExt{
+				ph:PhantomData
+			}),
+		)
+	}
+}
+
+pub trait Differential_otherContextAttrs<'input>: AsciiMath2ParserContext<'input> + BorrowMut<Differential_otherContextExt<'input>>{
+
+/// Retrieves first TerminalNode corresponding to token BETA_G
+/// Returns `None` if there is no child corresponding to token BETA_G
+fn BETA_G(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
+	self.get_token(BETA_G, 0)
+}
+/// Retrieves first TerminalNode corresponding to token LPAREN
+/// Returns `None` if there is no child corresponding to token LPAREN
+fn LPAREN(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
+	self.get_token(LPAREN, 0)
+}
+/// Retrieves first TerminalNode corresponding to token RPAREN
+/// Returns `None` if there is no child corresponding to token RPAREN
+fn RPAREN(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
+	self.get_token(RPAREN, 0)
+}
+
+}
+
+impl<'input> Differential_otherContextAttrs<'input> for Differential_otherContext<'input>{}
+
+impl<'input, I, H> AsciiMath2Parser<'input, I, H>
+where
+    I: TokenStream<'input, TF = LocalTokenFactory<'input> > + TidAble<'input>,
+    H: ErrorStrategy<'input,BaseParserType<'input,I>>
+{
+	pub fn differential_other(&mut self,)
+	-> Result<Rc<Differential_otherContextAll<'input>>,ANTLRError> {
+		let mut recog = self;
+		let _parentctx = recog.ctx.take();
+		let mut _localctx = Differential_otherContextExt::new(_parentctx.clone(), recog.base.get_state());
+        recog.base.enter_rule(_localctx.clone(), 18, RULE_differential_other);
+        let mut _localctx: Rc<Differential_otherContextAll> = _localctx;
+		let mut _la: isize = -1;
+		let result: Result<(), ANTLRError> = (|| {
+
+			//recog.base.enter_outer_alt(_localctx.clone(), 1);
+			recog.base.enter_outer_alt(None, 1);
+			{
+			recog.base.set_state(147);
+			recog.err_handler.sync(&mut recog.base)?;
+			_la = recog.base.input.la(1);
+			if _la==LPAREN {
+				{
+				recog.base.set_state(146);
+				recog.base.match_token(LPAREN,&mut recog.err_handler)?;
+
+				}
+			}
+
+			recog.base.set_state(149);
+			_la = recog.base.input.la(1);
+			if { !((((_la) & !0x3f) == 0 && ((1usize << _la) & ((1usize << T__0) | (1usize << T__1) | (1usize << T__2) | (1usize << T__3) | (1usize << T__4) | (1usize << T__5) | (1usize << T__6) | (1usize << T__7))) != 0) || _la==BETA_G) } {
+				recog.err_handler.recover_inline(&mut recog.base)?;
+
+			}
+			else {
+				if  recog.base.input.la(1)==TOKEN_EOF { recog.base.matched_eof = true };
+				recog.err_handler.report_match(&mut recog.base);
+				recog.base.consume(&mut recog.err_handler);
+			}
+			recog.base.set_state(151);
+			recog.err_handler.sync(&mut recog.base)?;
+			match  recog.interpreter.adaptive_predict(14,&mut recog.base)? {
+				x if x == 1=>{
+					{
+					recog.base.set_state(150);
+					recog.base.match_token(RPAREN,&mut recog.err_handler)?;
+
+					}
+				}
+
+				_ => {}
+			}
 			}
 			Ok(())
 		})();
@@ -1834,6 +2106,9 @@ impl<'input> DifferentialContextExt<'input>{
 
 pub trait DifferentialContextAttrs<'input>: AsciiMath2ParserContext<'input> + BorrowMut<DifferentialContextExt<'input>>{
 
+fn differential_other(&self) -> Option<Rc<Differential_otherContextAll<'input>>> where Self:Sized{
+	self.child_of_type(0)
+}
 
 }
 
@@ -1849,24 +2124,63 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = DifferentialContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 18, RULE_differential);
+        recog.base.enter_rule(_localctx.clone(), 20, RULE_differential);
         let mut _localctx: Rc<DifferentialContextAll> = _localctx;
-		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
 
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(136);
-			_la = recog.base.input.la(1);
-			if { !((((_la) & !0x3f) == 0 && ((1usize << _la) & ((1usize << T__0) | (1usize << T__1) | (1usize << T__2) | (1usize << T__3) | (1usize << T__4) | (1usize << T__5) | (1usize << T__6) | (1usize << T__7) | (1usize << T__8))) != 0)) } {
-				recog.err_handler.recover_inline(&mut recog.base)?;
+			recog.base.set_state(158);
+			recog.err_handler.sync(&mut recog.base)?;
+			match recog.base.input.la(1) {
+			 T__8 
+				=> {
+					{
+					recog.base.set_state(153);
+					recog.base.match_token(T__8,&mut recog.err_handler)?;
 
-			}
-			else {
-				if  recog.base.input.la(1)==TOKEN_EOF { recog.base.matched_eof = true };
-				recog.err_handler.report_match(&mut recog.base);
-				recog.base.consume(&mut recog.err_handler);
+					}
+				}
+
+			 T__9 
+				=> {
+					{
+					recog.base.set_state(154);
+					recog.base.match_token(T__9,&mut recog.err_handler)?;
+
+					}
+				}
+
+			 T__10 
+				=> {
+					{
+					recog.base.set_state(155);
+					recog.base.match_token(T__10,&mut recog.err_handler)?;
+
+					}
+				}
+
+			 T__11 
+				=> {
+					{
+					recog.base.set_state(156);
+					recog.base.match_token(T__11,&mut recog.err_handler)?;
+
+					}
+				}
+
+			 T__0 | T__1 | T__2 | T__3 | T__4 | T__5 | T__6 | T__7 | LPAREN | BETA_G 
+				=> {
+					{
+					/*InvokeRule differential_other*/
+					recog.base.set_state(157);
+					recog.differential_other()?;
+
+					}
+				}
+
+				_ => Err(ANTLRError::NoAltError(NoViableAltError::new(&mut recog.base)))?
 			}
 			}
 			Ok(())
@@ -1885,84 +2199,591 @@ where
 		Ok(_localctx)
 	}
 }
-//------------------- integral_body ----------------
-pub type Integral_bodyContextAll<'input> = Integral_bodyContext<'input>;
+//------------------- integral_expression ----------------
+#[derive(Debug)]
+pub enum Integral_expressionContextAll<'input>{
+	IntegralExpressionContext(IntegralExpressionContext<'input>),
+Error(Integral_expressionContext<'input>)
+}
+antlr_rust::tid!{Integral_expressionContextAll<'a>}
+
+impl<'input> antlr_rust::parser_rule_context::DerefSeal for Integral_expressionContextAll<'input>{}
+
+impl<'input> AsciiMath2ParserContext<'input> for Integral_expressionContextAll<'input>{}
+
+impl<'input> Deref for Integral_expressionContextAll<'input>{
+	type Target = dyn Integral_expressionContextAttrs<'input> + 'input;
+	fn deref(&self) -> &Self::Target{
+		use Integral_expressionContextAll::*;
+		match self{
+			IntegralExpressionContext(inner) => inner,
+Error(inner) => inner
+		}
+	}
+}
+impl<'input,'a> Visitable<dyn AsciiMath2Visitor<'input> + 'a> for Integral_expressionContextAll<'input>{
+	fn accept(&self, visitor: &mut (dyn AsciiMath2Visitor<'input> + 'a)) { self.deref().accept(visitor) }
+}
+impl<'input,'a> Listenable<dyn AsciiMath2Listener<'input> + 'a> for Integral_expressionContextAll<'input>{
+    fn enter(&self, listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) { self.deref().enter(listener) }
+    fn exit(&self, listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) { self.deref().exit(listener) }
+}
 
 
-pub type Integral_bodyContext<'input> = BaseParserRuleContext<'input,Integral_bodyContextExt<'input>>;
+
+pub type Integral_expressionContext<'input> = BaseParserRuleContext<'input,Integral_expressionContextExt<'input>>;
 
 #[derive(Clone)]
-pub struct Integral_bodyContextExt<'input>{
+pub struct Integral_expressionContextExt<'input>{
 ph:PhantomData<&'input str>
 }
 
-impl<'input> AsciiMath2ParserContext<'input> for Integral_bodyContext<'input>{}
+impl<'input> AsciiMath2ParserContext<'input> for Integral_expressionContext<'input>{}
 
-impl<'input,'a> Listenable<dyn AsciiMath2Listener<'input> + 'a> for Integral_bodyContext<'input>{
-		fn enter(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
-			listener.enter_every_rule(self);
-			listener.enter_integral_body(self);
-		}
-		fn exit(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
-			listener.exit_integral_body(self);
-			listener.exit_every_rule(self);
-		}
+impl<'input,'a> Listenable<dyn AsciiMath2Listener<'input> + 'a> for Integral_expressionContext<'input>{
 }
 
-impl<'input,'a> Visitable<dyn AsciiMath2Visitor<'input> + 'a> for Integral_bodyContext<'input>{
-	fn accept(&self,visitor: &mut (dyn AsciiMath2Visitor<'input> + 'a)) {
-		visitor.visit_integral_body(self);
-	}
+impl<'input,'a> Visitable<dyn AsciiMath2Visitor<'input> + 'a> for Integral_expressionContext<'input>{
 }
 
-impl<'input> CustomRuleContext<'input> for Integral_bodyContextExt<'input>{
+impl<'input> CustomRuleContext<'input> for Integral_expressionContextExt<'input>{
 	type TF = LocalTokenFactory<'input>;
 	type Ctx = AsciiMath2ParserContextType;
-	fn get_rule_index(&self) -> usize { RULE_integral_body }
-	//fn type_rule_index() -> usize where Self: Sized { RULE_integral_body }
+	fn get_rule_index(&self) -> usize { RULE_integral_expression }
+	//fn type_rule_index() -> usize where Self: Sized { RULE_integral_expression }
 }
-antlr_rust::tid!{Integral_bodyContextExt<'a>}
+antlr_rust::tid!{Integral_expressionContextExt<'a>}
 
-impl<'input> Integral_bodyContextExt<'input>{
-	fn new(parent: Option<Rc<dyn AsciiMath2ParserContext<'input> + 'input > >, invoking_state: isize) -> Rc<Integral_bodyContextAll<'input>> {
+impl<'input> Integral_expressionContextExt<'input>{
+	fn new(parent: Option<Rc<dyn AsciiMath2ParserContext<'input> + 'input > >, invoking_state: isize) -> Rc<Integral_expressionContextAll<'input>> {
 		Rc::new(
-			BaseParserRuleContext::new_parser_ctx(parent, invoking_state,Integral_bodyContextExt{
+		Integral_expressionContextAll::Error(
+			BaseParserRuleContext::new_parser_ctx(parent, invoking_state,Integral_expressionContextExt{
 				ph:PhantomData
 			}),
+		)
 		)
 	}
 }
 
-pub trait Integral_bodyContextAttrs<'input>: AsciiMath2ParserContext<'input> + BorrowMut<Integral_bodyContextExt<'input>>{
+pub trait Integral_expressionContextAttrs<'input>: AsciiMath2ParserContext<'input> + BorrowMut<Integral_expressionContextExt<'input>>{
 
-fn mult_div_expression(&self) -> Option<Rc<Mult_div_expressionContextAll<'input>>> where Self:Sized{
-	self.child_of_type(0)
-}
 
 }
 
-impl<'input> Integral_bodyContextAttrs<'input> for Integral_bodyContext<'input>{}
+impl<'input> Integral_expressionContextAttrs<'input> for Integral_expressionContext<'input>{}
+
+pub type IntegralExpressionContext<'input> = BaseParserRuleContext<'input,IntegralExpressionContextExt<'input>>;
+
+pub trait IntegralExpressionContextAttrs<'input>: AsciiMath2ParserContext<'input>{
+	/// Retrieves first TerminalNode corresponding to token INTEGRAL
+	/// Returns `None` if there is no child corresponding to token INTEGRAL
+	fn INTEGRAL(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
+		self.get_token(INTEGRAL, 0)
+	}
+	fn op_body(&self) -> Option<Rc<Op_bodyContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+	fn differential(&self) -> Option<Rc<DifferentialContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+	/// Retrieves first TerminalNode corresponding to token LPAREN
+	/// Returns `None` if there is no child corresponding to token LPAREN
+	fn LPAREN(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
+		self.get_token(LPAREN, 0)
+	}
+	/// Retrieves first TerminalNode corresponding to token RPAREN
+	/// Returns `None` if there is no child corresponding to token RPAREN
+	fn RPAREN(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
+		self.get_token(RPAREN, 0)
+	}
+	fn integral_lower_limit(&self) -> Option<Rc<Integral_lower_limitContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+	fn integral_upper_limit(&self) -> Option<Rc<Integral_upper_limitContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+	/// Retrieves first TerminalNode corresponding to token EQ
+	/// Returns `None` if there is no child corresponding to token EQ
+	fn EQ(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
+		self.get_token(EQ, 0)
+	}
+}
+
+impl<'input> IntegralExpressionContextAttrs<'input> for IntegralExpressionContext<'input>{}
+
+pub struct IntegralExpressionContextExt<'input>{
+	base:Integral_expressionContextExt<'input>,
+	ph:PhantomData<&'input str>
+}
+
+antlr_rust::tid!{IntegralExpressionContextExt<'a>}
+
+impl<'input> AsciiMath2ParserContext<'input> for IntegralExpressionContext<'input>{}
+
+impl<'input,'a> Listenable<dyn AsciiMath2Listener<'input> + 'a> for IntegralExpressionContext<'input>{
+	fn enter(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
+		listener.enter_every_rule(self);
+		listener.enter_integralExpression(self);
+	}
+	fn exit(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
+		listener.exit_integralExpression(self);
+		listener.exit_every_rule(self);
+	}
+}
+
+impl<'input,'a> Visitable<dyn AsciiMath2Visitor<'input> + 'a> for IntegralExpressionContext<'input>{
+	fn accept(&self,visitor: &mut (dyn AsciiMath2Visitor<'input> + 'a)) {
+		visitor.visit_integralExpression(self);
+	}
+}
+
+impl<'input> CustomRuleContext<'input> for IntegralExpressionContextExt<'input>{
+	type TF = LocalTokenFactory<'input>;
+	type Ctx = AsciiMath2ParserContextType;
+	fn get_rule_index(&self) -> usize { RULE_integral_expression }
+	//fn type_rule_index() -> usize where Self: Sized { RULE_integral_expression }
+}
+
+impl<'input> Borrow<Integral_expressionContextExt<'input>> for IntegralExpressionContext<'input>{
+	fn borrow(&self) -> &Integral_expressionContextExt<'input> { &self.base }
+}
+impl<'input> BorrowMut<Integral_expressionContextExt<'input>> for IntegralExpressionContext<'input>{
+	fn borrow_mut(&mut self) -> &mut Integral_expressionContextExt<'input> { &mut self.base }
+}
+
+impl<'input> Integral_expressionContextAttrs<'input> for IntegralExpressionContext<'input> {}
+
+impl<'input> IntegralExpressionContextExt<'input>{
+	fn new(ctx: &dyn Integral_expressionContextAttrs<'input>) -> Rc<Integral_expressionContextAll<'input>>  {
+		Rc::new(
+			Integral_expressionContextAll::IntegralExpressionContext(
+				BaseParserRuleContext::copy_from(ctx,IntegralExpressionContextExt{
+        			base: ctx.borrow().clone(),
+        			ph:PhantomData
+				})
+			)
+		)
+	}
+}
 
 impl<'input, I, H> AsciiMath2Parser<'input, I, H>
 where
     I: TokenStream<'input, TF = LocalTokenFactory<'input> > + TidAble<'input>,
     H: ErrorStrategy<'input,BaseParserType<'input,I>>
 {
-	pub fn integral_body(&mut self,)
-	-> Result<Rc<Integral_bodyContextAll<'input>>,ANTLRError> {
+	pub fn integral_expression(&mut self,)
+	-> Result<Rc<Integral_expressionContextAll<'input>>,ANTLRError> {
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
-		let mut _localctx = Integral_bodyContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 20, RULE_integral_body);
-        let mut _localctx: Rc<Integral_bodyContextAll> = _localctx;
+		let mut _localctx = Integral_expressionContextExt::new(_parentctx.clone(), recog.base.get_state());
+        recog.base.enter_rule(_localctx.clone(), 22, RULE_integral_expression);
+        let mut _localctx: Rc<Integral_expressionContextAll> = _localctx;
+		let mut _la: isize = -1;
+		let result: Result<(), ANTLRError> = (|| {
+
+			let tmp = IntegralExpressionContextExt::new(&**_localctx);
+			recog.base.enter_outer_alt(Some(tmp.clone()), 1);
+			_localctx = tmp;
+			{
+			recog.base.set_state(161);
+			recog.err_handler.sync(&mut recog.base)?;
+			_la = recog.base.input.la(1);
+			if _la==LPAREN {
+				{
+				recog.base.set_state(160);
+				recog.base.match_token(LPAREN,&mut recog.err_handler)?;
+
+				}
+			}
+
+			recog.base.set_state(163);
+			recog.base.match_token(INTEGRAL,&mut recog.err_handler)?;
+
+			recog.base.set_state(165);
+			recog.err_handler.sync(&mut recog.base)?;
+			_la = recog.base.input.la(1);
+			if _la==RPAREN {
+				{
+				recog.base.set_state(164);
+				recog.base.match_token(RPAREN,&mut recog.err_handler)?;
+
+				}
+			}
+
+			recog.base.set_state(168);
+			recog.err_handler.sync(&mut recog.base)?;
+			_la = recog.base.input.la(1);
+			if _la==UNDERSCORE {
+				{
+				/*InvokeRule integral_lower_limit*/
+				recog.base.set_state(167);
+				recog.integral_lower_limit()?;
+
+				}
+			}
+
+			recog.base.set_state(171);
+			recog.err_handler.sync(&mut recog.base)?;
+			_la = recog.base.input.la(1);
+			if _la==HAT {
+				{
+				/*InvokeRule integral_upper_limit*/
+				recog.base.set_state(170);
+				recog.integral_upper_limit()?;
+
+				}
+			}
+
+			/*InvokeRule op_body*/
+			recog.base.set_state(173);
+			recog.op_body()?;
+
+			/*InvokeRule differential*/
+			recog.base.set_state(174);
+			recog.differential()?;
+
+			recog.base.set_state(176);
+			recog.err_handler.sync(&mut recog.base)?;
+			_la = recog.base.input.la(1);
+			if _la==EQ {
+				{
+				recog.base.set_state(175);
+				recog.base.match_token(EQ,&mut recog.err_handler)?;
+
+				}
+			}
+
+			}
+			Ok(())
+		})();
+		match result {
+		Ok(_)=>{},
+        Err(e @ ANTLRError::FallThrough(_)) => return Err(e),
+		Err(ref re) => {
+				//_localctx.exception = re;
+				recog.err_handler.report_error(&mut recog.base, re);
+				recog.err_handler.recover(&mut recog.base, re)?;
+			}
+		}
+		recog.base.exit_rule();
+
+		Ok(_localctx)
+	}
+}
+//------------------- scripted_op_expression ----------------
+pub type Scripted_op_expressionContextAll<'input> = Scripted_op_expressionContext<'input>;
+
+
+pub type Scripted_op_expressionContext<'input> = BaseParserRuleContext<'input,Scripted_op_expressionContextExt<'input>>;
+
+#[derive(Clone)]
+pub struct Scripted_op_expressionContextExt<'input>{
+ph:PhantomData<&'input str>
+}
+
+impl<'input> AsciiMath2ParserContext<'input> for Scripted_op_expressionContext<'input>{}
+
+impl<'input,'a> Listenable<dyn AsciiMath2Listener<'input> + 'a> for Scripted_op_expressionContext<'input>{
+		fn enter(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
+			listener.enter_every_rule(self);
+			listener.enter_scripted_op_expression(self);
+		}
+		fn exit(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
+			listener.exit_scripted_op_expression(self);
+			listener.exit_every_rule(self);
+		}
+}
+
+impl<'input,'a> Visitable<dyn AsciiMath2Visitor<'input> + 'a> for Scripted_op_expressionContext<'input>{
+	fn accept(&self,visitor: &mut (dyn AsciiMath2Visitor<'input> + 'a)) {
+		visitor.visit_scripted_op_expression(self);
+	}
+}
+
+impl<'input> CustomRuleContext<'input> for Scripted_op_expressionContextExt<'input>{
+	type TF = LocalTokenFactory<'input>;
+	type Ctx = AsciiMath2ParserContextType;
+	fn get_rule_index(&self) -> usize { RULE_scripted_op_expression }
+	//fn type_rule_index() -> usize where Self: Sized { RULE_scripted_op_expression }
+}
+antlr_rust::tid!{Scripted_op_expressionContextExt<'a>}
+
+impl<'input> Scripted_op_expressionContextExt<'input>{
+	fn new(parent: Option<Rc<dyn AsciiMath2ParserContext<'input> + 'input > >, invoking_state: isize) -> Rc<Scripted_op_expressionContextAll<'input>> {
+		Rc::new(
+			BaseParserRuleContext::new_parser_ctx(parent, invoking_state,Scripted_op_expressionContextExt{
+				ph:PhantomData
+			}),
+		)
+	}
+}
+
+pub trait Scripted_op_expressionContextAttrs<'input>: AsciiMath2ParserContext<'input> + BorrowMut<Scripted_op_expressionContextExt<'input>>{
+
+/// Retrieves first TerminalNode corresponding to token BUILTIN_KEYWORD_FUNC_NAME
+/// Returns `None` if there is no child corresponding to token BUILTIN_KEYWORD_FUNC_NAME
+fn BUILTIN_KEYWORD_FUNC_NAME(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
+	self.get_token(BUILTIN_KEYWORD_FUNC_NAME, 0)
+}
+/// Retrieves first TerminalNode corresponding to token LPAREN
+/// Returns `None` if there is no child corresponding to token LPAREN
+fn LPAREN(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
+	self.get_token(LPAREN, 0)
+}
+/// Retrieves first TerminalNode corresponding to token RPAREN
+/// Returns `None` if there is no child corresponding to token RPAREN
+fn RPAREN(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
+	self.get_token(RPAREN, 0)
+}
+/// Retrieves all `TerminalNode`s corresponding to token WS in current rule
+fn WS_all(&self) -> Vec<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>>  where Self:Sized{
+	self.children_of_type()
+}
+/// Retrieves 'i's TerminalNode corresponding to token WS, starting from 0.
+/// Returns `None` if number of children corresponding to token WS is less or equal than `i`.
+fn WS(&self, i: usize) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
+	self.get_token(WS, i)
+}
+/// Retrieves first TerminalNode corresponding to token UNDERSCORE
+/// Returns `None` if there is no child corresponding to token UNDERSCORE
+fn UNDERSCORE(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
+	self.get_token(UNDERSCORE, 0)
+}
+fn add_sub_expression_all(&self) ->  Vec<Rc<Add_sub_expressionContextAll<'input>>> where Self:Sized{
+	self.children_of_type()
+}
+fn add_sub_expression(&self, i: usize) -> Option<Rc<Add_sub_expressionContextAll<'input>>> where Self:Sized{
+	self.child_of_type(i)
+}
+/// Retrieves first TerminalNode corresponding to token HAT
+/// Returns `None` if there is no child corresponding to token HAT
+fn HAT(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
+	self.get_token(HAT, 0)
+}
+
+}
+
+impl<'input> Scripted_op_expressionContextAttrs<'input> for Scripted_op_expressionContext<'input>{}
+
+impl<'input, I, H> AsciiMath2Parser<'input, I, H>
+where
+    I: TokenStream<'input, TF = LocalTokenFactory<'input> > + TidAble<'input>,
+    H: ErrorStrategy<'input,BaseParserType<'input,I>>
+{
+	pub fn scripted_op_expression(&mut self,)
+	-> Result<Rc<Scripted_op_expressionContextAll<'input>>,ANTLRError> {
+		let mut recog = self;
+		let _parentctx = recog.ctx.take();
+		let mut _localctx = Scripted_op_expressionContextExt::new(_parentctx.clone(), recog.base.get_state());
+        recog.base.enter_rule(_localctx.clone(), 24, RULE_scripted_op_expression);
+        let mut _localctx: Rc<Scripted_op_expressionContextAll> = _localctx;
+		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
 
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			/*InvokeRule mult_div_expression*/
-			recog.base.set_state(138);
-			recog.mult_div_expression()?;
+			recog.base.set_state(179);
+			recog.err_handler.sync(&mut recog.base)?;
+			_la = recog.base.input.la(1);
+			if _la==LPAREN {
+				{
+				recog.base.set_state(178);
+				recog.base.match_token(LPAREN,&mut recog.err_handler)?;
+
+				}
+			}
+
+			recog.base.set_state(181);
+			recog.base.match_token(BUILTIN_KEYWORD_FUNC_NAME,&mut recog.err_handler)?;
+
+			recog.base.set_state(183);
+			recog.err_handler.sync(&mut recog.base)?;
+			_la = recog.base.input.la(1);
+			if _la==RPAREN {
+				{
+				recog.base.set_state(182);
+				recog.base.match_token(RPAREN,&mut recog.err_handler)?;
+
+				}
+			}
+
+			recog.base.set_state(188);
+			recog.err_handler.sync(&mut recog.base)?;
+			_la = recog.base.input.la(1);
+			while _la==WS {
+				{
+				{
+				recog.base.set_state(185);
+				recog.base.match_token(WS,&mut recog.err_handler)?;
+
+				}
+				}
+				recog.base.set_state(190);
+				recog.err_handler.sync(&mut recog.base)?;
+				_la = recog.base.input.la(1);
+			}
+			recog.base.set_state(193);
+			recog.err_handler.sync(&mut recog.base)?;
+			_la = recog.base.input.la(1);
+			if _la==UNDERSCORE {
+				{
+				recog.base.set_state(191);
+				recog.base.match_token(UNDERSCORE,&mut recog.err_handler)?;
+
+				/*InvokeRule add_sub_expression*/
+				recog.base.set_state(192);
+				recog.add_sub_expression()?;
+
+				}
+			}
+
+			recog.base.set_state(197);
+			recog.err_handler.sync(&mut recog.base)?;
+			_la = recog.base.input.la(1);
+			if _la==HAT {
+				{
+				recog.base.set_state(195);
+				recog.base.match_token(HAT,&mut recog.err_handler)?;
+
+				/*InvokeRule add_sub_expression*/
+				recog.base.set_state(196);
+				recog.add_sub_expression()?;
+
+				}
+			}
+
+			}
+			Ok(())
+		})();
+		match result {
+		Ok(_)=>{},
+        Err(e @ ANTLRError::FallThrough(_)) => return Err(e),
+		Err(ref re) => {
+				//_localctx.exception = re;
+				recog.err_handler.report_error(&mut recog.base, re);
+				recog.err_handler.recover(&mut recog.base, re)?;
+			}
+		}
+		recog.base.exit_rule();
+
+		Ok(_localctx)
+	}
+}
+//------------------- op_body ----------------
+pub type Op_bodyContextAll<'input> = Op_bodyContext<'input>;
+
+
+pub type Op_bodyContext<'input> = BaseParserRuleContext<'input,Op_bodyContextExt<'input>>;
+
+#[derive(Clone)]
+pub struct Op_bodyContextExt<'input>{
+ph:PhantomData<&'input str>
+}
+
+impl<'input> AsciiMath2ParserContext<'input> for Op_bodyContext<'input>{}
+
+impl<'input,'a> Listenable<dyn AsciiMath2Listener<'input> + 'a> for Op_bodyContext<'input>{
+		fn enter(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
+			listener.enter_every_rule(self);
+			listener.enter_op_body(self);
+		}
+		fn exit(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
+			listener.exit_op_body(self);
+			listener.exit_every_rule(self);
+		}
+}
+
+impl<'input,'a> Visitable<dyn AsciiMath2Visitor<'input> + 'a> for Op_bodyContext<'input>{
+	fn accept(&self,visitor: &mut (dyn AsciiMath2Visitor<'input> + 'a)) {
+		visitor.visit_op_body(self);
+	}
+}
+
+impl<'input> CustomRuleContext<'input> for Op_bodyContextExt<'input>{
+	type TF = LocalTokenFactory<'input>;
+	type Ctx = AsciiMath2ParserContextType;
+	fn get_rule_index(&self) -> usize { RULE_op_body }
+	//fn type_rule_index() -> usize where Self: Sized { RULE_op_body }
+}
+antlr_rust::tid!{Op_bodyContextExt<'a>}
+
+impl<'input> Op_bodyContextExt<'input>{
+	fn new(parent: Option<Rc<dyn AsciiMath2ParserContext<'input> + 'input > >, invoking_state: isize) -> Rc<Op_bodyContextAll<'input>> {
+		Rc::new(
+			BaseParserRuleContext::new_parser_ctx(parent, invoking_state,Op_bodyContextExt{
+				ph:PhantomData
+			}),
+		)
+	}
+}
+
+pub trait Op_bodyContextAttrs<'input>: AsciiMath2ParserContext<'input> + BorrowMut<Op_bodyContextExt<'input>>{
+
+fn add_sub_expression(&self) -> Option<Rc<Add_sub_expressionContextAll<'input>>> where Self:Sized{
+	self.child_of_type(0)
+}
+/// Retrieves first TerminalNode corresponding to token LPAREN
+/// Returns `None` if there is no child corresponding to token LPAREN
+fn LPAREN(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
+	self.get_token(LPAREN, 0)
+}
+/// Retrieves first TerminalNode corresponding to token RPAREN
+/// Returns `None` if there is no child corresponding to token RPAREN
+fn RPAREN(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
+	self.get_token(RPAREN, 0)
+}
+
+}
+
+impl<'input> Op_bodyContextAttrs<'input> for Op_bodyContext<'input>{}
+
+impl<'input, I, H> AsciiMath2Parser<'input, I, H>
+where
+    I: TokenStream<'input, TF = LocalTokenFactory<'input> > + TidAble<'input>,
+    H: ErrorStrategy<'input,BaseParserType<'input,I>>
+{
+	pub fn op_body(&mut self,)
+	-> Result<Rc<Op_bodyContextAll<'input>>,ANTLRError> {
+		let mut recog = self;
+		let _parentctx = recog.ctx.take();
+		let mut _localctx = Op_bodyContextExt::new(_parentctx.clone(), recog.base.get_state());
+        recog.base.enter_rule(_localctx.clone(), 26, RULE_op_body);
+        let mut _localctx: Rc<Op_bodyContextAll> = _localctx;
+		let mut _la: isize = -1;
+		let result: Result<(), ANTLRError> = (|| {
+
+			//recog.base.enter_outer_alt(_localctx.clone(), 1);
+			recog.base.enter_outer_alt(None, 1);
+			{
+			recog.base.set_state(200);
+			recog.err_handler.sync(&mut recog.base)?;
+			match  recog.interpreter.adaptive_predict(26,&mut recog.base)? {
+				x if x == 1=>{
+					{
+					recog.base.set_state(199);
+					recog.base.match_token(LPAREN,&mut recog.err_handler)?;
+
+					}
+				}
+
+				_ => {}
+			}
+			/*InvokeRule add_sub_expression*/
+			recog.base.set_state(202);
+			recog.add_sub_expression()?;
+
+			recog.base.set_state(204);
+			recog.err_handler.sync(&mut recog.base)?;
+			_la = recog.base.input.la(1);
+			if _la==RPAREN {
+				{
+				recog.base.set_state(203);
+				recog.base.match_token(RPAREN,&mut recog.err_handler)?;
+
+				}
+			}
 
 			}
 			Ok(())
@@ -2056,7 +2877,7 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = Integral_upper_limitContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 22, RULE_integral_upper_limit);
+        recog.base.enter_rule(_localctx.clone(), 28, RULE_integral_upper_limit);
         let mut _localctx: Rc<Integral_upper_limitContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
@@ -2064,12 +2885,12 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(140);
+			recog.base.set_state(206);
 			recog.base.match_token(HAT,&mut recog.err_handler)?;
 
-			recog.base.set_state(141);
+			recog.base.set_state(207);
 			_la = recog.base.input.la(1);
-			if { !((((_la) & !0x3f) == 0 && ((1usize << _la) & ((1usize << T__9) | (1usize << T__10) | (1usize << T__11))) != 0) || _la==NUMBER) } {
+			if { !((((_la) & !0x3f) == 0 && ((1usize << _la) & ((1usize << T__12) | (1usize << T__13) | (1usize << T__14))) != 0) || _la==NUMBER) } {
 				recog.err_handler.recover_inline(&mut recog.base)?;
 
 			}
@@ -2170,7 +2991,7 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = Integral_lower_limitContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 24, RULE_integral_lower_limit);
+        recog.base.enter_rule(_localctx.clone(), 30, RULE_integral_lower_limit);
         let mut _localctx: Rc<Integral_lower_limitContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
@@ -2178,12 +2999,12 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(143);
+			recog.base.set_state(209);
 			recog.base.match_token(UNDERSCORE,&mut recog.err_handler)?;
 
-			recog.base.set_state(144);
+			recog.base.set_state(210);
 			_la = recog.base.input.la(1);
-			if { !((((_la) & !0x3f) == 0 && ((1usize << _la) & ((1usize << T__9) | (1usize << T__10) | (1usize << T__11))) != 0) || _la==NUMBER) } {
+			if { !((((_la) & !0x3f) == 0 && ((1usize << _la) & ((1usize << T__12) | (1usize << T__13) | (1usize << T__14))) != 0) || _la==NUMBER) } {
 				recog.err_handler.recover_inline(&mut recog.base)?;
 
 			}
@@ -2192,366 +3013,6 @@ where
 				recog.err_handler.report_match(&mut recog.base);
 				recog.base.consume(&mut recog.err_handler);
 			}
-			}
-			Ok(())
-		})();
-		match result {
-		Ok(_)=>{},
-        Err(e @ ANTLRError::FallThrough(_)) => return Err(e),
-		Err(ref re) => {
-				//_localctx.exception = re;
-				recog.err_handler.report_error(&mut recog.base, re);
-				recog.err_handler.recover(&mut recog.base, re)?;
-			}
-		}
-		recog.base.exit_rule();
-
-		Ok(_localctx)
-	}
-}
-//------------------- script_op_expression ----------------
-#[derive(Debug)]
-pub enum Script_op_expressionContextAll<'input>{
-	PrimaryExpressionContext(PrimaryExpressionContext<'input>),
-	SubscriptExpressionContext(SubscriptExpressionContext<'input>),
-	PrimeExpressionContext(PrimeExpressionContext<'input>),
-Error(Script_op_expressionContext<'input>)
-}
-antlr_rust::tid!{Script_op_expressionContextAll<'a>}
-
-impl<'input> antlr_rust::parser_rule_context::DerefSeal for Script_op_expressionContextAll<'input>{}
-
-impl<'input> AsciiMath2ParserContext<'input> for Script_op_expressionContextAll<'input>{}
-
-impl<'input> Deref for Script_op_expressionContextAll<'input>{
-	type Target = dyn Script_op_expressionContextAttrs<'input> + 'input;
-	fn deref(&self) -> &Self::Target{
-		use Script_op_expressionContextAll::*;
-		match self{
-			PrimaryExpressionContext(inner) => inner,
-			SubscriptExpressionContext(inner) => inner,
-			PrimeExpressionContext(inner) => inner,
-Error(inner) => inner
-		}
-	}
-}
-impl<'input,'a> Visitable<dyn AsciiMath2Visitor<'input> + 'a> for Script_op_expressionContextAll<'input>{
-	fn accept(&self, visitor: &mut (dyn AsciiMath2Visitor<'input> + 'a)) { self.deref().accept(visitor) }
-}
-impl<'input,'a> Listenable<dyn AsciiMath2Listener<'input> + 'a> for Script_op_expressionContextAll<'input>{
-    fn enter(&self, listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) { self.deref().enter(listener) }
-    fn exit(&self, listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) { self.deref().exit(listener) }
-}
-
-
-
-pub type Script_op_expressionContext<'input> = BaseParserRuleContext<'input,Script_op_expressionContextExt<'input>>;
-
-#[derive(Clone)]
-pub struct Script_op_expressionContextExt<'input>{
-ph:PhantomData<&'input str>
-}
-
-impl<'input> AsciiMath2ParserContext<'input> for Script_op_expressionContext<'input>{}
-
-impl<'input,'a> Listenable<dyn AsciiMath2Listener<'input> + 'a> for Script_op_expressionContext<'input>{
-}
-
-impl<'input,'a> Visitable<dyn AsciiMath2Visitor<'input> + 'a> for Script_op_expressionContext<'input>{
-}
-
-impl<'input> CustomRuleContext<'input> for Script_op_expressionContextExt<'input>{
-	type TF = LocalTokenFactory<'input>;
-	type Ctx = AsciiMath2ParserContextType;
-	fn get_rule_index(&self) -> usize { RULE_script_op_expression }
-	//fn type_rule_index() -> usize where Self: Sized { RULE_script_op_expression }
-}
-antlr_rust::tid!{Script_op_expressionContextExt<'a>}
-
-impl<'input> Script_op_expressionContextExt<'input>{
-	fn new(parent: Option<Rc<dyn AsciiMath2ParserContext<'input> + 'input > >, invoking_state: isize) -> Rc<Script_op_expressionContextAll<'input>> {
-		Rc::new(
-		Script_op_expressionContextAll::Error(
-			BaseParserRuleContext::new_parser_ctx(parent, invoking_state,Script_op_expressionContextExt{
-				ph:PhantomData
-			}),
-		)
-		)
-	}
-}
-
-pub trait Script_op_expressionContextAttrs<'input>: AsciiMath2ParserContext<'input> + BorrowMut<Script_op_expressionContextExt<'input>>{
-
-
-}
-
-impl<'input> Script_op_expressionContextAttrs<'input> for Script_op_expressionContext<'input>{}
-
-pub type PrimaryExpressionContext<'input> = BaseParserRuleContext<'input,PrimaryExpressionContextExt<'input>>;
-
-pub trait PrimaryExpressionContextAttrs<'input>: AsciiMath2ParserContext<'input>{
-	fn primary_expression(&self) -> Option<Rc<Primary_expressionContextAll<'input>>> where Self:Sized{
-		self.child_of_type(0)
-	}
-}
-
-impl<'input> PrimaryExpressionContextAttrs<'input> for PrimaryExpressionContext<'input>{}
-
-pub struct PrimaryExpressionContextExt<'input>{
-	base:Script_op_expressionContextExt<'input>,
-	ph:PhantomData<&'input str>
-}
-
-antlr_rust::tid!{PrimaryExpressionContextExt<'a>}
-
-impl<'input> AsciiMath2ParserContext<'input> for PrimaryExpressionContext<'input>{}
-
-impl<'input,'a> Listenable<dyn AsciiMath2Listener<'input> + 'a> for PrimaryExpressionContext<'input>{
-	fn enter(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
-		listener.enter_every_rule(self);
-		listener.enter_primaryExpression(self);
-	}
-	fn exit(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
-		listener.exit_primaryExpression(self);
-		listener.exit_every_rule(self);
-	}
-}
-
-impl<'input,'a> Visitable<dyn AsciiMath2Visitor<'input> + 'a> for PrimaryExpressionContext<'input>{
-	fn accept(&self,visitor: &mut (dyn AsciiMath2Visitor<'input> + 'a)) {
-		visitor.visit_primaryExpression(self);
-	}
-}
-
-impl<'input> CustomRuleContext<'input> for PrimaryExpressionContextExt<'input>{
-	type TF = LocalTokenFactory<'input>;
-	type Ctx = AsciiMath2ParserContextType;
-	fn get_rule_index(&self) -> usize { RULE_script_op_expression }
-	//fn type_rule_index() -> usize where Self: Sized { RULE_script_op_expression }
-}
-
-impl<'input> Borrow<Script_op_expressionContextExt<'input>> for PrimaryExpressionContext<'input>{
-	fn borrow(&self) -> &Script_op_expressionContextExt<'input> { &self.base }
-}
-impl<'input> BorrowMut<Script_op_expressionContextExt<'input>> for PrimaryExpressionContext<'input>{
-	fn borrow_mut(&mut self) -> &mut Script_op_expressionContextExt<'input> { &mut self.base }
-}
-
-impl<'input> Script_op_expressionContextAttrs<'input> for PrimaryExpressionContext<'input> {}
-
-impl<'input> PrimaryExpressionContextExt<'input>{
-	fn new(ctx: &dyn Script_op_expressionContextAttrs<'input>) -> Rc<Script_op_expressionContextAll<'input>>  {
-		Rc::new(
-			Script_op_expressionContextAll::PrimaryExpressionContext(
-				BaseParserRuleContext::copy_from(ctx,PrimaryExpressionContextExt{
-        			base: ctx.borrow().clone(),
-        			ph:PhantomData
-				})
-			)
-		)
-	}
-}
-
-pub type SubscriptExpressionContext<'input> = BaseParserRuleContext<'input,SubscriptExpressionContextExt<'input>>;
-
-pub trait SubscriptExpressionContextAttrs<'input>: AsciiMath2ParserContext<'input>{
-	/// Retrieves first TerminalNode corresponding to token UNDERSCORE
-	/// Returns `None` if there is no child corresponding to token UNDERSCORE
-	fn UNDERSCORE(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
-		self.get_token(UNDERSCORE, 0)
-	}
-	fn primary_expression(&self) -> Option<Rc<Primary_expressionContextAll<'input>>> where Self:Sized{
-		self.child_of_type(0)
-	}
-}
-
-impl<'input> SubscriptExpressionContextAttrs<'input> for SubscriptExpressionContext<'input>{}
-
-pub struct SubscriptExpressionContextExt<'input>{
-	base:Script_op_expressionContextExt<'input>,
-	ph:PhantomData<&'input str>
-}
-
-antlr_rust::tid!{SubscriptExpressionContextExt<'a>}
-
-impl<'input> AsciiMath2ParserContext<'input> for SubscriptExpressionContext<'input>{}
-
-impl<'input,'a> Listenable<dyn AsciiMath2Listener<'input> + 'a> for SubscriptExpressionContext<'input>{
-	fn enter(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
-		listener.enter_every_rule(self);
-		listener.enter_subscriptExpression(self);
-	}
-	fn exit(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
-		listener.exit_subscriptExpression(self);
-		listener.exit_every_rule(self);
-	}
-}
-
-impl<'input,'a> Visitable<dyn AsciiMath2Visitor<'input> + 'a> for SubscriptExpressionContext<'input>{
-	fn accept(&self,visitor: &mut (dyn AsciiMath2Visitor<'input> + 'a)) {
-		visitor.visit_subscriptExpression(self);
-	}
-}
-
-impl<'input> CustomRuleContext<'input> for SubscriptExpressionContextExt<'input>{
-	type TF = LocalTokenFactory<'input>;
-	type Ctx = AsciiMath2ParserContextType;
-	fn get_rule_index(&self) -> usize { RULE_script_op_expression }
-	//fn type_rule_index() -> usize where Self: Sized { RULE_script_op_expression }
-}
-
-impl<'input> Borrow<Script_op_expressionContextExt<'input>> for SubscriptExpressionContext<'input>{
-	fn borrow(&self) -> &Script_op_expressionContextExt<'input> { &self.base }
-}
-impl<'input> BorrowMut<Script_op_expressionContextExt<'input>> for SubscriptExpressionContext<'input>{
-	fn borrow_mut(&mut self) -> &mut Script_op_expressionContextExt<'input> { &mut self.base }
-}
-
-impl<'input> Script_op_expressionContextAttrs<'input> for SubscriptExpressionContext<'input> {}
-
-impl<'input> SubscriptExpressionContextExt<'input>{
-	fn new(ctx: &dyn Script_op_expressionContextAttrs<'input>) -> Rc<Script_op_expressionContextAll<'input>>  {
-		Rc::new(
-			Script_op_expressionContextAll::SubscriptExpressionContext(
-				BaseParserRuleContext::copy_from(ctx,SubscriptExpressionContextExt{
-        			base: ctx.borrow().clone(),
-        			ph:PhantomData
-				})
-			)
-		)
-	}
-}
-
-pub type PrimeExpressionContext<'input> = BaseParserRuleContext<'input,PrimeExpressionContextExt<'input>>;
-
-pub trait PrimeExpressionContextAttrs<'input>: AsciiMath2ParserContext<'input>{
-	/// Retrieves first TerminalNode corresponding to token PRIME
-	/// Returns `None` if there is no child corresponding to token PRIME
-	fn PRIME(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
-		self.get_token(PRIME, 0)
-	}
-}
-
-impl<'input> PrimeExpressionContextAttrs<'input> for PrimeExpressionContext<'input>{}
-
-pub struct PrimeExpressionContextExt<'input>{
-	base:Script_op_expressionContextExt<'input>,
-	ph:PhantomData<&'input str>
-}
-
-antlr_rust::tid!{PrimeExpressionContextExt<'a>}
-
-impl<'input> AsciiMath2ParserContext<'input> for PrimeExpressionContext<'input>{}
-
-impl<'input,'a> Listenable<dyn AsciiMath2Listener<'input> + 'a> for PrimeExpressionContext<'input>{
-	fn enter(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
-		listener.enter_every_rule(self);
-		listener.enter_primeExpression(self);
-	}
-	fn exit(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
-		listener.exit_primeExpression(self);
-		listener.exit_every_rule(self);
-	}
-}
-
-impl<'input,'a> Visitable<dyn AsciiMath2Visitor<'input> + 'a> for PrimeExpressionContext<'input>{
-	fn accept(&self,visitor: &mut (dyn AsciiMath2Visitor<'input> + 'a)) {
-		visitor.visit_primeExpression(self);
-	}
-}
-
-impl<'input> CustomRuleContext<'input> for PrimeExpressionContextExt<'input>{
-	type TF = LocalTokenFactory<'input>;
-	type Ctx = AsciiMath2ParserContextType;
-	fn get_rule_index(&self) -> usize { RULE_script_op_expression }
-	//fn type_rule_index() -> usize where Self: Sized { RULE_script_op_expression }
-}
-
-impl<'input> Borrow<Script_op_expressionContextExt<'input>> for PrimeExpressionContext<'input>{
-	fn borrow(&self) -> &Script_op_expressionContextExt<'input> { &self.base }
-}
-impl<'input> BorrowMut<Script_op_expressionContextExt<'input>> for PrimeExpressionContext<'input>{
-	fn borrow_mut(&mut self) -> &mut Script_op_expressionContextExt<'input> { &mut self.base }
-}
-
-impl<'input> Script_op_expressionContextAttrs<'input> for PrimeExpressionContext<'input> {}
-
-impl<'input> PrimeExpressionContextExt<'input>{
-	fn new(ctx: &dyn Script_op_expressionContextAttrs<'input>) -> Rc<Script_op_expressionContextAll<'input>>  {
-		Rc::new(
-			Script_op_expressionContextAll::PrimeExpressionContext(
-				BaseParserRuleContext::copy_from(ctx,PrimeExpressionContextExt{
-        			base: ctx.borrow().clone(),
-        			ph:PhantomData
-				})
-			)
-		)
-	}
-}
-
-impl<'input, I, H> AsciiMath2Parser<'input, I, H>
-where
-    I: TokenStream<'input, TF = LocalTokenFactory<'input> > + TidAble<'input>,
-    H: ErrorStrategy<'input,BaseParserType<'input,I>>
-{
-	pub fn script_op_expression(&mut self,)
-	-> Result<Rc<Script_op_expressionContextAll<'input>>,ANTLRError> {
-		let mut recog = self;
-		let _parentctx = recog.ctx.take();
-		let mut _localctx = Script_op_expressionContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 26, RULE_script_op_expression);
-        let mut _localctx: Rc<Script_op_expressionContextAll> = _localctx;
-		let result: Result<(), ANTLRError> = (|| {
-
-			recog.base.set_state(150);
-			recog.err_handler.sync(&mut recog.base)?;
-			match recog.base.input.la(1) {
-			 T__0 | T__1 | T__2 | T__3 | T__4 | T__5 | T__6 | T__7 | T__8 | BUILTIN_KEYWORD_FUNC_NAME |
-			 INTEGRAL | DERIV | DBYD | PARTIAL | LIM | ROOT | FRAC | TEXT | DET |
-			 TRANSPOSE | PI_CONST | INFINITY_CONST | GAMMA_CONST | PHI_CONST | TRUE_CONST |
-			 FALSE_CONST | NAN_CONST | LPAREN | LBRACE | ABS | GREEK_LETTER | IDENTIFIER |
-			 NUMBER | NUMBER_WITH_COMMAS | CURRENCY_NUMBER | STRING 
-				=> {
-					let tmp = PrimaryExpressionContextExt::new(&**_localctx);
-					recog.base.enter_outer_alt(Some(tmp.clone()), 1);
-					_localctx = tmp;
-					{
-					/*InvokeRule primary_expression*/
-					recog.base.set_state(146);
-					recog.primary_expression()?;
-
-					}
-				}
-
-			 UNDERSCORE 
-				=> {
-					let tmp = SubscriptExpressionContextExt::new(&**_localctx);
-					recog.base.enter_outer_alt(Some(tmp.clone()), 2);
-					_localctx = tmp;
-					{
-					recog.base.set_state(147);
-					recog.base.match_token(UNDERSCORE,&mut recog.err_handler)?;
-
-					/*InvokeRule primary_expression*/
-					recog.base.set_state(148);
-					recog.primary_expression()?;
-
-					}
-				}
-
-			 PRIME 
-				=> {
-					let tmp = PrimeExpressionContextExt::new(&**_localctx);
-					recog.base.enter_outer_alt(Some(tmp.clone()), 3);
-					_localctx = tmp;
-					{
-					recog.base.set_state(149);
-					recog.base.match_token(PRIME,&mut recog.err_handler)?;
-
-					}
-				}
-
-				_ => Err(ANTLRError::NoAltError(NoViableAltError::new(&mut recog.base)))?
 			}
 			Ok(())
 		})();
@@ -2580,7 +3041,6 @@ pub enum Primary_expressionContextAll<'input>{
 	ParenExpressionContext(ParenExpressionContext<'input>),
 	ParenColumnVectorContext(ParenColumnVectorContext<'input>),
 	NumberAtomContext(NumberAtomContext<'input>),
-	IntegralExpressionContext(IntegralExpressionContext<'input>),
 	LimitExpressionContext(LimitExpressionContext<'input>),
 	PartialFunctionContext(PartialFunctionContext<'input>),
 	DetFunctionContext(DetFunctionContext<'input>),
@@ -2592,8 +3052,8 @@ pub enum Primary_expressionContextAll<'input>{
 	FractionLeibnizContext(FractionLeibnizContext<'input>),
 	StringAtomContext(StringAtomContext<'input>),
 	TextFunctionContext(TextFunctionContext<'input>),
-	AbsExpressionContext(AbsExpressionContext<'input>),
 	SimpleKeywordCallContext(SimpleKeywordCallContext<'input>),
+	AbsExpressionContext(AbsExpressionContext<'input>),
 	DerivativeFunctionContext(DerivativeFunctionContext<'input>),
 Error(Primary_expressionContext<'input>)
 }
@@ -2616,7 +3076,6 @@ impl<'input> Deref for Primary_expressionContextAll<'input>{
 			ParenExpressionContext(inner) => inner,
 			ParenColumnVectorContext(inner) => inner,
 			NumberAtomContext(inner) => inner,
-			IntegralExpressionContext(inner) => inner,
 			LimitExpressionContext(inner) => inner,
 			PartialFunctionContext(inner) => inner,
 			DetFunctionContext(inner) => inner,
@@ -2628,8 +3087,8 @@ impl<'input> Deref for Primary_expressionContextAll<'input>{
 			FractionLeibnizContext(inner) => inner,
 			StringAtomContext(inner) => inner,
 			TextFunctionContext(inner) => inner,
-			AbsExpressionContext(inner) => inner,
 			SimpleKeywordCallContext(inner) => inner,
+			AbsExpressionContext(inner) => inner,
 			DerivativeFunctionContext(inner) => inner,
 Error(inner) => inner
 		}
@@ -2690,11 +3149,6 @@ impl<'input> Primary_expressionContextAttrs<'input> for Primary_expressionContex
 pub type ExplicitKeywordCallContext<'input> = BaseParserRuleContext<'input,ExplicitKeywordCallContextExt<'input>>;
 
 pub trait ExplicitKeywordCallContextAttrs<'input>: AsciiMath2ParserContext<'input>{
-	/// Retrieves first TerminalNode corresponding to token BUILTIN_KEYWORD_FUNC_NAME
-	/// Returns `None` if there is no child corresponding to token BUILTIN_KEYWORD_FUNC_NAME
-	fn BUILTIN_KEYWORD_FUNC_NAME(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
-		self.get_token(BUILTIN_KEYWORD_FUNC_NAME, 0)
-	}
 	/// Retrieves first TerminalNode corresponding to token LPAREN
 	/// Returns `None` if there is no child corresponding to token LPAREN
 	fn LPAREN(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
@@ -2707,6 +3161,14 @@ pub trait ExplicitKeywordCallContextAttrs<'input>: AsciiMath2ParserContext<'inpu
 	/// Returns `None` if there is no child corresponding to token RPAREN
 	fn RPAREN(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
 		self.get_token(RPAREN, 0)
+	}
+	/// Retrieves first TerminalNode corresponding to token BUILTIN_KEYWORD_FUNC_NAME
+	/// Returns `None` if there is no child corresponding to token BUILTIN_KEYWORD_FUNC_NAME
+	fn BUILTIN_KEYWORD_FUNC_NAME(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
+		self.get_token(BUILTIN_KEYWORD_FUNC_NAME, 0)
+	}
+	fn scripted_op_expression(&self) -> Option<Rc<Scripted_op_expressionContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
 	}
 }
 
@@ -3264,85 +3726,6 @@ impl<'input> NumberAtomContextExt<'input>{
 		Rc::new(
 			Primary_expressionContextAll::NumberAtomContext(
 				BaseParserRuleContext::copy_from(ctx,NumberAtomContextExt{
-        			base: ctx.borrow().clone(),
-        			ph:PhantomData
-				})
-			)
-		)
-	}
-}
-
-pub type IntegralExpressionContext<'input> = BaseParserRuleContext<'input,IntegralExpressionContextExt<'input>>;
-
-pub trait IntegralExpressionContextAttrs<'input>: AsciiMath2ParserContext<'input>{
-	/// Retrieves first TerminalNode corresponding to token INTEGRAL
-	/// Returns `None` if there is no child corresponding to token INTEGRAL
-	fn INTEGRAL(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
-		self.get_token(INTEGRAL, 0)
-	}
-	fn integral_body(&self) -> Option<Rc<Integral_bodyContextAll<'input>>> where Self:Sized{
-		self.child_of_type(0)
-	}
-	fn differential(&self) -> Option<Rc<DifferentialContextAll<'input>>> where Self:Sized{
-		self.child_of_type(0)
-	}
-	fn integral_lower_limit(&self) -> Option<Rc<Integral_lower_limitContextAll<'input>>> where Self:Sized{
-		self.child_of_type(0)
-	}
-	fn integral_upper_limit(&self) -> Option<Rc<Integral_upper_limitContextAll<'input>>> where Self:Sized{
-		self.child_of_type(0)
-	}
-}
-
-impl<'input> IntegralExpressionContextAttrs<'input> for IntegralExpressionContext<'input>{}
-
-pub struct IntegralExpressionContextExt<'input>{
-	base:Primary_expressionContextExt<'input>,
-	ph:PhantomData<&'input str>
-}
-
-antlr_rust::tid!{IntegralExpressionContextExt<'a>}
-
-impl<'input> AsciiMath2ParserContext<'input> for IntegralExpressionContext<'input>{}
-
-impl<'input,'a> Listenable<dyn AsciiMath2Listener<'input> + 'a> for IntegralExpressionContext<'input>{
-	fn enter(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
-		listener.enter_every_rule(self);
-		listener.enter_integralExpression(self);
-	}
-	fn exit(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
-		listener.exit_integralExpression(self);
-		listener.exit_every_rule(self);
-	}
-}
-
-impl<'input,'a> Visitable<dyn AsciiMath2Visitor<'input> + 'a> for IntegralExpressionContext<'input>{
-	fn accept(&self,visitor: &mut (dyn AsciiMath2Visitor<'input> + 'a)) {
-		visitor.visit_integralExpression(self);
-	}
-}
-
-impl<'input> CustomRuleContext<'input> for IntegralExpressionContextExt<'input>{
-	type TF = LocalTokenFactory<'input>;
-	type Ctx = AsciiMath2ParserContextType;
-	fn get_rule_index(&self) -> usize { RULE_primary_expression }
-	//fn type_rule_index() -> usize where Self: Sized { RULE_primary_expression }
-}
-
-impl<'input> Borrow<Primary_expressionContextExt<'input>> for IntegralExpressionContext<'input>{
-	fn borrow(&self) -> &Primary_expressionContextExt<'input> { &self.base }
-}
-impl<'input> BorrowMut<Primary_expressionContextExt<'input>> for IntegralExpressionContext<'input>{
-	fn borrow_mut(&mut self) -> &mut Primary_expressionContextExt<'input> { &mut self.base }
-}
-
-impl<'input> Primary_expressionContextAttrs<'input> for IntegralExpressionContext<'input> {}
-
-impl<'input> IntegralExpressionContextExt<'input>{
-	fn new(ctx: &dyn Primary_expressionContextAttrs<'input>) -> Rc<Primary_expressionContextAll<'input>>  {
-		Rc::new(
-			Primary_expressionContextAll::IntegralExpressionContext(
-				BaseParserRuleContext::copy_from(ctx,IntegralExpressionContextExt{
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -4142,6 +4525,76 @@ impl<'input> TextFunctionContextExt<'input>{
 	}
 }
 
+pub type SimpleKeywordCallContext<'input> = BaseParserRuleContext<'input,SimpleKeywordCallContextExt<'input>>;
+
+pub trait SimpleKeywordCallContextAttrs<'input>: AsciiMath2ParserContext<'input>{
+	/// Retrieves first TerminalNode corresponding to token BUILTIN_KEYWORD_FUNC_NAME
+	/// Returns `None` if there is no child corresponding to token BUILTIN_KEYWORD_FUNC_NAME
+	fn BUILTIN_KEYWORD_FUNC_NAME(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
+		self.get_token(BUILTIN_KEYWORD_FUNC_NAME, 0)
+	}
+	fn primary_expression(&self) -> Option<Rc<Primary_expressionContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+}
+
+impl<'input> SimpleKeywordCallContextAttrs<'input> for SimpleKeywordCallContext<'input>{}
+
+pub struct SimpleKeywordCallContextExt<'input>{
+	base:Primary_expressionContextExt<'input>,
+	ph:PhantomData<&'input str>
+}
+
+antlr_rust::tid!{SimpleKeywordCallContextExt<'a>}
+
+impl<'input> AsciiMath2ParserContext<'input> for SimpleKeywordCallContext<'input>{}
+
+impl<'input,'a> Listenable<dyn AsciiMath2Listener<'input> + 'a> for SimpleKeywordCallContext<'input>{
+	fn enter(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
+		listener.enter_every_rule(self);
+		listener.enter_simpleKeywordCall(self);
+	}
+	fn exit(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
+		listener.exit_simpleKeywordCall(self);
+		listener.exit_every_rule(self);
+	}
+}
+
+impl<'input,'a> Visitable<dyn AsciiMath2Visitor<'input> + 'a> for SimpleKeywordCallContext<'input>{
+	fn accept(&self,visitor: &mut (dyn AsciiMath2Visitor<'input> + 'a)) {
+		visitor.visit_simpleKeywordCall(self);
+	}
+}
+
+impl<'input> CustomRuleContext<'input> for SimpleKeywordCallContextExt<'input>{
+	type TF = LocalTokenFactory<'input>;
+	type Ctx = AsciiMath2ParserContextType;
+	fn get_rule_index(&self) -> usize { RULE_primary_expression }
+	//fn type_rule_index() -> usize where Self: Sized { RULE_primary_expression }
+}
+
+impl<'input> Borrow<Primary_expressionContextExt<'input>> for SimpleKeywordCallContext<'input>{
+	fn borrow(&self) -> &Primary_expressionContextExt<'input> { &self.base }
+}
+impl<'input> BorrowMut<Primary_expressionContextExt<'input>> for SimpleKeywordCallContext<'input>{
+	fn borrow_mut(&mut self) -> &mut Primary_expressionContextExt<'input> { &mut self.base }
+}
+
+impl<'input> Primary_expressionContextAttrs<'input> for SimpleKeywordCallContext<'input> {}
+
+impl<'input> SimpleKeywordCallContextExt<'input>{
+	fn new(ctx: &dyn Primary_expressionContextAttrs<'input>) -> Rc<Primary_expressionContextAll<'input>>  {
+		Rc::new(
+			Primary_expressionContextAll::SimpleKeywordCallContext(
+				BaseParserRuleContext::copy_from(ctx,SimpleKeywordCallContextExt{
+        			base: ctx.borrow().clone(),
+        			ph:PhantomData
+				})
+			)
+		)
+	}
+}
+
 pub type AbsExpressionContext<'input> = BaseParserRuleContext<'input,AbsExpressionContextExt<'input>>;
 
 pub trait AbsExpressionContextAttrs<'input>: AsciiMath2ParserContext<'input>{
@@ -4208,76 +4661,6 @@ impl<'input> AbsExpressionContextExt<'input>{
 		Rc::new(
 			Primary_expressionContextAll::AbsExpressionContext(
 				BaseParserRuleContext::copy_from(ctx,AbsExpressionContextExt{
-        			base: ctx.borrow().clone(),
-        			ph:PhantomData
-				})
-			)
-		)
-	}
-}
-
-pub type SimpleKeywordCallContext<'input> = BaseParserRuleContext<'input,SimpleKeywordCallContextExt<'input>>;
-
-pub trait SimpleKeywordCallContextAttrs<'input>: AsciiMath2ParserContext<'input>{
-	/// Retrieves first TerminalNode corresponding to token BUILTIN_KEYWORD_FUNC_NAME
-	/// Returns `None` if there is no child corresponding to token BUILTIN_KEYWORD_FUNC_NAME
-	fn BUILTIN_KEYWORD_FUNC_NAME(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
-		self.get_token(BUILTIN_KEYWORD_FUNC_NAME, 0)
-	}
-	fn primary_expression(&self) -> Option<Rc<Primary_expressionContextAll<'input>>> where Self:Sized{
-		self.child_of_type(0)
-	}
-}
-
-impl<'input> SimpleKeywordCallContextAttrs<'input> for SimpleKeywordCallContext<'input>{}
-
-pub struct SimpleKeywordCallContextExt<'input>{
-	base:Primary_expressionContextExt<'input>,
-	ph:PhantomData<&'input str>
-}
-
-antlr_rust::tid!{SimpleKeywordCallContextExt<'a>}
-
-impl<'input> AsciiMath2ParserContext<'input> for SimpleKeywordCallContext<'input>{}
-
-impl<'input,'a> Listenable<dyn AsciiMath2Listener<'input> + 'a> for SimpleKeywordCallContext<'input>{
-	fn enter(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
-		listener.enter_every_rule(self);
-		listener.enter_simpleKeywordCall(self);
-	}
-	fn exit(&self,listener: &mut (dyn AsciiMath2Listener<'input> + 'a)) {
-		listener.exit_simpleKeywordCall(self);
-		listener.exit_every_rule(self);
-	}
-}
-
-impl<'input,'a> Visitable<dyn AsciiMath2Visitor<'input> + 'a> for SimpleKeywordCallContext<'input>{
-	fn accept(&self,visitor: &mut (dyn AsciiMath2Visitor<'input> + 'a)) {
-		visitor.visit_simpleKeywordCall(self);
-	}
-}
-
-impl<'input> CustomRuleContext<'input> for SimpleKeywordCallContextExt<'input>{
-	type TF = LocalTokenFactory<'input>;
-	type Ctx = AsciiMath2ParserContextType;
-	fn get_rule_index(&self) -> usize { RULE_primary_expression }
-	//fn type_rule_index() -> usize where Self: Sized { RULE_primary_expression }
-}
-
-impl<'input> Borrow<Primary_expressionContextExt<'input>> for SimpleKeywordCallContext<'input>{
-	fn borrow(&self) -> &Primary_expressionContextExt<'input> { &self.base }
-}
-impl<'input> BorrowMut<Primary_expressionContextExt<'input>> for SimpleKeywordCallContext<'input>{
-	fn borrow_mut(&mut self) -> &mut Primary_expressionContextExt<'input> { &mut self.base }
-}
-
-impl<'input> Primary_expressionContextAttrs<'input> for SimpleKeywordCallContext<'input> {}
-
-impl<'input> SimpleKeywordCallContextExt<'input>{
-	fn new(ctx: &dyn Primary_expressionContextAttrs<'input>) -> Rc<Primary_expressionContextAll<'input>>  {
-		Rc::new(
-			Primary_expressionContextAll::SimpleKeywordCallContext(
-				BaseParserRuleContext::copy_from(ctx,SimpleKeywordCallContextExt{
         			base: ctx.borrow().clone(),
         			ph:PhantomData
 				})
@@ -4361,27 +4744,27 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = Primary_expressionContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 28, RULE_primary_expression);
+        recog.base.enter_rule(_localctx.clone(), 32, RULE_primary_expression);
         let mut _localctx: Rc<Primary_expressionContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
 
-			recog.base.set_state(229);
+			recog.base.set_state(282);
 			recog.err_handler.sync(&mut recog.base)?;
-			match  recog.interpreter.adaptive_predict(15,&mut recog.base)? {
+			match  recog.interpreter.adaptive_predict(30,&mut recog.base)? {
 				1 =>{
 					let tmp = ParenExpressionContextExt::new(&**_localctx);
 					recog.base.enter_outer_alt(Some(tmp.clone()), 1);
 					_localctx = tmp;
 					{
-					recog.base.set_state(152);
+					recog.base.set_state(212);
 					recog.base.match_token(LPAREN,&mut recog.err_handler)?;
 
 					/*InvokeRule logical_expression*/
-					recog.base.set_state(153);
+					recog.base.set_state(213);
 					recog.logical_expression()?;
 
-					recog.base.set_state(154);
+					recog.base.set_state(214);
 					recog.base.match_token(RPAREN,&mut recog.err_handler)?;
 
 					}
@@ -4392,69 +4775,88 @@ where
 					recog.base.enter_outer_alt(Some(tmp.clone()), 2);
 					_localctx = tmp;
 					{
-					recog.base.set_state(156);
-					recog.base.match_token(BUILTIN_KEYWORD_FUNC_NAME,&mut recog.err_handler)?;
+					recog.base.set_state(218);
+					recog.err_handler.sync(&mut recog.base)?;
+					match  recog.interpreter.adaptive_predict(28,&mut recog.base)? {
+						1 =>{
+							{
+							recog.base.set_state(216);
+							recog.base.match_token(BUILTIN_KEYWORD_FUNC_NAME,&mut recog.err_handler)?;
 
-					recog.base.set_state(157);
+							}
+						}
+					,
+						2 =>{
+							{
+							/*InvokeRule scripted_op_expression*/
+							recog.base.set_state(217);
+							recog.scripted_op_expression()?;
+
+							}
+						}
+
+						_ => {}
+					}
+					recog.base.set_state(220);
 					recog.base.match_token(LPAREN,&mut recog.err_handler)?;
 
 					/*InvokeRule arguments*/
-					recog.base.set_state(158);
+					recog.base.set_state(221);
 					recog.arguments()?;
 
-					recog.base.set_state(159);
+					recog.base.set_state(222);
 					recog.base.match_token(RPAREN,&mut recog.err_handler)?;
 
 					}
 				}
 			,
 				3 =>{
-					let tmp = BraceExpressionContextExt::new(&**_localctx);
+					let tmp = SimpleKeywordCallContextExt::new(&**_localctx);
 					recog.base.enter_outer_alt(Some(tmp.clone()), 3);
 					_localctx = tmp;
 					{
-					recog.base.set_state(161);
-					recog.base.match_token(LBRACE,&mut recog.err_handler)?;
+					recog.base.set_state(224);
+					recog.base.match_token(BUILTIN_KEYWORD_FUNC_NAME,&mut recog.err_handler)?;
 
-					/*InvokeRule logical_expression*/
-					recog.base.set_state(162);
-					recog.logical_expression()?;
-
-					recog.base.set_state(163);
-					recog.base.match_token(RBRACE,&mut recog.err_handler)?;
+					/*InvokeRule primary_expression*/
+					recog.base.set_state(225);
+					recog.primary_expression()?;
 
 					}
 				}
 			,
 				4 =>{
-					let tmp = AbsExpressionContextExt::new(&**_localctx);
+					let tmp = BraceExpressionContextExt::new(&**_localctx);
 					recog.base.enter_outer_alt(Some(tmp.clone()), 4);
 					_localctx = tmp;
 					{
-					recog.base.set_state(165);
-					recog.base.match_token(ABS,&mut recog.err_handler)?;
+					recog.base.set_state(226);
+					recog.base.match_token(LBRACE,&mut recog.err_handler)?;
 
 					/*InvokeRule logical_expression*/
-					recog.base.set_state(166);
+					recog.base.set_state(227);
 					recog.logical_expression()?;
 
-					recog.base.set_state(167);
-					recog.base.match_token(ABS,&mut recog.err_handler)?;
+					recog.base.set_state(228);
+					recog.base.match_token(RBRACE,&mut recog.err_handler)?;
 
 					}
 				}
 			,
 				5 =>{
-					let tmp = SimpleKeywordCallContextExt::new(&**_localctx);
+					let tmp = AbsExpressionContextExt::new(&**_localctx);
 					recog.base.enter_outer_alt(Some(tmp.clone()), 5);
 					_localctx = tmp;
 					{
-					recog.base.set_state(169);
-					recog.base.match_token(BUILTIN_KEYWORD_FUNC_NAME,&mut recog.err_handler)?;
+					recog.base.set_state(230);
+					recog.base.match_token(ABS,&mut recog.err_handler)?;
 
-					/*InvokeRule primary_expression*/
-					recog.base.set_state(170);
-					recog.primary_expression()?;
+					/*InvokeRule logical_expression*/
+					recog.base.set_state(231);
+					recog.logical_expression()?;
+
+					recog.base.set_state(232);
+					recog.base.match_token(ABS,&mut recog.err_handler)?;
 
 					}
 				}
@@ -4464,15 +4866,15 @@ where
 					recog.base.enter_outer_alt(Some(tmp.clone()), 6);
 					_localctx = tmp;
 					{
-					recog.base.set_state(171);
+					recog.base.set_state(234);
 					recog.base.match_token(ROOT,&mut recog.err_handler)?;
 
 					/*InvokeRule primary_expression*/
-					recog.base.set_state(172);
+					recog.base.set_state(235);
 					recog.primary_expression()?;
 
 					/*InvokeRule primary_expression*/
-					recog.base.set_state(173);
+					recog.base.set_state(236);
 					recog.primary_expression()?;
 
 					}
@@ -4483,15 +4885,15 @@ where
 					recog.base.enter_outer_alt(Some(tmp.clone()), 7);
 					_localctx = tmp;
 					{
-					recog.base.set_state(175);
+					recog.base.set_state(238);
 					recog.base.match_token(FRAC,&mut recog.err_handler)?;
 
 					/*InvokeRule primary_expression*/
-					recog.base.set_state(176);
+					recog.base.set_state(239);
 					recog.primary_expression()?;
 
 					/*InvokeRule primary_expression*/
-					recog.base.set_state(177);
+					recog.base.set_state(240);
 					recog.primary_expression()?;
 
 					}
@@ -4502,126 +4904,81 @@ where
 					recog.base.enter_outer_alt(Some(tmp.clone()), 8);
 					_localctx = tmp;
 					{
-					recog.base.set_state(179);
+					recog.base.set_state(242);
 					recog.base.match_token(TEXT,&mut recog.err_handler)?;
 
-					recog.base.set_state(180);
+					recog.base.set_state(243);
 					recog.base.match_token(LPAREN,&mut recog.err_handler)?;
 
 					/*InvokeRule text_argument*/
-					recog.base.set_state(181);
+					recog.base.set_state(244);
 					recog.text_argument()?;
 
-					recog.base.set_state(182);
+					recog.base.set_state(245);
 					recog.base.match_token(RPAREN,&mut recog.err_handler)?;
 
 					}
 				}
 			,
 				9 =>{
-					let tmp = IntegralExpressionContextExt::new(&**_localctx);
+					let tmp = DerivativeFunctionContextExt::new(&**_localctx);
 					recog.base.enter_outer_alt(Some(tmp.clone()), 9);
 					_localctx = tmp;
 					{
-					recog.base.set_state(184);
-					recog.base.match_token(INTEGRAL,&mut recog.err_handler)?;
-
-					recog.base.set_state(186);
-					recog.err_handler.sync(&mut recog.base)?;
-					match  recog.interpreter.adaptive_predict(12,&mut recog.base)? {
-						x if x == 1=>{
-							{
-							/*InvokeRule integral_lower_limit*/
-							recog.base.set_state(185);
-							recog.integral_lower_limit()?;
-
-							}
-						}
-
-						_ => {}
-					}
-					recog.base.set_state(189);
-					recog.err_handler.sync(&mut recog.base)?;
-					_la = recog.base.input.la(1);
-					if _la==HAT {
-						{
-						/*InvokeRule integral_upper_limit*/
-						recog.base.set_state(188);
-						recog.integral_upper_limit()?;
-
-						}
-					}
-
-					/*InvokeRule integral_body*/
-					recog.base.set_state(191);
-					recog.integral_body()?;
-
-					/*InvokeRule differential*/
-					recog.base.set_state(192);
-					recog.differential()?;
-
-					}
-				}
-			,
-				10 =>{
-					let tmp = DerivativeFunctionContextExt::new(&**_localctx);
-					recog.base.enter_outer_alt(Some(tmp.clone()), 10);
-					_localctx = tmp;
-					{
 					/*InvokeRule derivative*/
-					recog.base.set_state(194);
+					recog.base.set_state(247);
 					recog.derivative()?;
 
 					}
 				}
 			,
-				11 =>{
+				10 =>{
 					let tmp = PartialFunctionContextExt::new(&**_localctx);
-					recog.base.enter_outer_alt(Some(tmp.clone()), 11);
+					recog.base.enter_outer_alt(Some(tmp.clone()), 10);
 					_localctx = tmp;
 					{
 					/*InvokeRule partial_derivative*/
-					recog.base.set_state(195);
+					recog.base.set_state(248);
 					recog.partial_derivative()?;
 
 					}
 				}
 			,
-				12 =>{
+				11 =>{
 					let tmp = FractionLeibnizContextExt::new(&**_localctx);
-					recog.base.enter_outer_alt(Some(tmp.clone()), 12);
+					recog.base.enter_outer_alt(Some(tmp.clone()), 11);
 					_localctx = tmp;
 					{
 					/*InvokeRule differential*/
-					recog.base.set_state(196);
+					recog.base.set_state(249);
 					recog.differential()?;
 
-					recog.base.set_state(197);
+					recog.base.set_state(250);
 					recog.base.match_token(FSLASH,&mut recog.err_handler)?;
 
 					/*InvokeRule differential*/
-					recog.base.set_state(198);
+					recog.base.set_state(251);
 					recog.differential()?;
 
 					}
 				}
 			,
-				13 =>{
+				12 =>{
 					let tmp = LimitExpressionContextExt::new(&**_localctx);
-					recog.base.enter_outer_alt(Some(tmp.clone()), 13);
+					recog.base.enter_outer_alt(Some(tmp.clone()), 12);
 					_localctx = tmp;
 					{
-					recog.base.set_state(200);
+					recog.base.set_state(253);
 					recog.base.match_token(LIM,&mut recog.err_handler)?;
 
-					recog.base.set_state(201);
+					recog.base.set_state(254);
 					recog.base.match_token(UNDERSCORE,&mut recog.err_handler)?;
 
 					/*InvokeRule primary_expression*/
-					recog.base.set_state(202);
+					recog.base.set_state(255);
 					recog.primary_expression()?;
 
-					recog.base.set_state(203);
+					recog.base.set_state(256);
 					_la = recog.base.input.la(1);
 					if { !(_la==TO || _la==RARROW) } {
 						recog.err_handler.recover_inline(&mut recog.base)?;
@@ -4633,156 +4990,156 @@ where
 						recog.base.consume(&mut recog.err_handler);
 					}
 					/*InvokeRule primary_expression*/
-					recog.base.set_state(204);
+					recog.base.set_state(257);
 					recog.primary_expression()?;
 
 					/*InvokeRule primary_expression*/
-					recog.base.set_state(205);
+					recog.base.set_state(258);
 					recog.primary_expression()?;
 
 					}
 				}
 			,
-				14 =>{
+				13 =>{
 					let tmp = ParenColumnVectorContextExt::new(&**_localctx);
-					recog.base.enter_outer_alt(Some(tmp.clone()), 14);
+					recog.base.enter_outer_alt(Some(tmp.clone()), 13);
 					_localctx = tmp;
 					{
-					recog.base.set_state(207);
+					recog.base.set_state(260);
 					recog.base.match_token(LPAREN,&mut recog.err_handler)?;
 
 					/*InvokeRule paren_element_for_column_vector*/
-					recog.base.set_state(208);
+					recog.base.set_state(261);
 					recog.paren_element_for_column_vector()?;
 
-					recog.base.set_state(213);
+					recog.base.set_state(266);
 					recog.err_handler.sync(&mut recog.base)?;
 					_la = recog.base.input.la(1);
 					while _la==COMMA {
 						{
 						{
-						recog.base.set_state(209);
+						recog.base.set_state(262);
 						recog.base.match_token(COMMA,&mut recog.err_handler)?;
 
 						/*InvokeRule paren_element_for_column_vector*/
-						recog.base.set_state(210);
+						recog.base.set_state(263);
 						recog.paren_element_for_column_vector()?;
 
 						}
 						}
-						recog.base.set_state(215);
+						recog.base.set_state(268);
 						recog.err_handler.sync(&mut recog.base)?;
 						_la = recog.base.input.la(1);
 					}
-					recog.base.set_state(216);
+					recog.base.set_state(269);
 					recog.base.match_token(RPAREN,&mut recog.err_handler)?;
 
 					}
 				}
 			,
-				15 =>{
+				14 =>{
 					let tmp = DetFunctionContextExt::new(&**_localctx);
-					recog.base.enter_outer_alt(Some(tmp.clone()), 15);
+					recog.base.enter_outer_alt(Some(tmp.clone()), 14);
 					_localctx = tmp;
 					{
-					recog.base.set_state(218);
+					recog.base.set_state(271);
 					recog.base.match_token(DET,&mut recog.err_handler)?;
 
 					/*InvokeRule primary_expression*/
-					recog.base.set_state(219);
+					recog.base.set_state(272);
+					recog.primary_expression()?;
+
+					}
+				}
+			,
+				15 =>{
+					let tmp = TransposeFunctionContextExt::new(&**_localctx);
+					recog.base.enter_outer_alt(Some(tmp.clone()), 15);
+					_localctx = tmp;
+					{
+					recog.base.set_state(273);
+					recog.base.match_token(TRANSPOSE,&mut recog.err_handler)?;
+
+					/*InvokeRule primary_expression*/
+					recog.base.set_state(274);
 					recog.primary_expression()?;
 
 					}
 				}
 			,
 				16 =>{
-					let tmp = TransposeFunctionContextExt::new(&**_localctx);
+					let tmp = IdentifierAtomContextExt::new(&**_localctx);
 					recog.base.enter_outer_alt(Some(tmp.clone()), 16);
 					_localctx = tmp;
 					{
-					recog.base.set_state(220);
-					recog.base.match_token(TRANSPOSE,&mut recog.err_handler)?;
-
-					/*InvokeRule primary_expression*/
-					recog.base.set_state(221);
-					recog.primary_expression()?;
-
-					}
-				}
-			,
-				17 =>{
-					let tmp = IdentifierAtomContextExt::new(&**_localctx);
-					recog.base.enter_outer_alt(Some(tmp.clone()), 17);
-					_localctx = tmp;
-					{
-					recog.base.set_state(222);
+					recog.base.set_state(275);
 					recog.base.match_token(IDENTIFIER,&mut recog.err_handler)?;
 
 					}
 				}
 			,
-				18 =>{
+				17 =>{
 					let tmp = NumberAtomContextExt::new(&**_localctx);
-					recog.base.enter_outer_alt(Some(tmp.clone()), 18);
+					recog.base.enter_outer_alt(Some(tmp.clone()), 17);
 					_localctx = tmp;
 					{
-					recog.base.set_state(223);
+					recog.base.set_state(276);
 					recog.base.match_token(NUMBER,&mut recog.err_handler)?;
 
 					}
 				}
 			,
-				19 =>{
+				18 =>{
 					let tmp = NumberWithCommasAtomContextExt::new(&**_localctx);
-					recog.base.enter_outer_alt(Some(tmp.clone()), 19);
+					recog.base.enter_outer_alt(Some(tmp.clone()), 18);
 					_localctx = tmp;
 					{
-					recog.base.set_state(224);
+					recog.base.set_state(277);
 					recog.base.match_token(NUMBER_WITH_COMMAS,&mut recog.err_handler)?;
 
 					}
 				}
 			,
-				20 =>{
+				19 =>{
 					let tmp = CurrencyNumberAtomContextExt::new(&**_localctx);
-					recog.base.enter_outer_alt(Some(tmp.clone()), 20);
+					recog.base.enter_outer_alt(Some(tmp.clone()), 19);
 					_localctx = tmp;
 					{
-					recog.base.set_state(225);
+					recog.base.set_state(278);
 					recog.base.match_token(CURRENCY_NUMBER,&mut recog.err_handler)?;
 
 					}
 				}
 			,
-				21 =>{
+				20 =>{
 					let tmp = GreekLetterAtomContextExt::new(&**_localctx);
-					recog.base.enter_outer_alt(Some(tmp.clone()), 21);
+					recog.base.enter_outer_alt(Some(tmp.clone()), 20);
 					_localctx = tmp;
 					{
-					recog.base.set_state(226);
+					recog.base.set_state(279);
 					recog.base.match_token(GREEK_LETTER,&mut recog.err_handler)?;
 
 					}
 				}
 			,
-				22 =>{
+				21 =>{
 					let tmp = ConstantAtomContextExt::new(&**_localctx);
-					recog.base.enter_outer_alt(Some(tmp.clone()), 22);
+					recog.base.enter_outer_alt(Some(tmp.clone()), 21);
 					_localctx = tmp;
 					{
 					/*InvokeRule constant_symbol*/
-					recog.base.set_state(227);
+					recog.base.set_state(280);
 					recog.constant_symbol()?;
 
 					}
 				}
 			,
-				23 =>{
+				22 =>{
 					let tmp = StringAtomContextExt::new(&**_localctx);
-					recog.base.enter_outer_alt(Some(tmp.clone()), 23);
+					recog.base.enter_outer_alt(Some(tmp.clone()), 22);
 					_localctx = tmp;
 					{
-					recog.base.set_state(228);
+					recog.base.set_state(281);
 					recog.base.match_token(STRING,&mut recog.err_handler)?;
 
 					}
@@ -4884,21 +5241,21 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = Paren_element_for_column_vectorContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 30, RULE_paren_element_for_column_vector);
+        recog.base.enter_rule(_localctx.clone(), 34, RULE_paren_element_for_column_vector);
         let mut _localctx: Rc<Paren_element_for_column_vectorContextAll> = _localctx;
 		let result: Result<(), ANTLRError> = (|| {
 
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(231);
+			recog.base.set_state(284);
 			recog.base.match_token(LPAREN,&mut recog.err_handler)?;
 
 			/*InvokeRule expression*/
-			recog.base.set_state(232);
+			recog.base.set_state(285);
 			recog.expression()?;
 
-			recog.base.set_state(233);
+			recog.base.set_state(286);
 			recog.base.match_token(RPAREN,&mut recog.err_handler)?;
 
 			}
@@ -5007,7 +5364,7 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = ArgumentsContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 32, RULE_arguments);
+        recog.base.enter_rule(_localctx.clone(), 36, RULE_arguments);
         let mut _localctx: Rc<ArgumentsContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
@@ -5015,13 +5372,13 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(237);
+			recog.base.set_state(290);
 			recog.err_handler.sync(&mut recog.base)?;
-			match  recog.interpreter.adaptive_predict(16,&mut recog.base)? {
+			match  recog.interpreter.adaptive_predict(31,&mut recog.base)? {
 				1 =>{
 					{
 					/*InvokeRule logical_expression*/
-					recog.base.set_state(235);
+					recog.base.set_state(288);
 					recog.logical_expression()?;
 
 					}
@@ -5030,7 +5387,7 @@ where
 				2 =>{
 					{
 					/*InvokeRule unary_op_expression*/
-					recog.base.set_state(236);
+					recog.base.set_state(289);
 					recog.unary_op_expression()?;
 
 					}
@@ -5038,22 +5395,22 @@ where
 
 				_ => {}
 			}
-			recog.base.set_state(246);
+			recog.base.set_state(299);
 			recog.err_handler.sync(&mut recog.base)?;
 			_la = recog.base.input.la(1);
 			while _la==COMMA {
 				{
 				{
-				recog.base.set_state(239);
+				recog.base.set_state(292);
 				recog.base.match_token(COMMA,&mut recog.err_handler)?;
 
-				recog.base.set_state(242);
+				recog.base.set_state(295);
 				recog.err_handler.sync(&mut recog.base)?;
-				match  recog.interpreter.adaptive_predict(17,&mut recog.base)? {
+				match  recog.interpreter.adaptive_predict(32,&mut recog.base)? {
 					1 =>{
 						{
 						/*InvokeRule expression*/
-						recog.base.set_state(240);
+						recog.base.set_state(293);
 						recog.expression()?;
 
 						}
@@ -5062,7 +5419,7 @@ where
 					2 =>{
 						{
 						/*InvokeRule unary_op_expression*/
-						recog.base.set_state(241);
+						recog.base.set_state(294);
 						recog.unary_op_expression()?;
 
 						}
@@ -5072,7 +5429,7 @@ where
 				}
 				}
 				}
-				recog.base.set_state(248);
+				recog.base.set_state(301);
 				recog.err_handler.sync(&mut recog.base)?;
 				_la = recog.base.input.la(1);
 			}
@@ -5166,18 +5523,18 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = Text_argumentContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 34, RULE_text_argument);
+        recog.base.enter_rule(_localctx.clone(), 38, RULE_text_argument);
         let mut _localctx: Rc<Text_argumentContextAll> = _localctx;
 		let result: Result<(), ANTLRError> = (|| {
 
-			recog.base.set_state(251);
+			recog.base.set_state(304);
 			recog.err_handler.sync(&mut recog.base)?;
-			match  recog.interpreter.adaptive_predict(19,&mut recog.base)? {
+			match  recog.interpreter.adaptive_predict(34,&mut recog.base)? {
 				1 =>{
 					//recog.base.enter_outer_alt(_localctx.clone(), 1);
 					recog.base.enter_outer_alt(None, 1);
 					{
-					recog.base.set_state(249);
+					recog.base.set_state(302);
 					recog.base.match_token(STRING,&mut recog.err_handler)?;
 
 					}
@@ -5188,7 +5545,7 @@ where
 					recog.base.enter_outer_alt(None, 2);
 					{
 					/*InvokeRule expression*/
-					recog.base.set_state(250);
+					recog.base.set_state(303);
 					recog.expression()?;
 
 					}
@@ -5285,18 +5642,18 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = Wrt_argumentContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 36, RULE_wrt_argument);
+        recog.base.enter_rule(_localctx.clone(), 40, RULE_wrt_argument);
         let mut _localctx: Rc<Wrt_argumentContextAll> = _localctx;
 		let result: Result<(), ANTLRError> = (|| {
 
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(253);
+			recog.base.set_state(306);
 			recog.base.match_token(COMMA,&mut recog.err_handler)?;
 
 			/*InvokeRule expression*/
-			recog.base.set_state(254);
+			recog.base.set_state(307);
 			recog.expression()?;
 
 			}
@@ -5396,7 +5753,7 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = Matrix_contentContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 38, RULE_matrix_content);
+        recog.base.enter_rule(_localctx.clone(), 42, RULE_matrix_content);
         let mut _localctx: Rc<Matrix_contentContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
@@ -5405,25 +5762,25 @@ where
 			recog.base.enter_outer_alt(None, 1);
 			{
 			/*InvokeRule matrix_row*/
-			recog.base.set_state(256);
+			recog.base.set_state(309);
 			recog.matrix_row()?;
 
-			recog.base.set_state(261);
+			recog.base.set_state(314);
 			recog.err_handler.sync(&mut recog.base)?;
 			_la = recog.base.input.la(1);
 			while _la==SEMICOLON {
 				{
 				{
-				recog.base.set_state(257);
+				recog.base.set_state(310);
 				recog.base.match_token(SEMICOLON,&mut recog.err_handler)?;
 
 				/*InvokeRule matrix_row*/
-				recog.base.set_state(258);
+				recog.base.set_state(311);
 				recog.matrix_row()?;
 
 				}
 				}
-				recog.base.set_state(263);
+				recog.base.set_state(316);
 				recog.err_handler.sync(&mut recog.base)?;
 				_la = recog.base.input.la(1);
 			}
@@ -5524,7 +5881,7 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = Matrix_rowContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 40, RULE_matrix_row);
+        recog.base.enter_rule(_localctx.clone(), 44, RULE_matrix_row);
         let mut _localctx: Rc<Matrix_rowContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
@@ -5533,25 +5890,25 @@ where
 			recog.base.enter_outer_alt(None, 1);
 			{
 			/*InvokeRule expression*/
-			recog.base.set_state(264);
+			recog.base.set_state(317);
 			recog.expression()?;
 
-			recog.base.set_state(269);
+			recog.base.set_state(322);
 			recog.err_handler.sync(&mut recog.base)?;
 			_la = recog.base.input.la(1);
 			while _la==COMMA {
 				{
 				{
-				recog.base.set_state(265);
+				recog.base.set_state(318);
 				recog.base.match_token(COMMA,&mut recog.err_handler)?;
 
 				/*InvokeRule expression*/
-				recog.base.set_state(266);
+				recog.base.set_state(319);
 				recog.expression()?;
 
 				}
 				}
-				recog.base.set_state(271);
+				recog.base.set_state(324);
 				recog.err_handler.sync(&mut recog.base)?;
 				_la = recog.base.input.la(1);
 			}
@@ -5642,14 +5999,14 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = Deriv_functionContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 42, RULE_deriv_function);
+        recog.base.enter_rule(_localctx.clone(), 46, RULE_deriv_function);
         let mut _localctx: Rc<Deriv_functionContextAll> = _localctx;
 		let result: Result<(), ANTLRError> = (|| {
 
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(272);
+			recog.base.set_state(325);
 			recog.base.match_token(DERIV,&mut recog.err_handler)?;
 
 			}
@@ -5739,14 +6096,14 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = D_by_dContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 44, RULE_d_by_d);
+        recog.base.enter_rule(_localctx.clone(), 48, RULE_d_by_d);
         let mut _localctx: Rc<D_by_dContextAll> = _localctx;
 		let result: Result<(), ANTLRError> = (|| {
 
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(274);
+			recog.base.set_state(327);
 			recog.base.match_token(DBYD,&mut recog.err_handler)?;
 
 			}
@@ -5843,21 +6200,21 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = DerivativeContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 46, RULE_derivative);
+        recog.base.enter_rule(_localctx.clone(), 50, RULE_derivative);
         let mut _localctx: Rc<DerivativeContextAll> = _localctx;
 		let result: Result<(), ANTLRError> = (|| {
 
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(278);
+			recog.base.set_state(331);
 			recog.err_handler.sync(&mut recog.base)?;
 			match recog.base.input.la(1) {
 			 DERIV 
 				=> {
 					{
 					/*InvokeRule deriv_function*/
-					recog.base.set_state(276);
+					recog.base.set_state(329);
 					recog.deriv_function()?;
 
 					}
@@ -5867,7 +6224,7 @@ where
 				=> {
 					{
 					/*InvokeRule d_by_d*/
-					recog.base.set_state(277);
+					recog.base.set_state(330);
 					recog.d_by_d()?;
 
 					}
@@ -5876,16 +6233,16 @@ where
 				_ => Err(ANTLRError::NoAltError(NoViableAltError::new(&mut recog.base)))?
 			}
 			/*InvokeRule primary_expression*/
-			recog.base.set_state(280);
+			recog.base.set_state(333);
 			recog.primary_expression()?;
 
-			recog.base.set_state(282);
+			recog.base.set_state(335);
 			recog.err_handler.sync(&mut recog.base)?;
-			match  recog.interpreter.adaptive_predict(23,&mut recog.base)? {
+			match  recog.interpreter.adaptive_predict(38,&mut recog.base)? {
 				x if x == 1=>{
 					{
 					/*InvokeRule wrt_argument*/
-					recog.base.set_state(281);
+					recog.base.set_state(334);
 					recog.wrt_argument()?;
 
 					}
@@ -5986,27 +6343,27 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = Partial_derivativeContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 48, RULE_partial_derivative);
+        recog.base.enter_rule(_localctx.clone(), 52, RULE_partial_derivative);
         let mut _localctx: Rc<Partial_derivativeContextAll> = _localctx;
 		let result: Result<(), ANTLRError> = (|| {
 
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(284);
+			recog.base.set_state(337);
 			recog.base.match_token(PARTIAL,&mut recog.err_handler)?;
 
 			/*InvokeRule primary_expression*/
-			recog.base.set_state(285);
+			recog.base.set_state(338);
 			recog.primary_expression()?;
 
-			recog.base.set_state(287);
+			recog.base.set_state(340);
 			recog.err_handler.sync(&mut recog.base)?;
-			match  recog.interpreter.adaptive_predict(24,&mut recog.base)? {
+			match  recog.interpreter.adaptive_predict(39,&mut recog.base)? {
 				x if x == 1=>{
 					{
 					/*InvokeRule wrt_argument*/
-					recog.base.set_state(286);
+					recog.base.set_state(339);
 					recog.wrt_argument()?;
 
 					}
@@ -6123,29 +6480,29 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = Function_callContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 50, RULE_function_call);
+        recog.base.enter_rule(_localctx.clone(), 54, RULE_function_call);
         let mut _localctx: Rc<Function_callContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
 
-			recog.base.set_state(306);
+			recog.base.set_state(359);
 			recog.err_handler.sync(&mut recog.base)?;
-			match  recog.interpreter.adaptive_predict(27,&mut recog.base)? {
+			match  recog.interpreter.adaptive_predict(42,&mut recog.base)? {
 				1 =>{
 					//recog.base.enter_outer_alt(_localctx.clone(), 1);
 					recog.base.enter_outer_alt(None, 1);
 					{
-					recog.base.set_state(289);
+					recog.base.set_state(342);
 					recog.base.match_token(IDENTIFIER,&mut recog.err_handler)?;
 
-					recog.base.set_state(290);
+					recog.base.set_state(343);
 					recog.base.match_token(LPAREN,&mut recog.err_handler)?;
 
 					/*InvokeRule arguments*/
-					recog.base.set_state(291);
+					recog.base.set_state(344);
 					recog.arguments()?;
 
-					recog.base.set_state(292);
+					recog.base.set_state(345);
 					recog.base.match_token(RPAREN,&mut recog.err_handler)?;
 
 					}
@@ -6155,26 +6512,26 @@ where
 					//recog.base.enter_outer_alt(_localctx.clone(), 2);
 					recog.base.enter_outer_alt(None, 2);
 					{
-					recog.base.set_state(294);
+					recog.base.set_state(347);
 					recog.base.match_token(IDENTIFIER,&mut recog.err_handler)?;
 
-					recog.base.set_state(300);
+					recog.base.set_state(353);
 					recog.err_handler.sync(&mut recog.base)?;
 					_la = recog.base.input.la(1);
 					if _la==PRIME {
 						{
-						recog.base.set_state(296); 
+						recog.base.set_state(349); 
 						recog.err_handler.sync(&mut recog.base)?;
 						_la = recog.base.input.la(1);
 						loop {
 							{
 							{
-							recog.base.set_state(295);
+							recog.base.set_state(348);
 							recog.base.match_token(PRIME,&mut recog.err_handler)?;
 
 							}
 							}
-							recog.base.set_state(298); 
+							recog.base.set_state(351); 
 							recog.err_handler.sync(&mut recog.base)?;
 							_la = recog.base.input.la(1);
 							if !(_la==PRIME) {break}
@@ -6182,14 +6539,14 @@ where
 						}
 					}
 
-					recog.base.set_state(302);
+					recog.base.set_state(355);
 					recog.base.match_token(LPAREN,&mut recog.err_handler)?;
 
 					/*InvokeRule arguments*/
-					recog.base.set_state(303);
+					recog.base.set_state(356);
 					recog.arguments()?;
 
-					recog.base.set_state(304);
+					recog.base.set_state(357);
 					recog.base.match_token(RPAREN,&mut recog.err_handler)?;
 
 					}
@@ -6313,7 +6670,7 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = Constant_symbolContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 52, RULE_constant_symbol);
+        recog.base.enter_rule(_localctx.clone(), 56, RULE_constant_symbol);
         let mut _localctx: Rc<Constant_symbolContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
@@ -6321,9 +6678,9 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(308);
+			recog.base.set_state(361);
 			_la = recog.base.input.la(1);
-			if { !(((((_la - 65)) & !0x3f) == 0 && ((1usize << (_la - 65)) & ((1usize << (PI_CONST - 65)) | (1usize << (INFINITY_CONST - 65)) | (1usize << (GAMMA_CONST - 65)) | (1usize << (PHI_CONST - 65)) | (1usize << (TRUE_CONST - 65)) | (1usize << (FALSE_CONST - 65)) | (1usize << (NAN_CONST - 65)))) != 0)) } {
+			if { !(((((_la - 68)) & !0x3f) == 0 && ((1usize << (_la - 68)) & ((1usize << (PI_CONST - 68)) | (1usize << (INFINITY_CONST - 68)) | (1usize << (GAMMA_CONST - 68)) | (1usize << (PHI_CONST - 68)) | (1usize << (TRUE_CONST - 68)) | (1usize << (FALSE_CONST - 68)) | (1usize << (NAN_CONST - 68)))) != 0)) } {
 				recog.err_handler.recover_inline(&mut recog.base)?;
 
 			}
@@ -6449,7 +6806,7 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = RelopContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 54, RULE_relop);
+        recog.base.enter_rule(_localctx.clone(), 58, RULE_relop);
         let mut _localctx: Rc<RelopContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
@@ -6457,9 +6814,9 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(310);
+			recog.base.set_state(363);
 			_la = recog.base.input.la(1);
-			if { !(((((_la - 82)) & !0x3f) == 0 && ((1usize << (_la - 82)) & ((1usize << (EQ - 82)) | (1usize << (DOUBLE_EQ - 82)) | (1usize << (NEQ - 82)) | (1usize << (LT - 82)) | (1usize << (GT - 82)) | (1usize << (LTE - 82)) | (1usize << (GTE - 82)))) != 0)) } {
+			if { !(((((_la - 85)) & !0x3f) == 0 && ((1usize << (_la - 85)) & ((1usize << (EQ - 85)) | (1usize << (DOUBLE_EQ - 85)) | (1usize << (NEQ - 85)) | (1usize << (LT - 85)) | (1usize << (GT - 85)) | (1usize << (LTE - 85)) | (1usize << (GTE - 85)))) != 0)) } {
 				recog.err_handler.recover_inline(&mut recog.base)?;
 
 			}
@@ -6565,7 +6922,7 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = SumopContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 56, RULE_sumop);
+        recog.base.enter_rule(_localctx.clone(), 60, RULE_sumop);
         let mut _localctx: Rc<SumopContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
@@ -6573,9 +6930,9 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(312);
+			recog.base.set_state(365);
 			_la = recog.base.input.la(1);
-			if { !(((((_la - 73)) & !0x3f) == 0 && ((1usize << (_la - 73)) & ((1usize << (PLUS - 73)) | (1usize << (MINUS - 73)) | (1usize << (PM - 73)))) != 0)) } {
+			if { !(((((_la - 76)) & !0x3f) == 0 && ((1usize << (_la - 76)) & ((1usize << (PLUS - 76)) | (1usize << (MINUS - 76)) | (1usize << (PM - 76)))) != 0)) } {
 				recog.err_handler.recover_inline(&mut recog.base)?;
 
 			}
@@ -6686,7 +7043,7 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = MultopContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 58, RULE_multop);
+        recog.base.enter_rule(_localctx.clone(), 62, RULE_multop);
         let mut _localctx: Rc<MultopContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
@@ -6694,9 +7051,9 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(314);
+			recog.base.set_state(367);
 			_la = recog.base.input.la(1);
-			if { !(((((_la - 75)) & !0x3f) == 0 && ((1usize << (_la - 75)) & ((1usize << (STAR - 75)) | (1usize << (FSLASH - 75)) | (1usize << (TIMES - 75)) | (1usize << (DIV - 75)))) != 0)) } {
+			if { !(((((_la - 78)) & !0x3f) == 0 && ((1usize << (_la - 78)) & ((1usize << (STAR - 78)) | (1usize << (FSLASH - 78)) | (1usize << (TIMES - 78)) | (1usize << (DIV - 78)))) != 0)) } {
 				recog.err_handler.recover_inline(&mut recog.base)?;
 
 			}
@@ -6797,7 +7154,7 @@ where
 		let mut recog = self;
 		let _parentctx = recog.ctx.take();
 		let mut _localctx = PowopContextExt::new(_parentctx.clone(), recog.base.get_state());
-        recog.base.enter_rule(_localctx.clone(), 60, RULE_powop);
+        recog.base.enter_rule(_localctx.clone(), 64, RULE_powop);
         let mut _localctx: Rc<PowopContextAll> = _localctx;
 		let mut _la: isize = -1;
 		let result: Result<(), ANTLRError> = (|| {
@@ -6805,7 +7162,7 @@ where
 			//recog.base.enter_outer_alt(_localctx.clone(), 1);
 			recog.base.enter_outer_alt(None, 1);
 			{
-			recog.base.set_state(316);
+			recog.base.set_state(369);
 			_la = recog.base.input.la(1);
 			if { !(_la==HAT || _la==POW) } {
 				recog.err_handler.recover_inline(&mut recog.base)?;
@@ -6855,176 +7212,213 @@ lazy_static! {
 
 const _serializedATN:&'static str =
 	"\x03\u{608b}\u{a72a}\u{8133}\u{b9ed}\u{417c}\u{3be7}\u{7786}\u{5964}\x03\
-	\u{8c}\u{141}\x04\x02\x09\x02\x04\x03\x09\x03\x04\x04\x09\x04\x04\x05\x09\
+	\u{90}\u{176}\x04\x02\x09\x02\x04\x03\x09\x03\x04\x04\x09\x04\x04\x05\x09\
 	\x05\x04\x06\x09\x06\x04\x07\x09\x07\x04\x08\x09\x08\x04\x09\x09\x09\x04\
 	\x0a\x09\x0a\x04\x0b\x09\x0b\x04\x0c\x09\x0c\x04\x0d\x09\x0d\x04\x0e\x09\
 	\x0e\x04\x0f\x09\x0f\x04\x10\x09\x10\x04\x11\x09\x11\x04\x12\x09\x12\x04\
 	\x13\x09\x13\x04\x14\x09\x14\x04\x15\x09\x15\x04\x16\x09\x16\x04\x17\x09\
 	\x17\x04\x18\x09\x18\x04\x19\x09\x19\x04\x1a\x09\x1a\x04\x1b\x09\x1b\x04\
 	\x1c\x09\x1c\x04\x1d\x09\x1d\x04\x1e\x09\x1e\x04\x1f\x09\x1f\x04\x20\x09\
-	\x20\x03\x02\x03\x02\x03\x02\x07\x02\x44\x0a\x02\x0c\x02\x0e\x02\x47\x0b\
-	\x02\x03\x02\x07\x02\x4a\x0a\x02\x0c\x02\x0e\x02\x4d\x0b\x02\x03\x02\x03\
-	\x02\x03\x03\x03\x03\x03\x04\x03\x04\x03\x04\x07\x04\x56\x0a\x04\x0c\x04\
-	\x0e\x04\x59\x0b\x04\x03\x05\x03\x05\x03\x05\x03\x05\x03\x05\x05\x05\x60\
-	\x0a\x05\x05\x05\x62\x0a\x05\x03\x06\x03\x06\x05\x06\x66\x0a\x06\x03\x06\
-	\x03\x06\x03\x07\x03\x07\x03\x07\x03\x07\x07\x07\x6e\x0a\x07\x0c\x07\x0e\
-	\x07\x71\x0b\x07\x03\x08\x03\x08\x05\x08\x75\x0a\x08\x03\x08\x07\x08\x78\
-	\x0a\x08\x0c\x08\x0e\x08\x7b\x0b\x08\x03\x09\x03\x09\x03\x09\x03\x09\x07\
-	\x09\u{81}\x0a\x09\x0c\x09\x0e\x09\u{84}\x0b\x09\x03\x0a\x03\x0a\x03\x0a\
-	\x05\x0a\u{89}\x0a\x0a\x03\x0b\x03\x0b\x03\x0c\x03\x0c\x03\x0d\x03\x0d\x03\
-	\x0d\x03\x0e\x03\x0e\x03\x0e\x03\x0f\x03\x0f\x03\x0f\x03\x0f\x05\x0f\u{99}\
-	\x0a\x0f\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\
-	\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\
-	\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\
-	\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x05\x10\
-	\u{bd}\x0a\x10\x03\x10\x05\x10\u{c0}\x0a\x10\x03\x10\x03\x10\x03\x10\x03\
-	\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\
-	\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x07\x10\u{d6}\
-	\x0a\x10\x0c\x10\x0e\x10\u{d9}\x0b\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\
-	\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x05\
-	\x10\u{e8}\x0a\x10\x03\x11\x03\x11\x03\x11\x03\x11\x03\x12\x03\x12\x05\x12\
-	\u{f0}\x0a\x12\x03\x12\x03\x12\x03\x12\x05\x12\u{f5}\x0a\x12\x07\x12\u{f7}\
-	\x0a\x12\x0c\x12\x0e\x12\u{fa}\x0b\x12\x03\x13\x03\x13\x05\x13\u{fe}\x0a\
-	\x13\x03\x14\x03\x14\x03\x14\x03\x15\x03\x15\x03\x15\x07\x15\u{106}\x0a\
-	\x15\x0c\x15\x0e\x15\u{109}\x0b\x15\x03\x16\x03\x16\x03\x16\x07\x16\u{10e}\
-	\x0a\x16\x0c\x16\x0e\x16\u{111}\x0b\x16\x03\x17\x03\x17\x03\x18\x03\x18\
-	\x03\x19\x03\x19\x05\x19\u{119}\x0a\x19\x03\x19\x03\x19\x05\x19\u{11d}\x0a\
-	\x19\x03\x1a\x03\x1a\x03\x1a\x05\x1a\u{122}\x0a\x1a\x03\x1b\x03\x1b\x03\
-	\x1b\x03\x1b\x03\x1b\x03\x1b\x03\x1b\x06\x1b\u{12b}\x0a\x1b\x0d\x1b\x0e\
-	\x1b\u{12c}\x05\x1b\u{12f}\x0a\x1b\x03\x1b\x03\x1b\x03\x1b\x03\x1b\x05\x1b\
-	\u{135}\x0a\x1b\x03\x1c\x03\x1c\x03\x1d\x03\x1d\x03\x1e\x03\x1e\x03\x1f\
-	\x03\x1f\x03\x20\x03\x20\x03\x20\x02\x02\x21\x02\x04\x06\x08\x0a\x0c\x0e\
-	\x10\x12\x14\x16\x18\x1a\x1c\x1e\x20\x22\x24\x26\x28\x2a\x2c\x2e\x30\x32\
-	\x34\x36\x38\x3a\x3c\x3e\x02\x0c\x03\x02\x61\x62\x03\x02\x4b\x4c\x03\x02\
-	\x03\x0b\x04\x02\x0c\x0e\u{86}\u{86}\x03\x02\x5b\x5c\x04\x02\x43\x44\x46\
-	\x4a\x03\x02\x54\x5a\x04\x02\x4b\x4c\x5e\x5e\x04\x02\x4d\x4e\x5f\x60\x03\
-	\x02\x4f\x50\x02\u{153}\x02\x40\x03\x02\x02\x02\x04\x50\x03\x02\x02\x02\
-	\x06\x52\x03\x02\x02\x02\x08\x61\x03\x02\x02\x02\x0a\x65\x03\x02\x02\x02\
-	\x0c\x69\x03\x02\x02\x02\x0e\x72\x03\x02\x02\x02\x10\x7c\x03\x02\x02\x02\
-	\x12\u{88}\x03\x02\x02\x02\x14\u{8a}\x03\x02\x02\x02\x16\u{8c}\x03\x02\x02\
-	\x02\x18\u{8e}\x03\x02\x02\x02\x1a\u{91}\x03\x02\x02\x02\x1c\u{98}\x03\x02\
-	\x02\x02\x1e\u{e7}\x03\x02\x02\x02\x20\u{e9}\x03\x02\x02\x02\x22\u{ef}\x03\
-	\x02\x02\x02\x24\u{fd}\x03\x02\x02\x02\x26\u{ff}\x03\x02\x02\x02\x28\u{102}\
-	\x03\x02\x02\x02\x2a\u{10a}\x03\x02\x02\x02\x2c\u{112}\x03\x02\x02\x02\x2e\
-	\u{114}\x03\x02\x02\x02\x30\u{118}\x03\x02\x02\x02\x32\u{11e}\x03\x02\x02\
-	\x02\x34\u{134}\x03\x02\x02\x02\x36\u{136}\x03\x02\x02\x02\x38\u{138}\x03\
-	\x02\x02\x02\x3a\u{13a}\x03\x02\x02\x02\x3c\u{13c}\x03\x02\x02\x02\x3e\u{13e}\
-	\x03\x02\x02\x02\x40\x45\x05\x04\x03\x02\x41\x42\x07\u{8b}\x02\x02\x42\x44\
-	\x05\x04\x03\x02\x43\x41\x03\x02\x02\x02\x44\x47\x03\x02\x02\x02\x45\x43\
-	\x03\x02\x02\x02\x45\x46\x03\x02\x02\x02\x46\x4b\x03\x02\x02\x02\x47\x45\
-	\x03\x02\x02\x02\x48\x4a\x07\u{8b}\x02\x02\x49\x48\x03\x02\x02\x02\x4a\x4d\
-	\x03\x02\x02\x02\x4b\x49\x03\x02\x02\x02\x4b\x4c\x03\x02\x02\x02\x4c\x4e\
-	\x03\x02\x02\x02\x4d\x4b\x03\x02\x02\x02\x4e\x4f\x07\x02\x02\x03\x4f\x03\
-	\x03\x02\x02\x02\x50\x51\x05\x06\x04\x02\x51\x05\x03\x02\x02\x02\x52\x57\
-	\x05\x08\x05\x02\x53\x54\x09\x02\x02\x02\x54\x56\x05\x08\x05\x02\x55\x53\
-	\x03\x02\x02\x02\x56\x59\x03\x02\x02\x02\x57\x55\x03\x02\x02\x02\x57\x58\
-	\x03\x02\x02\x02\x58\x07\x03\x02\x02\x02\x59\x57\x03\x02\x02\x02\x5a\x62\
-	\x05\x0a\x06\x02\x5b\x5f\x05\x0c\x07\x02\x5c\x5d\x05\x38\x1d\x02\x5d\x5e\
-	\x05\x0c\x07\x02\x5e\x60\x03\x02\x02\x02\x5f\x5c\x03\x02\x02\x02\x5f\x60\
-	\x03\x02\x02\x02\x60\x62\x03\x02\x02\x02\x61\x5a\x03\x02\x02\x02\x61\x5b\
-	\x03\x02\x02\x02\x62\x09\x03\x02\x02\x02\x63\x66\x05\x0c\x07\x02\x64\x66\
-	\x05\x34\x1b\x02\x65\x63\x03\x02\x02\x02\x65\x64\x03\x02\x02\x02\x66\x67\
-	\x03\x02\x02\x02\x67\x68\x07\x54\x02\x02\x68\x0b\x03\x02\x02\x02\x69\x6f\
-	\x05\x0e\x08\x02\x6a\x6b\x05\x3a\x1e\x02\x6b\x6c\x05\x0e\x08\x02\x6c\x6e\
-	\x03\x02\x02\x02\x6d\x6a\x03\x02\x02\x02\x6e\x71\x03\x02\x02\x02\x6f\x6d\
-	\x03\x02\x02\x02\x6f\x70\x03\x02\x02\x02\x70\x0d\x03\x02\x02\x02\x71\x6f\
-	\x03\x02\x02\x02\x72\x79\x05\x10\x09\x02\x73\x75\x05\x3c\x1f\x02\x74\x73\
-	\x03\x02\x02\x02\x74\x75\x03\x02\x02\x02\x75\x76\x03\x02\x02\x02\x76\x78\
-	\x05\x10\x09\x02\x77\x74\x03\x02\x02\x02\x78\x7b\x03\x02\x02\x02\x79\x77\
-	\x03\x02\x02\x02\x79\x7a\x03\x02\x02\x02\x7a\x0f\x03\x02\x02\x02\x7b\x79\
-	\x03\x02\x02\x02\x7c\u{82}\x05\x1c\x0f\x02\x7d\x7e\x05\x3e\x20\x02\x7e\x7f\
-	\x05\x1e\x10\x02\x7f\u{81}\x03\x02\x02\x02\u{80}\x7d\x03\x02\x02\x02\u{81}\
-	\u{84}\x03\x02\x02\x02\u{82}\u{80}\x03\x02\x02\x02\u{82}\u{83}\x03\x02\x02\
-	\x02\u{83}\x11\x03\x02\x02\x02\u{84}\u{82}\x03\x02\x02\x02\u{85}\u{86}\x09\
-	\x03\x02\x02\u{86}\u{89}\x05\x1c\x0f\x02\u{87}\u{89}\x05\x1c\x0f\x02\u{88}\
-	\u{85}\x03\x02\x02\x02\u{88}\u{87}\x03\x02\x02\x02\u{89}\x13\x03\x02\x02\
-	\x02\u{8a}\u{8b}\x09\x04\x02\x02\u{8b}\x15\x03\x02\x02\x02\u{8c}\u{8d}\x05\
-	\x0e\x08\x02\u{8d}\x17\x03\x02\x02\x02\u{8e}\u{8f}\x07\x4f\x02\x02\u{8f}\
-	\u{90}\x09\x05\x02\x02\u{90}\x19\x03\x02\x02\x02\u{91}\u{92}\x07\x51\x02\
-	\x02\u{92}\u{93}\x09\x05\x02\x02\u{93}\x1b\x03\x02\x02\x02\u{94}\u{99}\x05\
-	\x1e\x10\x02\u{95}\u{96}\x07\x51\x02\x02\u{96}\u{99}\x05\x1e\x10\x02\u{97}\
-	\u{99}\x07\x52\x02\x02\u{98}\u{94}\x03\x02\x02\x02\u{98}\u{95}\x03\x02\x02\
-	\x02\u{98}\u{97}\x03\x02\x02\x02\u{99}\x1d\x03\x02\x02\x02\u{9a}\u{9b}\x07\
-	\x64\x02\x02\u{9b}\u{9c}\x05\x06\x04\x02\u{9c}\u{9d}\x07\x65\x02\x02\u{9d}\
-	\u{e8}\x03\x02\x02\x02\u{9e}\u{9f}\x07\x0f\x02\x02\u{9f}\u{a0}\x07\x64\x02\
-	\x02\u{a0}\u{a1}\x05\x22\x12\x02\u{a1}\u{a2}\x07\x65\x02\x02\u{a2}\u{e8}\
-	\x03\x02\x02\x02\u{a3}\u{a4}\x07\x68\x02\x02\u{a4}\u{a5}\x05\x06\x04\x02\
-	\u{a5}\u{a6}\x07\x69\x02\x02\u{a6}\u{e8}\x03\x02\x02\x02\u{a7}\u{a8}\x07\
-	\x6a\x02\x02\u{a8}\u{a9}\x05\x06\x04\x02\u{a9}\u{aa}\x07\x6a\x02\x02\u{aa}\
-	\u{e8}\x03\x02\x02\x02\u{ab}\u{ac}\x07\x0f\x02\x02\u{ac}\u{e8}\x05\x1e\x10\
-	\x02\u{ad}\u{ae}\x07\x3d\x02\x02\u{ae}\u{af}\x05\x1e\x10\x02\u{af}\u{b0}\
-	\x05\x1e\x10\x02\u{b0}\u{e8}\x03\x02\x02\x02\u{b1}\u{b2}\x07\x3e\x02\x02\
-	\u{b2}\u{b3}\x05\x1e\x10\x02\u{b3}\u{b4}\x05\x1e\x10\x02\u{b4}\u{e8}\x03\
-	\x02\x02\x02\u{b5}\u{b6}\x07\x3f\x02\x02\u{b6}\u{b7}\x07\x64\x02\x02\u{b7}\
-	\u{b8}\x05\x24\x13\x02\u{b8}\u{b9}\x07\x65\x02\x02\u{b9}\u{e8}\x03\x02\x02\
-	\x02\u{ba}\u{bc}\x07\x10\x02\x02\u{bb}\u{bd}\x05\x1a\x0e\x02\u{bc}\u{bb}\
-	\x03\x02\x02\x02\u{bc}\u{bd}\x03\x02\x02\x02\u{bd}\u{bf}\x03\x02\x02\x02\
-	\u{be}\u{c0}\x05\x18\x0d\x02\u{bf}\u{be}\x03\x02\x02\x02\u{bf}\u{c0}\x03\
-	\x02\x02\x02\u{c0}\u{c1}\x03\x02\x02\x02\u{c1}\u{c2}\x05\x16\x0c\x02\u{c2}\
-	\u{c3}\x05\x14\x0b\x02\u{c3}\u{e8}\x03\x02\x02\x02\u{c4}\u{e8}\x05\x30\x19\
-	\x02\u{c5}\u{e8}\x05\x32\x1a\x02\u{c6}\u{c7}\x05\x14\x0b\x02\u{c7}\u{c8}\
-	\x07\x4e\x02\x02\u{c8}\u{c9}\x05\x14\x0b\x02\u{c9}\u{e8}\x03\x02\x02\x02\
-	\u{ca}\u{cb}\x07\x14\x02\x02\u{cb}\u{cc}\x07\x51\x02\x02\u{cc}\u{cd}\x05\
-	\x1e\x10\x02\u{cd}\u{ce}\x09\x06\x02\x02\u{ce}\u{cf}\x05\x1e\x10\x02\u{cf}\
-	\u{d0}\x05\x1e\x10\x02\u{d0}\u{e8}\x03\x02\x02\x02\u{d1}\u{d2}\x07\x64\x02\
-	\x02\u{d2}\u{d7}\x05\x20\x11\x02\u{d3}\u{d4}\x07\x6d\x02\x02\u{d4}\u{d6}\
-	\x05\x20\x11\x02\u{d5}\u{d3}\x03\x02\x02\x02\u{d6}\u{d9}\x03\x02\x02\x02\
-	\u{d7}\u{d5}\x03\x02\x02\x02\u{d7}\u{d8}\x03\x02\x02\x02\u{d8}\u{da}\x03\
-	\x02\x02\x02\u{d9}\u{d7}\x03\x02\x02\x02\u{da}\u{db}\x07\x65\x02\x02\u{db}\
-	\u{e8}\x03\x02\x02\x02\u{dc}\u{dd}\x07\x41\x02\x02\u{dd}\u{e8}\x05\x1e\x10\
-	\x02\u{de}\u{df}\x07\x42\x02\x02\u{df}\u{e8}\x05\x1e\x10\x02\u{e0}\u{e8}\
-	\x07\u{84}\x02\x02\u{e1}\u{e8}\x07\u{86}\x02\x02\u{e2}\u{e8}\x07\u{87}\x02\
-	\x02\u{e3}\u{e8}\x07\u{88}\x02\x02\u{e4}\u{e8}\x07\u{83}\x02\x02\u{e5}\u{e8}\
-	\x05\x36\x1c\x02\u{e6}\u{e8}\x07\u{8a}\x02\x02\u{e7}\u{9a}\x03\x02\x02\x02\
-	\u{e7}\u{9e}\x03\x02\x02\x02\u{e7}\u{a3}\x03\x02\x02\x02\u{e7}\u{a7}\x03\
-	\x02\x02\x02\u{e7}\u{ab}\x03\x02\x02\x02\u{e7}\u{ad}\x03\x02\x02\x02\u{e7}\
-	\u{b1}\x03\x02\x02\x02\u{e7}\u{b5}\x03\x02\x02\x02\u{e7}\u{ba}\x03\x02\x02\
-	\x02\u{e7}\u{c4}\x03\x02\x02\x02\u{e7}\u{c5}\x03\x02\x02\x02\u{e7}\u{c6}\
-	\x03\x02\x02\x02\u{e7}\u{ca}\x03\x02\x02\x02\u{e7}\u{d1}\x03\x02\x02\x02\
-	\u{e7}\u{dc}\x03\x02\x02\x02\u{e7}\u{de}\x03\x02\x02\x02\u{e7}\u{e0}\x03\
-	\x02\x02\x02\u{e7}\u{e1}\x03\x02\x02\x02\u{e7}\u{e2}\x03\x02\x02\x02\u{e7}\
-	\u{e3}\x03\x02\x02\x02\u{e7}\u{e4}\x03\x02\x02\x02\u{e7}\u{e5}\x03\x02\x02\
-	\x02\u{e7}\u{e6}\x03\x02\x02\x02\u{e8}\x1f\x03\x02\x02\x02\u{e9}\u{ea}\x07\
-	\x64\x02\x02\u{ea}\u{eb}\x05\x04\x03\x02\u{eb}\u{ec}\x07\x65\x02\x02\u{ec}\
-	\x21\x03\x02\x02\x02\u{ed}\u{f0}\x05\x06\x04\x02\u{ee}\u{f0}\x05\x12\x0a\
-	\x02\u{ef}\u{ed}\x03\x02\x02\x02\u{ef}\u{ee}\x03\x02\x02\x02\u{f0}\u{f8}\
-	\x03\x02\x02\x02\u{f1}\u{f4}\x07\x6d\x02\x02\u{f2}\u{f5}\x05\x04\x03\x02\
-	\u{f3}\u{f5}\x05\x12\x0a\x02\u{f4}\u{f2}\x03\x02\x02\x02\u{f4}\u{f3}\x03\
-	\x02\x02\x02\u{f5}\u{f7}\x03\x02\x02\x02\u{f6}\u{f1}\x03\x02\x02\x02\u{f7}\
-	\u{fa}\x03\x02\x02\x02\u{f8}\u{f6}\x03\x02\x02\x02\u{f8}\u{f9}\x03\x02\x02\
-	\x02\u{f9}\x23\x03\x02\x02\x02\u{fa}\u{f8}\x03\x02\x02\x02\u{fb}\u{fe}\x07\
-	\u{8a}\x02\x02\u{fc}\u{fe}\x05\x04\x03\x02\u{fd}\u{fb}\x03\x02\x02\x02\u{fd}\
-	\u{fc}\x03\x02\x02\x02\u{fe}\x25\x03\x02\x02\x02\u{ff}\u{100}\x07\x6d\x02\
-	\x02\u{100}\u{101}\x05\x04\x03\x02\u{101}\x27\x03\x02\x02\x02\u{102}\u{107}\
-	\x05\x2a\x16\x02\u{103}\u{104}\x07\x6e\x02\x02\u{104}\u{106}\x05\x2a\x16\
-	\x02\u{105}\u{103}\x03\x02\x02\x02\u{106}\u{109}\x03\x02\x02\x02\u{107}\
-	\u{105}\x03\x02\x02\x02\u{107}\u{108}\x03\x02\x02\x02\u{108}\x29\x03\x02\
-	\x02\x02\u{109}\u{107}\x03\x02\x02\x02\u{10a}\u{10f}\x05\x04\x03\x02\u{10b}\
-	\u{10c}\x07\x6d\x02\x02\u{10c}\u{10e}\x05\x04\x03\x02\u{10d}\u{10b}\x03\
-	\x02\x02\x02\u{10e}\u{111}\x03\x02\x02\x02\u{10f}\u{10d}\x03\x02\x02\x02\
-	\u{10f}\u{110}\x03\x02\x02\x02\u{110}\x2b\x03\x02\x02\x02\u{111}\u{10f}\
-	\x03\x02\x02\x02\u{112}\u{113}\x07\x11\x02\x02\u{113}\x2d\x03\x02\x02\x02\
-	\u{114}\u{115}\x07\x12\x02\x02\u{115}\x2f\x03\x02\x02\x02\u{116}\u{119}\
-	\x05\x2c\x17\x02\u{117}\u{119}\x05\x2e\x18\x02\u{118}\u{116}\x03\x02\x02\
-	\x02\u{118}\u{117}\x03\x02\x02\x02\u{119}\u{11a}\x03\x02\x02\x02\u{11a}\
-	\u{11c}\x05\x1e\x10\x02\u{11b}\u{11d}\x05\x26\x14\x02\u{11c}\u{11b}\x03\
-	\x02\x02\x02\u{11c}\u{11d}\x03\x02\x02\x02\u{11d}\x31\x03\x02\x02\x02\u{11e}\
-	\u{11f}\x07\x13\x02\x02\u{11f}\u{121}\x05\x1e\x10\x02\u{120}\u{122}\x05\
-	\x26\x14\x02\u{121}\u{120}\x03\x02\x02\x02\u{121}\u{122}\x03\x02\x02\x02\
-	\u{122}\x33\x03\x02\x02\x02\u{123}\u{124}\x07\u{84}\x02\x02\u{124}\u{125}\
-	\x07\x64\x02\x02\u{125}\u{126}\x05\x22\x12\x02\u{126}\u{127}\x07\x65\x02\
-	\x02\u{127}\u{135}\x03\x02\x02\x02\u{128}\u{12e}\x07\u{84}\x02\x02\u{129}\
-	\u{12b}\x07\x52\x02\x02\u{12a}\u{129}\x03\x02\x02\x02\u{12b}\u{12c}\x03\
-	\x02\x02\x02\u{12c}\u{12a}\x03\x02\x02\x02\u{12c}\u{12d}\x03\x02\x02\x02\
-	\u{12d}\u{12f}\x03\x02\x02\x02\u{12e}\u{12a}\x03\x02\x02\x02\u{12e}\u{12f}\
-	\x03\x02\x02\x02\u{12f}\u{130}\x03\x02\x02\x02\u{130}\u{131}\x07\x64\x02\
-	\x02\u{131}\u{132}\x05\x22\x12\x02\u{132}\u{133}\x07\x65\x02\x02\u{133}\
-	\u{135}\x03\x02\x02\x02\u{134}\u{123}\x03\x02\x02\x02\u{134}\u{128}\x03\
-	\x02\x02\x02\u{135}\x35\x03\x02\x02\x02\u{136}\u{137}\x09\x07\x02\x02\u{137}\
-	\x37\x03\x02\x02\x02\u{138}\u{139}\x09\x08\x02\x02\u{139}\x39\x03\x02\x02\
-	\x02\u{13a}\u{13b}\x09\x09\x02\x02\u{13b}\x3b\x03\x02\x02\x02\u{13c}\u{13d}\
-	\x09\x0a\x02\x02\u{13d}\x3d\x03\x02\x02\x02\u{13e}\u{13f}\x09\x0b\x02\x02\
-	\u{13f}\x3f\x03\x02\x02\x02\x1e\x45\x4b\x57\x5f\x61\x65\x6f\x74\x79\u{82}\
-	\u{88}\u{98}\u{bc}\u{bf}\u{d7}\u{e7}\u{ef}\u{f4}\u{f8}\u{fd}\u{107}\u{10f}\
-	\u{118}\u{11c}\u{121}\u{12c}\u{12e}\u{134}";
+	\x20\x04\x21\x09\x21\x04\x22\x09\x22\x03\x02\x03\x02\x05\x02\x47\x0a\x02\
+	\x03\x02\x03\x02\x03\x02\x05\x02\x4c\x0a\x02\x07\x02\x4e\x0a\x02\x0c\x02\
+	\x0e\x02\x51\x0b\x02\x03\x02\x07\x02\x54\x0a\x02\x0c\x02\x0e\x02\x57\x0b\
+	\x02\x03\x02\x03\x02\x03\x03\x03\x03\x03\x04\x03\x04\x03\x04\x07\x04\x60\
+	\x0a\x04\x0c\x04\x0e\x04\x63\x0b\x04\x03\x05\x03\x05\x03\x05\x03\x05\x03\
+	\x05\x05\x05\x6a\x0a\x05\x05\x05\x6c\x0a\x05\x03\x06\x03\x06\x05\x06\x70\
+	\x0a\x06\x03\x06\x03\x06\x03\x07\x03\x07\x03\x07\x03\x07\x07\x07\x78\x0a\
+	\x07\x0c\x07\x0e\x07\x7b\x0b\x07\x03\x08\x03\x08\x05\x08\x7f\x0a\x08\x03\
+	\x08\x07\x08\u{82}\x0a\x08\x0c\x08\x0e\x08\u{85}\x0b\x08\x03\x09\x03\x09\
+	\x03\x09\x03\x09\x07\x09\u{8b}\x0a\x09\x0c\x09\x0e\x09\u{8e}\x0b\x09\x03\
+	\x0a\x03\x0a\x03\x0a\x05\x0a\u{93}\x0a\x0a\x03\x0b\x05\x0b\u{96}\x0a\x0b\
+	\x03\x0b\x03\x0b\x05\x0b\u{9a}\x0a\x0b\x03\x0c\x03\x0c\x03\x0c\x03\x0c\x03\
+	\x0c\x05\x0c\u{a1}\x0a\x0c\x03\x0d\x05\x0d\u{a4}\x0a\x0d\x03\x0d\x03\x0d\
+	\x05\x0d\u{a8}\x0a\x0d\x03\x0d\x05\x0d\u{ab}\x0a\x0d\x03\x0d\x05\x0d\u{ae}\
+	\x0a\x0d\x03\x0d\x03\x0d\x03\x0d\x05\x0d\u{b3}\x0a\x0d\x03\x0e\x05\x0e\u{b6}\
+	\x0a\x0e\x03\x0e\x03\x0e\x05\x0e\u{ba}\x0a\x0e\x03\x0e\x07\x0e\u{bd}\x0a\
+	\x0e\x0c\x0e\x0e\x0e\u{c0}\x0b\x0e\x03\x0e\x03\x0e\x05\x0e\u{c4}\x0a\x0e\
+	\x03\x0e\x03\x0e\x05\x0e\u{c8}\x0a\x0e\x03\x0f\x05\x0f\u{cb}\x0a\x0f\x03\
+	\x0f\x03\x0f\x05\x0f\u{cf}\x0a\x0f\x03\x10\x03\x10\x03\x10\x03\x11\x03\x11\
+	\x03\x11\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x05\x12\u{dd}\x0a\
+	\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\
+	\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\
+	\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\
+	\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\
+	\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x07\
+	\x12\u{10b}\x0a\x12\x0c\x12\x0e\x12\u{10e}\x0b\x12\x03\x12\x03\x12\x03\x12\
+	\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\
+	\x03\x12\x05\x12\u{11d}\x0a\x12\x03\x13\x03\x13\x03\x13\x03\x13\x03\x14\
+	\x03\x14\x05\x14\u{125}\x0a\x14\x03\x14\x03\x14\x03\x14\x05\x14\u{12a}\x0a\
+	\x14\x07\x14\u{12c}\x0a\x14\x0c\x14\x0e\x14\u{12f}\x0b\x14\x03\x15\x03\x15\
+	\x05\x15\u{133}\x0a\x15\x03\x16\x03\x16\x03\x16\x03\x17\x03\x17\x03\x17\
+	\x07\x17\u{13b}\x0a\x17\x0c\x17\x0e\x17\u{13e}\x0b\x17\x03\x18\x03\x18\x03\
+	\x18\x07\x18\u{143}\x0a\x18\x0c\x18\x0e\x18\u{146}\x0b\x18\x03\x19\x03\x19\
+	\x03\x1a\x03\x1a\x03\x1b\x03\x1b\x05\x1b\u{14e}\x0a\x1b\x03\x1b\x03\x1b\
+	\x05\x1b\u{152}\x0a\x1b\x03\x1c\x03\x1c\x03\x1c\x05\x1c\u{157}\x0a\x1c\x03\
+	\x1d\x03\x1d\x03\x1d\x03\x1d\x03\x1d\x03\x1d\x03\x1d\x06\x1d\u{160}\x0a\
+	\x1d\x0d\x1d\x0e\x1d\u{161}\x05\x1d\u{164}\x0a\x1d\x03\x1d\x03\x1d\x03\x1d\
+	\x03\x1d\x05\x1d\u{16a}\x0a\x1d\x03\x1e\x03\x1e\x03\x1f\x03\x1f\x03\x20\
+	\x03\x20\x03\x21\x03\x21\x03\x22\x03\x22\x03\x22\x02\x02\x23\x02\x04\x06\
+	\x08\x0a\x0c\x0e\x10\x12\x14\x16\x18\x1a\x1c\x1e\x20\x22\x24\x26\x28\x2a\
+	\x2c\x2e\x30\x32\x34\x36\x38\x3a\x3c\x3e\x40\x42\x02\x0c\x03\x02\x64\x65\
+	\x03\x02\x4e\x4f\x04\x02\x03\x0a\x73\x73\x04\x02\x0f\x11\u{8a}\u{8a}\x03\
+	\x02\x5e\x5f\x04\x02\x46\x47\x49\x4d\x03\x02\x57\x5d\x04\x02\x4e\x4f\x61\
+	\x61\x04\x02\x50\x51\x62\x63\x03\x02\x52\x53\x02\u{196}\x02\x46\x03\x02\
+	\x02\x02\x04\x5a\x03\x02\x02\x02\x06\x5c\x03\x02\x02\x02\x08\x6b\x03\x02\
+	\x02\x02\x0a\x6f\x03\x02\x02\x02\x0c\x73\x03\x02\x02\x02\x0e\x7c\x03\x02\
+	\x02\x02\x10\u{86}\x03\x02\x02\x02\x12\u{92}\x03\x02\x02\x02\x14\u{95}\x03\
+	\x02\x02\x02\x16\u{a0}\x03\x02\x02\x02\x18\u{a3}\x03\x02\x02\x02\x1a\u{b5}\
+	\x03\x02\x02\x02\x1c\u{ca}\x03\x02\x02\x02\x1e\u{d0}\x03\x02\x02\x02\x20\
+	\u{d3}\x03\x02\x02\x02\x22\u{11c}\x03\x02\x02\x02\x24\u{11e}\x03\x02\x02\
+	\x02\x26\u{124}\x03\x02\x02\x02\x28\u{132}\x03\x02\x02\x02\x2a\u{134}\x03\
+	\x02\x02\x02\x2c\u{137}\x03\x02\x02\x02\x2e\u{13f}\x03\x02\x02\x02\x30\u{147}\
+	\x03\x02\x02\x02\x32\u{149}\x03\x02\x02\x02\x34\u{14d}\x03\x02\x02\x02\x36\
+	\u{153}\x03\x02\x02\x02\x38\u{169}\x03\x02\x02\x02\x3a\u{16b}\x03\x02\x02\
+	\x02\x3c\u{16d}\x03\x02\x02\x02\x3e\u{16f}\x03\x02\x02\x02\x40\u{171}\x03\
+	\x02\x02\x02\x42\u{173}\x03\x02\x02\x02\x44\x47\x05\x18\x0d\x02\x45\x47\
+	\x05\x04\x03\x02\x46\x44\x03\x02\x02\x02\x46\x45\x03\x02\x02\x02\x47\x4f\
+	\x03\x02\x02\x02\x48\x4b\x07\u{8f}\x02\x02\x49\x4c\x05\x18\x0d\x02\x4a\x4c\
+	\x05\x04\x03\x02\x4b\x49\x03\x02\x02\x02\x4b\x4a\x03\x02\x02\x02\x4c\x4e\
+	\x03\x02\x02\x02\x4d\x48\x03\x02\x02\x02\x4e\x51\x03\x02\x02\x02\x4f\x4d\
+	\x03\x02\x02\x02\x4f\x50\x03\x02\x02\x02\x50\x55\x03\x02\x02\x02\x51\x4f\
+	\x03\x02\x02\x02\x52\x54\x07\u{8f}\x02\x02\x53\x52\x03\x02\x02\x02\x54\x57\
+	\x03\x02\x02\x02\x55\x53\x03\x02\x02\x02\x55\x56\x03\x02\x02\x02\x56\x58\
+	\x03\x02\x02\x02\x57\x55\x03\x02\x02\x02\x58\x59\x07\x02\x02\x03\x59\x03\
+	\x03\x02\x02\x02\x5a\x5b\x05\x06\x04\x02\x5b\x05\x03\x02\x02\x02\x5c\x61\
+	\x05\x08\x05\x02\x5d\x5e\x09\x02\x02\x02\x5e\x60\x05\x08\x05\x02\x5f\x5d\
+	\x03\x02\x02\x02\x60\x63\x03\x02\x02\x02\x61\x5f\x03\x02\x02\x02\x61\x62\
+	\x03\x02\x02\x02\x62\x07\x03\x02\x02\x02\x63\x61\x03\x02\x02\x02\x64\x6c\
+	\x05\x0a\x06\x02\x65\x69\x05\x0c\x07\x02\x66\x67\x05\x3c\x1f\x02\x67\x68\
+	\x05\x0c\x07\x02\x68\x6a\x03\x02\x02\x02\x69\x66\x03\x02\x02\x02\x69\x6a\
+	\x03\x02\x02\x02\x6a\x6c\x03\x02\x02\x02\x6b\x64\x03\x02\x02\x02\x6b\x65\
+	\x03\x02\x02\x02\x6c\x09\x03\x02\x02\x02\x6d\x70\x05\x0c\x07\x02\x6e\x70\
+	\x05\x38\x1d\x02\x6f\x6d\x03\x02\x02\x02\x6f\x6e\x03\x02\x02\x02\x70\x71\
+	\x03\x02\x02\x02\x71\x72\x07\x57\x02\x02\x72\x0b\x03\x02\x02\x02\x73\x79\
+	\x05\x0e\x08\x02\x74\x75\x05\x3e\x20\x02\x75\x76\x05\x0e\x08\x02\x76\x78\
+	\x03\x02\x02\x02\x77\x74\x03\x02\x02\x02\x78\x7b\x03\x02\x02\x02\x79\x77\
+	\x03\x02\x02\x02\x79\x7a\x03\x02\x02\x02\x7a\x0d\x03\x02\x02\x02\x7b\x79\
+	\x03\x02\x02\x02\x7c\u{83}\x05\x10\x09\x02\x7d\x7f\x05\x40\x21\x02\x7e\x7d\
+	\x03\x02\x02\x02\x7e\x7f\x03\x02\x02\x02\x7f\u{80}\x03\x02\x02\x02\u{80}\
+	\u{82}\x05\x10\x09\x02\u{81}\x7e\x03\x02\x02\x02\u{82}\u{85}\x03\x02\x02\
+	\x02\u{83}\u{81}\x03\x02\x02\x02\u{83}\u{84}\x03\x02\x02\x02\u{84}\x0f\x03\
+	\x02\x02\x02\u{85}\u{83}\x03\x02\x02\x02\u{86}\u{8c}\x05\x22\x12\x02\u{87}\
+	\u{88}\x05\x42\x22\x02\u{88}\u{89}\x05\x22\x12\x02\u{89}\u{8b}\x03\x02\x02\
+	\x02\u{8a}\u{87}\x03\x02\x02\x02\u{8b}\u{8e}\x03\x02\x02\x02\u{8c}\u{8a}\
+	\x03\x02\x02\x02\u{8c}\u{8d}\x03\x02\x02\x02\u{8d}\x11\x03\x02\x02\x02\u{8e}\
+	\u{8c}\x03\x02\x02\x02\u{8f}\u{90}\x09\x03\x02\x02\u{90}\u{93}\x05\x22\x12\
+	\x02\u{91}\u{93}\x05\x22\x12\x02\u{92}\u{8f}\x03\x02\x02\x02\u{92}\u{91}\
+	\x03\x02\x02\x02\u{93}\x13\x03\x02\x02\x02\u{94}\u{96}\x07\x67\x02\x02\u{95}\
+	\u{94}\x03\x02\x02\x02\u{95}\u{96}\x03\x02\x02\x02\u{96}\u{97}\x03\x02\x02\
+	\x02\u{97}\u{99}\x09\x04\x02\x02\u{98}\u{9a}\x07\x68\x02\x02\u{99}\u{98}\
+	\x03\x02\x02\x02\u{99}\u{9a}\x03\x02\x02\x02\u{9a}\x15\x03\x02\x02\x02\u{9b}\
+	\u{a1}\x07\x0b\x02\x02\u{9c}\u{a1}\x07\x0c\x02\x02\u{9d}\u{a1}\x07\x0d\x02\
+	\x02\u{9e}\u{a1}\x07\x0e\x02\x02\u{9f}\u{a1}\x05\x14\x0b\x02\u{a0}\u{9b}\
+	\x03\x02\x02\x02\u{a0}\u{9c}\x03\x02\x02\x02\u{a0}\u{9d}\x03\x02\x02\x02\
+	\u{a0}\u{9e}\x03\x02\x02\x02\u{a0}\u{9f}\x03\x02\x02\x02\u{a1}\x17\x03\x02\
+	\x02\x02\u{a2}\u{a4}\x07\x67\x02\x02\u{a3}\u{a2}\x03\x02\x02\x02\u{a3}\u{a4}\
+	\x03\x02\x02\x02\u{a4}\u{a5}\x03\x02\x02\x02\u{a5}\u{a7}\x07\x13\x02\x02\
+	\u{a6}\u{a8}\x07\x68\x02\x02\u{a7}\u{a6}\x03\x02\x02\x02\u{a7}\u{a8}\x03\
+	\x02\x02\x02\u{a8}\u{aa}\x03\x02\x02\x02\u{a9}\u{ab}\x05\x20\x11\x02\u{aa}\
+	\u{a9}\x03\x02\x02\x02\u{aa}\u{ab}\x03\x02\x02\x02\u{ab}\u{ad}\x03\x02\x02\
+	\x02\u{ac}\u{ae}\x05\x1e\x10\x02\u{ad}\u{ac}\x03\x02\x02\x02\u{ad}\u{ae}\
+	\x03\x02\x02\x02\u{ae}\u{af}\x03\x02\x02\x02\u{af}\u{b0}\x05\x1c\x0f\x02\
+	\u{b0}\u{b2}\x05\x16\x0c\x02\u{b1}\u{b3}\x07\x57\x02\x02\u{b2}\u{b1}\x03\
+	\x02\x02\x02\u{b2}\u{b3}\x03\x02\x02\x02\u{b3}\x19\x03\x02\x02\x02\u{b4}\
+	\u{b6}\x07\x67\x02\x02\u{b5}\u{b4}\x03\x02\x02\x02\u{b5}\u{b6}\x03\x02\x02\
+	\x02\u{b6}\u{b7}\x03\x02\x02\x02\u{b7}\u{b9}\x07\x12\x02\x02\u{b8}\u{ba}\
+	\x07\x68\x02\x02\u{b9}\u{b8}\x03\x02\x02\x02\u{b9}\u{ba}\x03\x02\x02\x02\
+	\u{ba}\u{be}\x03\x02\x02\x02\u{bb}\u{bd}\x07\u{90}\x02\x02\u{bc}\u{bb}\x03\
+	\x02\x02\x02\u{bd}\u{c0}\x03\x02\x02\x02\u{be}\u{bc}\x03\x02\x02\x02\u{be}\
+	\u{bf}\x03\x02\x02\x02\u{bf}\u{c3}\x03\x02\x02\x02\u{c0}\u{be}\x03\x02\x02\
+	\x02\u{c1}\u{c2}\x07\x54\x02\x02\u{c2}\u{c4}\x05\x0c\x07\x02\u{c3}\u{c1}\
+	\x03\x02\x02\x02\u{c3}\u{c4}\x03\x02\x02\x02\u{c4}\u{c7}\x03\x02\x02\x02\
+	\u{c5}\u{c6}\x07\x52\x02\x02\u{c6}\u{c8}\x05\x0c\x07\x02\u{c7}\u{c5}\x03\
+	\x02\x02\x02\u{c7}\u{c8}\x03\x02\x02\x02\u{c8}\x1b\x03\x02\x02\x02\u{c9}\
+	\u{cb}\x07\x67\x02\x02\u{ca}\u{c9}\x03\x02\x02\x02\u{ca}\u{cb}\x03\x02\x02\
+	\x02\u{cb}\u{cc}\x03\x02\x02\x02\u{cc}\u{ce}\x05\x0c\x07\x02\u{cd}\u{cf}\
+	\x07\x68\x02\x02\u{ce}\u{cd}\x03\x02\x02\x02\u{ce}\u{cf}\x03\x02\x02\x02\
+	\u{cf}\x1d\x03\x02\x02\x02\u{d0}\u{d1}\x07\x52\x02\x02\u{d1}\u{d2}\x09\x05\
+	\x02\x02\u{d2}\x1f\x03\x02\x02\x02\u{d3}\u{d4}\x07\x54\x02\x02\u{d4}\u{d5}\
+	\x09\x05\x02\x02\u{d5}\x21\x03\x02\x02\x02\u{d6}\u{d7}\x07\x67\x02\x02\u{d7}\
+	\u{d8}\x05\x06\x04\x02\u{d8}\u{d9}\x07\x68\x02\x02\u{d9}\u{11d}\x03\x02\
+	\x02\x02\u{da}\u{dd}\x07\x12\x02\x02\u{db}\u{dd}\x05\x1a\x0e\x02\u{dc}\u{da}\
+	\x03\x02\x02\x02\u{dc}\u{db}\x03\x02\x02\x02\u{dd}\u{de}\x03\x02\x02\x02\
+	\u{de}\u{df}\x07\x67\x02\x02\u{df}\u{e0}\x05\x26\x14\x02\u{e0}\u{e1}\x07\
+	\x68\x02\x02\u{e1}\u{11d}\x03\x02\x02\x02\u{e2}\u{e3}\x07\x12\x02\x02\u{e3}\
+	\u{11d}\x05\x22\x12\x02\u{e4}\u{e5}\x07\x6b\x02\x02\u{e5}\u{e6}\x05\x06\
+	\x04\x02\u{e6}\u{e7}\x07\x6c\x02\x02\u{e7}\u{11d}\x03\x02\x02\x02\u{e8}\
+	\u{e9}\x07\x6d\x02\x02\u{e9}\u{ea}\x05\x06\x04\x02\u{ea}\u{eb}\x07\x6d\x02\
+	\x02\u{eb}\u{11d}\x03\x02\x02\x02\u{ec}\u{ed}\x07\x40\x02\x02\u{ed}\u{ee}\
+	\x05\x22\x12\x02\u{ee}\u{ef}\x05\x22\x12\x02\u{ef}\u{11d}\x03\x02\x02\x02\
+	\u{f0}\u{f1}\x07\x41\x02\x02\u{f1}\u{f2}\x05\x22\x12\x02\u{f2}\u{f3}\x05\
+	\x22\x12\x02\u{f3}\u{11d}\x03\x02\x02\x02\u{f4}\u{f5}\x07\x42\x02\x02\u{f5}\
+	\u{f6}\x07\x67\x02\x02\u{f6}\u{f7}\x05\x28\x15\x02\u{f7}\u{f8}\x07\x68\x02\
+	\x02\u{f8}\u{11d}\x03\x02\x02\x02\u{f9}\u{11d}\x05\x34\x1b\x02\u{fa}\u{11d}\
+	\x05\x36\x1c\x02\u{fb}\u{fc}\x05\x16\x0c\x02\u{fc}\u{fd}\x07\x51\x02\x02\
+	\u{fd}\u{fe}\x05\x16\x0c\x02\u{fe}\u{11d}\x03\x02\x02\x02\u{ff}\u{100}\x07\
+	\x17\x02\x02\u{100}\u{101}\x07\x54\x02\x02\u{101}\u{102}\x05\x22\x12\x02\
+	\u{102}\u{103}\x09\x06\x02\x02\u{103}\u{104}\x05\x22\x12\x02\u{104}\u{105}\
+	\x05\x22\x12\x02\u{105}\u{11d}\x03\x02\x02\x02\u{106}\u{107}\x07\x67\x02\
+	\x02\u{107}\u{10c}\x05\x24\x13\x02\u{108}\u{109}\x07\x70\x02\x02\u{109}\
+	\u{10b}\x05\x24\x13\x02\u{10a}\u{108}\x03\x02\x02\x02\u{10b}\u{10e}\x03\
+	\x02\x02\x02\u{10c}\u{10a}\x03\x02\x02\x02\u{10c}\u{10d}\x03\x02\x02\x02\
+	\u{10d}\u{10f}\x03\x02\x02\x02\u{10e}\u{10c}\x03\x02\x02\x02\u{10f}\u{110}\
+	\x07\x68\x02\x02\u{110}\u{11d}\x03\x02\x02\x02\u{111}\u{112}\x07\x44\x02\
+	\x02\u{112}\u{11d}\x05\x22\x12\x02\u{113}\u{114}\x07\x45\x02\x02\u{114}\
+	\u{11d}\x05\x22\x12\x02\u{115}\u{11d}\x07\u{87}\x02\x02\u{116}\u{11d}\x07\
+	\u{8a}\x02\x02\u{117}\u{11d}\x07\u{8b}\x02\x02\u{118}\u{11d}\x07\u{8c}\x02\
+	\x02\u{119}\u{11d}\x07\u{86}\x02\x02\u{11a}\u{11d}\x05\x3a\x1e\x02\u{11b}\
+	\u{11d}\x07\u{8e}\x02\x02\u{11c}\u{d6}\x03\x02\x02\x02\u{11c}\u{dc}\x03\
+	\x02\x02\x02\u{11c}\u{e2}\x03\x02\x02\x02\u{11c}\u{e4}\x03\x02\x02\x02\u{11c}\
+	\u{e8}\x03\x02\x02\x02\u{11c}\u{ec}\x03\x02\x02\x02\u{11c}\u{f0}\x03\x02\
+	\x02\x02\u{11c}\u{f4}\x03\x02\x02\x02\u{11c}\u{f9}\x03\x02\x02\x02\u{11c}\
+	\u{fa}\x03\x02\x02\x02\u{11c}\u{fb}\x03\x02\x02\x02\u{11c}\u{ff}\x03\x02\
+	\x02\x02\u{11c}\u{106}\x03\x02\x02\x02\u{11c}\u{111}\x03\x02\x02\x02\u{11c}\
+	\u{113}\x03\x02\x02\x02\u{11c}\u{115}\x03\x02\x02\x02\u{11c}\u{116}\x03\
+	\x02\x02\x02\u{11c}\u{117}\x03\x02\x02\x02\u{11c}\u{118}\x03\x02\x02\x02\
+	\u{11c}\u{119}\x03\x02\x02\x02\u{11c}\u{11a}\x03\x02\x02\x02\u{11c}\u{11b}\
+	\x03\x02\x02\x02\u{11d}\x23\x03\x02\x02\x02\u{11e}\u{11f}\x07\x67\x02\x02\
+	\u{11f}\u{120}\x05\x04\x03\x02\u{120}\u{121}\x07\x68\x02\x02\u{121}\x25\
+	\x03\x02\x02\x02\u{122}\u{125}\x05\x06\x04\x02\u{123}\u{125}\x05\x12\x0a\
+	\x02\u{124}\u{122}\x03\x02\x02\x02\u{124}\u{123}\x03\x02\x02\x02\u{125}\
+	\u{12d}\x03\x02\x02\x02\u{126}\u{129}\x07\x70\x02\x02\u{127}\u{12a}\x05\
+	\x04\x03\x02\u{128}\u{12a}\x05\x12\x0a\x02\u{129}\u{127}\x03\x02\x02\x02\
+	\u{129}\u{128}\x03\x02\x02\x02\u{12a}\u{12c}\x03\x02\x02\x02\u{12b}\u{126}\
+	\x03\x02\x02\x02\u{12c}\u{12f}\x03\x02\x02\x02\u{12d}\u{12b}\x03\x02\x02\
+	\x02\u{12d}\u{12e}\x03\x02\x02\x02\u{12e}\x27\x03\x02\x02\x02\u{12f}\u{12d}\
+	\x03\x02\x02\x02\u{130}\u{133}\x07\u{8e}\x02\x02\u{131}\u{133}\x05\x04\x03\
+	\x02\u{132}\u{130}\x03\x02\x02\x02\u{132}\u{131}\x03\x02\x02\x02\u{133}\
+	\x29\x03\x02\x02\x02\u{134}\u{135}\x07\x70\x02\x02\u{135}\u{136}\x05\x04\
+	\x03\x02\u{136}\x2b\x03\x02\x02\x02\u{137}\u{13c}\x05\x2e\x18\x02\u{138}\
+	\u{139}\x07\x71\x02\x02\u{139}\u{13b}\x05\x2e\x18\x02\u{13a}\u{138}\x03\
+	\x02\x02\x02\u{13b}\u{13e}\x03\x02\x02\x02\u{13c}\u{13a}\x03\x02\x02\x02\
+	\u{13c}\u{13d}\x03\x02\x02\x02\u{13d}\x2d\x03\x02\x02\x02\u{13e}\u{13c}\
+	\x03\x02\x02\x02\u{13f}\u{144}\x05\x04\x03\x02\u{140}\u{141}\x07\x70\x02\
+	\x02\u{141}\u{143}\x05\x04\x03\x02\u{142}\u{140}\x03\x02\x02\x02\u{143}\
+	\u{146}\x03\x02\x02\x02\u{144}\u{142}\x03\x02\x02\x02\u{144}\u{145}\x03\
+	\x02\x02\x02\u{145}\x2f\x03\x02\x02\x02\u{146}\u{144}\x03\x02\x02\x02\u{147}\
+	\u{148}\x07\x14\x02\x02\u{148}\x31\x03\x02\x02\x02\u{149}\u{14a}\x07\x15\
+	\x02\x02\u{14a}\x33\x03\x02\x02\x02\u{14b}\u{14e}\x05\x30\x19\x02\u{14c}\
+	\u{14e}\x05\x32\x1a\x02\u{14d}\u{14b}\x03\x02\x02\x02\u{14d}\u{14c}\x03\
+	\x02\x02\x02\u{14e}\u{14f}\x03\x02\x02\x02\u{14f}\u{151}\x05\x22\x12\x02\
+	\u{150}\u{152}\x05\x2a\x16\x02\u{151}\u{150}\x03\x02\x02\x02\u{151}\u{152}\
+	\x03\x02\x02\x02\u{152}\x35\x03\x02\x02\x02\u{153}\u{154}\x07\x16\x02\x02\
+	\u{154}\u{156}\x05\x22\x12\x02\u{155}\u{157}\x05\x2a\x16\x02\u{156}\u{155}\
+	\x03\x02\x02\x02\u{156}\u{157}\x03\x02\x02\x02\u{157}\x37\x03\x02\x02\x02\
+	\u{158}\u{159}\x07\u{87}\x02\x02\u{159}\u{15a}\x07\x67\x02\x02\u{15a}\u{15b}\
+	\x05\x26\x14\x02\u{15b}\u{15c}\x07\x68\x02\x02\u{15c}\u{16a}\x03\x02\x02\
+	\x02\u{15d}\u{163}\x07\u{87}\x02\x02\u{15e}\u{160}\x07\x55\x02\x02\u{15f}\
+	\u{15e}\x03\x02\x02\x02\u{160}\u{161}\x03\x02\x02\x02\u{161}\u{15f}\x03\
+	\x02\x02\x02\u{161}\u{162}\x03\x02\x02\x02\u{162}\u{164}\x03\x02\x02\x02\
+	\u{163}\u{15f}\x03\x02\x02\x02\u{163}\u{164}\x03\x02\x02\x02\u{164}\u{165}\
+	\x03\x02\x02\x02\u{165}\u{166}\x07\x67\x02\x02\u{166}\u{167}\x05\x26\x14\
+	\x02\u{167}\u{168}\x07\x68\x02\x02\u{168}\u{16a}\x03\x02\x02\x02\u{169}\
+	\u{158}\x03\x02\x02\x02\u{169}\u{15d}\x03\x02\x02\x02\u{16a}\x39\x03\x02\
+	\x02\x02\u{16b}\u{16c}\x09\x07\x02\x02\u{16c}\x3b\x03\x02\x02\x02\u{16d}\
+	\u{16e}\x09\x08\x02\x02\u{16e}\x3d\x03\x02\x02\x02\u{16f}\u{170}\x09\x09\
+	\x02\x02\u{170}\x3f\x03\x02\x02\x02\u{171}\u{172}\x09\x0a\x02\x02\u{172}\
+	\x41\x03\x02\x02\x02\u{173}\u{174}\x09\x0b\x02\x02\u{174}\x43\x03\x02\x02\
+	\x02\x2d\x46\x4b\x4f\x55\x61\x69\x6b\x6f\x79\x7e\u{83}\u{8c}\u{92}\u{95}\
+	\u{99}\u{a0}\u{a3}\u{a7}\u{aa}\u{ad}\u{b2}\u{b5}\u{b9}\u{be}\u{c3}\u{c7}\
+	\u{ca}\u{ce}\u{dc}\u{10c}\u{11c}\u{124}\u{129}\u{12d}\u{132}\u{13c}\u{144}\
+	\u{14d}\u{151}\u{156}\u{161}\u{163}\u{169}";
 

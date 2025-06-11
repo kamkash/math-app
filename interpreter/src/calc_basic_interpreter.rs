@@ -67,7 +67,7 @@ impl CalcBasicVisitor {
 
     fn build_result_table(&mut self) {
         for (sym, expr) in &self.symbol_table {
-            let value = Basic::rc_subs(expr, self.symbol_table.iter().map(|(k, v)| (k, v)));
+            let value = Basic::rc_subs(expr, &self.symbol_table.iter().collect::<Vec<_>>());
             self.result_table.insert(Rc::clone(sym), Rc::new(value));
         }
     }

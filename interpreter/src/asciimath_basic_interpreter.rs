@@ -8,8 +8,9 @@ use asciimath2lexer::AsciiMath2Lexer;
 use log::info;
 use math_parser::gen_parsers::asciimath2lexer;
 use math_parser::gen_parsers::asciimath2parser::{
-    AsciiMath2Parser, AsciiMath2ParserContextType, IdentifierAtomContext, MultopContext,
-    NumberAtomContext, Power_expressionContext, PowopContext, RelopContext, SumopContext,
+    AsciiMath2Parser, AsciiMath2ParserContextType, IdentifierAtomContext,
+    IntegralExpressionContext, MultopContext, NumberAtomContext, Power_expressionContext,
+    PowopContext, RelopContext, SumopContext,
 };
 use math_parser::gen_parsers::asciimath2visitor::AsciiMath2VisitorCompat;
 use symengine_rs::basic::{Basic, LogicalOperator};
@@ -54,7 +55,8 @@ impl AsciiMathBasicVisitor {
             .symbol_table
             .iter()
             .map(|(sym, expr)| {
-                let value = Basic::rc_subs(expr, self.symbol_table.iter());
+                let pairs: Vec<(&Rc<Basic>, &Rc<Basic>)> = self.symbol_table.iter().collect();
+                let value = Basic::rc_subs(expr, &pairs);
                 (Rc::clone(sym), Rc::new(value))
             })
             .collect();
@@ -95,24 +97,14 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         ctx: &math_parser::gen_parsers::asciimath2parser::ExpressionContext<'input>,
     ) -> Self::Return {
         let res = self.visit_children(ctx);
-        // dbg!(&self.visitor_stack);
         let len = self.visitor_stack.len();
-        if len == 3 {
-            let right = self.visitor_stack.pop().unwrap();
-            let op = self.visitor_stack.pop().unwrap();
-            let left = self.visitor_stack.pop().unwrap();
-            let equation = SymEquation::new(Rc::clone(&left), Rc::clone(&right), op);
-            self.block_expressions.push(equation);
-        }
-        assert!(self.visitor_stack.is_empty());
+        assert!(len == 3, "Expected 3 items on the stack, found {}", len);
+        let right = self.visitor_stack.pop().unwrap();
+        let op = self.visitor_stack.pop().unwrap();
+        let left = self.visitor_stack.pop().unwrap();
+        let equation = SymEquation::new(Rc::clone(&left), Rc::clone(&right), op);
+        self.block_expressions.push(equation);
         res
-    }
-
-    fn visit_logical_expression(
-        &mut self,
-        ctx: &math_parser::gen_parsers::asciimath2parser::Logical_expressionContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
     }
 
     fn visit_relation_expression(
@@ -292,29 +284,53 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         &mut self,
         ctx: &math_parser::gen_parsers::asciimath2parser::ExplicitKeywordCallContext<'input>,
     ) -> Self::Return {
-        // dbg!(ctx.get_text());
         let res = self.visit_children(ctx);
         let child_count = ctx.get_child_count();
-        // dbg!(&self.visitor_stack);
         let func_name = ctx.get_child(0).unwrap().get_text();
-        // Arguments are typically after the function name and parenthesis
-        // This assumes the grammar is: func_name '(' arg1 [, arg2, ...] ')'
-        // Find arguments between '(' and ')'
         let mut args = Vec::new();
         for i in 2..(child_count - 1) {
-            // This is a simplification; you may need to adjust based on your grammar
             let arg_text = ctx.get_child(i).unwrap().get_text();
-            // Try to find the corresponding Basic in the stack (last pushed)
             if let Some(arg_basic) = self.visitor_stack.pop() {
                 args.push(arg_basic);
             } else {
-                // Fallback: create a symbol
                 args.push(Rc::new(Basic::symbol(&arg_text)));
             }
         }
-        args.reverse(); // Because stack is LIFO
+        args.reverse();
         let func_basic = Rc::new(Basic::function(&func_name, &args));
         self.visitor_stack.push(func_basic);
+        res
+    }
+
+    fn visit_integralExpression(
+        &mut self,
+        ctx: &IntegralExpressionContext<'input>,
+    ) -> Self::Return {
+        self.visit_children(ctx)
+    }
+
+    fn visit_constantAtom(
+        &mut self,
+        ctx: &math_parser::gen_parsers::asciimath2parser::ConstantAtomContext<'input>,
+    ) -> Self::Return {
+        let res = self.visit_children(ctx);
+        let constant_text = ctx.get_text();
+        let constant_value = match constant_text.as_str() {
+            "pi" => {
+                let pi = Rc::new(Basic::pi());
+                let pi_val = Rc::new(pi.evalf(1, true));
+                self.symbol_table.insert(Rc::clone(&pi), Rc::clone(&pi_val));
+                pi
+            }
+            "e" => {
+                let e = Rc::new(Basic::e());
+                let e_val = Rc::new(e.evalf(1, true));
+                self.symbol_table.insert(Rc::clone(&e), Rc::clone(&e_val));
+                e
+            }
+            _ => Basic::symbol(&constant_text).into(),
+        };
+        self.visitor_stack.push(constant_value);
         res
     }
 

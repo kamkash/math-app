@@ -90,7 +90,7 @@ impl CalcStringVisitor {
             .symbol_table
             .iter()
             .map(|(sym, expr)| {
-                let value = Basic::rc_subs(expr, self.symbol_table.iter().map(|(k, v)| (k, v)));
+                let value = Basic::rc_subs(expr, &self.symbol_table.iter().collect::<Vec<_>>());
                 (Rc::clone(sym), Rc::new(value))
             })
             .collect();

@@ -2,14 +2,16 @@ grammar AsciiMath2;
 
 // Parser Rules
 
-block: expression (SEPARATOR expression)* SEPARATOR* EOF;
+block: (integral_expression | expression) (
+		SEPARATOR (integral_expression | expression)
+	)* SEPARATOR* EOF;
 
 expression: logical_expression; // Start with lowest precedence
 
 // Logical operators (lowest precedence if needed, e.g. and, or, not) For simplicity, we'll skip
 // explicit logical operators for now and go to relations
 logical_expression:
-	relation_expression ((AND | OR) relation_expression)*;
+	relation_expression ((AND | OR) relation_expression)* # relationalExpression;
 
 relation_expression:
 	relation_expression_no_rhs
@@ -24,46 +26,52 @@ mult_div_expression:
 	power_expression (multop? power_expression)*;
 
 power_expression:
-	script_op_expression (powop primary_expression)*;
+	primary_expression (powop primary_expression)*;
 
-unary_op_expression: (PLUS | MINUS) script_op_expression	# unaryPlusMinus
-	| script_op_expression									# noUnaryOperator;
+unary_op_expression: (PLUS | MINUS) primary_expression	# unaryPlusMinus
+	| primary_expression								# noUnaryOperator;
 
-// differential: D_LOWERCASE (IDENTIFIER | GREEK_LETTER);   // can't get this to work
-differential:
-	'dx'
-	| 'dy'
-	| 'dz'
-	| 'dt'
-	| 'du'
-	| 'dv'
-	| 'dw'
-	| 'dtheta'
-	| 'dphi';
-integral_body: mult_div_expression;
+//differential_other: LPAREN? DVAR RPAREN?;   // can't get this to work
+differential_other:
+	LPAREN? (
+		'du'
+		| 'dv'
+		| 'dw'
+		| 'dalpha'
+		| 'beta'
+		| 'dgamma'
+		| 'd\u03B1'
+		| 'd\u03B2'
+		| 'd\u03B3'
+	) RPAREN?;
+
+differential: ('dx' | 'dy' | 'dz' | 'dt' | differential_other);
+
+integral_expression:
+	LPAREN? INTEGRAL RPAREN? (integral_lower_limit)? (
+		integral_upper_limit
+	)? op_body differential EQ? # integralExpression;
+
+scripted_op_expression:
+    LPAREN? BUILTIN_KEYWORD_FUNC_NAME RPAREN? WS* (UNDERSCORE add_sub_expression)? (HAT add_sub_expression)? ;
+
+op_body: LPAREN? add_sub_expression RPAREN?;
+
 integral_upper_limit: HAT ('oo' | '+oo' | '-oo' | NUMBER);
+
 integral_lower_limit:
 	UNDERSCORE ('oo' | '+oo' | '-oo' | NUMBER);
 
-script_op_expression:
-	primary_expression				# primaryExpression
-	| UNDERSCORE primary_expression	# subscriptExpression
-	| PRIME							# primeExpression; // Allow multiple scripts like f'_1^2 but needs care
-
 // Primary expressions - the highest precedence
 primary_expression:
-	// function_call # explicitIdentifierCall | | IDENTIFIER (PRIME+)? LPAREN arguments RPAREN #
-	// explicitIdentifierCall // f(x), f'(x) |
 	LPAREN logical_expression RPAREN														# parenExpression
-	| BUILTIN_KEYWORD_FUNC_NAME LPAREN arguments RPAREN										# explicitKeywordCall // sin(x), vec(x,y,z)
+	| (BUILTIN_KEYWORD_FUNC_NAME | scripted_op_expression) LPAREN arguments RPAREN			# explicitKeywordCall // sin(x), vec(x,y,z)
+	| BUILTIN_KEYWORD_FUNC_NAME primary_expression											# simpleKeywordCall // e.g., sin x
 	| LBRACE logical_expression RBRACE														# braceExpression // e.g. {a+b}
 	| ABS logical_expression ABS															# absExpression // |expression|
-	| BUILTIN_KEYWORD_FUNC_NAME primary_expression											# simpleKeywordCall // e.g., sin x
 	| ROOT primary_expression primary_expression											# rootFunction
 	| FRAC primary_expression primary_expression											# fracFunction
 	| TEXT LPAREN text_argument RPAREN														# textFunction
-	| INTEGRAL (integral_lower_limit)? (integral_upper_limit)? integral_body differential	#
-		integralExpression
 	| derivative																			# derivativeFunction
 	| partial_derivative																	# partialFunction
 	| differential FSLASH differential														# fractionLeibniz
@@ -155,7 +163,7 @@ BUILTIN_KEYWORD_FUNC_NAME:
 	| NORM
 	| CARD
 	| SUM
-	| PROD // if used as name(args)
+	| PROD
 	| VEC
 	| SOLVE;
 
@@ -355,16 +363,14 @@ fragment RESERVED_WORDS: 'oo' | 'infty';
 
 // General Identifier
 IDENTIFIER: [_]* [a-zA-Z] [a-zA-Z0-9_]*;
-
-fragment LETTERS: [a-zA-Z];
+LETTERS: [a-zA-Z];
 LOWERCASE_LETTER: [a-z];
+fragment DVAR: 'du' | 'dv' | 'dw';
 
 // Numbers
 NUMBER:
 	DIGITS ('.' DIGITS)? ([eE] MINUS? DIGITS)?
 	| '.' DIGITS ( [eE] MINUS? DIGITS)?;
-
-fragment DIGITS: [0-9]+;
 
 NUMBER_WITH_COMMAS: DIGIT+ (',' DIGIT_THREE)* ('.' DIGIT+)?;
 
@@ -373,8 +379,8 @@ CURRENCY_NUMBER:
 
 SCIENTIFIC_NUMBER: NUMBER ((E1 | E2) SIGN? NUMBER)?;
 
+fragment DIGITS: [0-9]+;
 fragment DIGIT: [0-9];
-
 fragment DIGIT_THREE: DIGIT DIGIT DIGIT;
 
 // String Literals

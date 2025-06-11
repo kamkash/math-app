@@ -25,15 +25,17 @@ fn enter_expression(&mut self, _ctx: &ExpressionContext<'input>) { }
  */
 fn exit_expression(&mut self, _ctx: &ExpressionContext<'input>) { }
 /**
- * Enter a parse tree produced by {@link AsciiMath2Parser#logical_expression}.
+ * Enter a parse tree produced by the {@code relationalExpression}
+ * labeled alternative in {@link AsciiMath2Parser#logical_expression}.
  * @param ctx the parse tree
  */
-fn enter_logical_expression(&mut self, _ctx: &Logical_expressionContext<'input>) { }
+fn enter_relationalExpression(&mut self, _ctx: &RelationalExpressionContext<'input>) { }
 /**
- * Exit a parse tree produced by {@link AsciiMath2Parser#logical_expression}.
+ * Exit a parse tree produced by the {@code relationalExpression}
+ * labeled alternative in {@link AsciiMath2Parser#logical_expression}.
  * @param ctx the parse tree
  */
-fn exit_logical_expression(&mut self, _ctx: &Logical_expressionContext<'input>) { }
+fn exit_relationalExpression(&mut self, _ctx: &RelationalExpressionContext<'input>) { }
 /**
  * Enter a parse tree produced by {@link AsciiMath2Parser#relation_expression}.
  * @param ctx the parse tree
@@ -109,6 +111,16 @@ fn enter_noUnaryOperator(&mut self, _ctx: &NoUnaryOperatorContext<'input>) { }
  */
 fn exit_noUnaryOperator(&mut self, _ctx: &NoUnaryOperatorContext<'input>) { }
 /**
+ * Enter a parse tree produced by {@link AsciiMath2Parser#differential_other}.
+ * @param ctx the parse tree
+ */
+fn enter_differential_other(&mut self, _ctx: &Differential_otherContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link AsciiMath2Parser#differential_other}.
+ * @param ctx the parse tree
+ */
+fn exit_differential_other(&mut self, _ctx: &Differential_otherContext<'input>) { }
+/**
  * Enter a parse tree produced by {@link AsciiMath2Parser#differential}.
  * @param ctx the parse tree
  */
@@ -119,15 +131,37 @@ fn enter_differential(&mut self, _ctx: &DifferentialContext<'input>) { }
  */
 fn exit_differential(&mut self, _ctx: &DifferentialContext<'input>) { }
 /**
- * Enter a parse tree produced by {@link AsciiMath2Parser#integral_body}.
+ * Enter a parse tree produced by the {@code integralExpression}
+ * labeled alternative in {@link AsciiMath2Parser#integral_expression}.
  * @param ctx the parse tree
  */
-fn enter_integral_body(&mut self, _ctx: &Integral_bodyContext<'input>) { }
+fn enter_integralExpression(&mut self, _ctx: &IntegralExpressionContext<'input>) { }
 /**
- * Exit a parse tree produced by {@link AsciiMath2Parser#integral_body}.
+ * Exit a parse tree produced by the {@code integralExpression}
+ * labeled alternative in {@link AsciiMath2Parser#integral_expression}.
  * @param ctx the parse tree
  */
-fn exit_integral_body(&mut self, _ctx: &Integral_bodyContext<'input>) { }
+fn exit_integralExpression(&mut self, _ctx: &IntegralExpressionContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link AsciiMath2Parser#scripted_op_expression}.
+ * @param ctx the parse tree
+ */
+fn enter_scripted_op_expression(&mut self, _ctx: &Scripted_op_expressionContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link AsciiMath2Parser#scripted_op_expression}.
+ * @param ctx the parse tree
+ */
+fn exit_scripted_op_expression(&mut self, _ctx: &Scripted_op_expressionContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link AsciiMath2Parser#op_body}.
+ * @param ctx the parse tree
+ */
+fn enter_op_body(&mut self, _ctx: &Op_bodyContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link AsciiMath2Parser#op_body}.
+ * @param ctx the parse tree
+ */
+fn exit_op_body(&mut self, _ctx: &Op_bodyContext<'input>) { }
 /**
  * Enter a parse tree produced by {@link AsciiMath2Parser#integral_upper_limit}.
  * @param ctx the parse tree
@@ -148,42 +182,6 @@ fn enter_integral_lower_limit(&mut self, _ctx: &Integral_lower_limitContext<'inp
  * @param ctx the parse tree
  */
 fn exit_integral_lower_limit(&mut self, _ctx: &Integral_lower_limitContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code primaryExpression}
- * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
- * @param ctx the parse tree
- */
-fn enter_primaryExpression(&mut self, _ctx: &PrimaryExpressionContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code primaryExpression}
- * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
- * @param ctx the parse tree
- */
-fn exit_primaryExpression(&mut self, _ctx: &PrimaryExpressionContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code subscriptExpression}
- * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
- * @param ctx the parse tree
- */
-fn enter_subscriptExpression(&mut self, _ctx: &SubscriptExpressionContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code subscriptExpression}
- * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
- * @param ctx the parse tree
- */
-fn exit_subscriptExpression(&mut self, _ctx: &SubscriptExpressionContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code primeExpression}
- * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
- * @param ctx the parse tree
- */
-fn enter_primeExpression(&mut self, _ctx: &PrimeExpressionContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code primeExpression}
- * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
- * @param ctx the parse tree
- */
-fn exit_primeExpression(&mut self, _ctx: &PrimeExpressionContext<'input>) { }
 /**
  * Enter a parse tree produced by the {@code parenExpression}
  * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
@@ -209,6 +207,18 @@ fn enter_explicitKeywordCall(&mut self, _ctx: &ExplicitKeywordCallContext<'input
  */
 fn exit_explicitKeywordCall(&mut self, _ctx: &ExplicitKeywordCallContext<'input>) { }
 /**
+ * Enter a parse tree produced by the {@code simpleKeywordCall}
+ * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+ * @param ctx the parse tree
+ */
+fn enter_simpleKeywordCall(&mut self, _ctx: &SimpleKeywordCallContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code simpleKeywordCall}
+ * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+ * @param ctx the parse tree
+ */
+fn exit_simpleKeywordCall(&mut self, _ctx: &SimpleKeywordCallContext<'input>) { }
+/**
  * Enter a parse tree produced by the {@code braceExpression}
  * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
  * @param ctx the parse tree
@@ -232,18 +242,6 @@ fn enter_absExpression(&mut self, _ctx: &AbsExpressionContext<'input>) { }
  * @param ctx the parse tree
  */
 fn exit_absExpression(&mut self, _ctx: &AbsExpressionContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code simpleKeywordCall}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn enter_simpleKeywordCall(&mut self, _ctx: &SimpleKeywordCallContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code simpleKeywordCall}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn exit_simpleKeywordCall(&mut self, _ctx: &SimpleKeywordCallContext<'input>) { }
 /**
  * Enter a parse tree produced by the {@code rootFunction}
  * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
@@ -280,18 +278,6 @@ fn enter_textFunction(&mut self, _ctx: &TextFunctionContext<'input>) { }
  * @param ctx the parse tree
  */
 fn exit_textFunction(&mut self, _ctx: &TextFunctionContext<'input>) { }
-/**
- * Enter a parse tree produced by the {@code integralExpression}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn enter_integralExpression(&mut self, _ctx: &IntegralExpressionContext<'input>) { }
-/**
- * Exit a parse tree produced by the {@code integralExpression}
- * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
- * @param ctx the parse tree
- */
-fn exit_integralExpression(&mut self, _ctx: &IntegralExpressionContext<'input>) { }
 /**
  * Enter a parse tree produced by the {@code derivativeFunction}
  * labeled alternative in {@link AsciiMath2Parser#primary_expression}.

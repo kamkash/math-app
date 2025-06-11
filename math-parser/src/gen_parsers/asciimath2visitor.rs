@@ -21,10 +21,11 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	fn visit_expression(&mut self, ctx: &ExpressionContext<'input>) { self.visit_children(ctx) }
 
 	/**
-	 * Visit a parse tree produced by {@link AsciiMath2Parser#logical_expression}.
+	 * Visit a parse tree produced by the {@code relationalExpression}
+	 * labeled alternative in {@link AsciiMath2Parser#logical_expression}.
 	 * @param ctx the parse tree
 	 */
-	fn visit_logical_expression(&mut self, ctx: &Logical_expressionContext<'input>) { self.visit_children(ctx) }
+	fn visit_relationalExpression(&mut self, ctx: &RelationalExpressionContext<'input>) { self.visit_children(ctx) }
 
 	/**
 	 * Visit a parse tree produced by {@link AsciiMath2Parser#relation_expression}.
@@ -71,16 +72,35 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	fn visit_noUnaryOperator(&mut self, ctx: &NoUnaryOperatorContext<'input>) { self.visit_children(ctx) }
 
 	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#differential_other}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_differential_other(&mut self, ctx: &Differential_otherContext<'input>) { self.visit_children(ctx) }
+
+	/**
 	 * Visit a parse tree produced by {@link AsciiMath2Parser#differential}.
 	 * @param ctx the parse tree
 	 */
 	fn visit_differential(&mut self, ctx: &DifferentialContext<'input>) { self.visit_children(ctx) }
 
 	/**
-	 * Visit a parse tree produced by {@link AsciiMath2Parser#integral_body}.
+	 * Visit a parse tree produced by the {@code integralExpression}
+	 * labeled alternative in {@link AsciiMath2Parser#integral_expression}.
 	 * @param ctx the parse tree
 	 */
-	fn visit_integral_body(&mut self, ctx: &Integral_bodyContext<'input>) { self.visit_children(ctx) }
+	fn visit_integralExpression(&mut self, ctx: &IntegralExpressionContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#scripted_op_expression}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_scripted_op_expression(&mut self, ctx: &Scripted_op_expressionContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#op_body}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_op_body(&mut self, ctx: &Op_bodyContext<'input>) { self.visit_children(ctx) }
 
 	/**
 	 * Visit a parse tree produced by {@link AsciiMath2Parser#integral_upper_limit}.
@@ -93,27 +113,6 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	 * @param ctx the parse tree
 	 */
 	fn visit_integral_lower_limit(&mut self, ctx: &Integral_lower_limitContext<'input>) { self.visit_children(ctx) }
-
-	/**
-	 * Visit a parse tree produced by the {@code primaryExpression}
-	 * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
-	 * @param ctx the parse tree
-	 */
-	fn visit_primaryExpression(&mut self, ctx: &PrimaryExpressionContext<'input>) { self.visit_children(ctx) }
-
-	/**
-	 * Visit a parse tree produced by the {@code subscriptExpression}
-	 * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
-	 * @param ctx the parse tree
-	 */
-	fn visit_subscriptExpression(&mut self, ctx: &SubscriptExpressionContext<'input>) { self.visit_children(ctx) }
-
-	/**
-	 * Visit a parse tree produced by the {@code primeExpression}
-	 * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
-	 * @param ctx the parse tree
-	 */
-	fn visit_primeExpression(&mut self, ctx: &PrimeExpressionContext<'input>) { self.visit_children(ctx) }
 
 	/**
 	 * Visit a parse tree produced by the {@code parenExpression}
@@ -130,6 +129,13 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	fn visit_explicitKeywordCall(&mut self, ctx: &ExplicitKeywordCallContext<'input>) { self.visit_children(ctx) }
 
 	/**
+	 * Visit a parse tree produced by the {@code simpleKeywordCall}
+	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_simpleKeywordCall(&mut self, ctx: &SimpleKeywordCallContext<'input>) { self.visit_children(ctx) }
+
+	/**
 	 * Visit a parse tree produced by the {@code braceExpression}
 	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
 	 * @param ctx the parse tree
@@ -142,13 +148,6 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	 * @param ctx the parse tree
 	 */
 	fn visit_absExpression(&mut self, ctx: &AbsExpressionContext<'input>) { self.visit_children(ctx) }
-
-	/**
-	 * Visit a parse tree produced by the {@code simpleKeywordCall}
-	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
-	 * @param ctx the parse tree
-	 */
-	fn visit_simpleKeywordCall(&mut self, ctx: &SimpleKeywordCallContext<'input>) { self.visit_children(ctx) }
 
 	/**
 	 * Visit a parse tree produced by the {@code rootFunction}
@@ -170,13 +169,6 @@ pub trait AsciiMath2Visitor<'input>: ParseTreeVisitor<'input,AsciiMath2ParserCon
 	 * @param ctx the parse tree
 	 */
 	fn visit_textFunction(&mut self, ctx: &TextFunctionContext<'input>) { self.visit_children(ctx) }
-
-	/**
-	 * Visit a parse tree produced by the {@code integralExpression}
-	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
-	 * @param ctx the parse tree
-	 */
-	fn visit_integralExpression(&mut self, ctx: &IntegralExpressionContext<'input>) { self.visit_children(ctx) }
 
 	/**
 	 * Visit a parse tree produced by the {@code derivativeFunction}
@@ -392,10 +384,11 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 		}
 
 	/**
-	 * Visit a parse tree produced by {@link AsciiMath2Parser#logical_expression}.
+	 * Visit a parse tree produced by the {@code relationalExpression}
+	 * labeled alternative in {@link AsciiMath2Parser#logical_expression}.
 	 * @param ctx the parse tree
 	 */
-		fn visit_logical_expression(&mut self, ctx: &Logical_expressionContext<'input>) -> Self::Return {
+		fn visit_relationalExpression(&mut self, ctx: &RelationalExpressionContext<'input>) -> Self::Return {
 			self.visit_children(ctx)
 		}
 
@@ -458,6 +451,14 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 		}
 
 	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#differential_other}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_differential_other(&mut self, ctx: &Differential_otherContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
 	 * Visit a parse tree produced by {@link AsciiMath2Parser#differential}.
 	 * @param ctx the parse tree
 	 */
@@ -466,10 +467,27 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 		}
 
 	/**
-	 * Visit a parse tree produced by {@link AsciiMath2Parser#integral_body}.
+	 * Visit a parse tree produced by the {@code integralExpression}
+	 * labeled alternative in {@link AsciiMath2Parser#integral_expression}.
 	 * @param ctx the parse tree
 	 */
-		fn visit_integral_body(&mut self, ctx: &Integral_bodyContext<'input>) -> Self::Return {
+		fn visit_integralExpression(&mut self, ctx: &IntegralExpressionContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#scripted_op_expression}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_scripted_op_expression(&mut self, ctx: &Scripted_op_expressionContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link AsciiMath2Parser#op_body}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_op_body(&mut self, ctx: &Op_bodyContext<'input>) -> Self::Return {
 			self.visit_children(ctx)
 		}
 
@@ -486,33 +504,6 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 	 * @param ctx the parse tree
 	 */
 		fn visit_integral_lower_limit(&mut self, ctx: &Integral_lower_limitContext<'input>) -> Self::Return {
-			self.visit_children(ctx)
-		}
-
-	/**
-	 * Visit a parse tree produced by the {@code primaryExpression}
-	 * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
-	 * @param ctx the parse tree
-	 */
-		fn visit_primaryExpression(&mut self, ctx: &PrimaryExpressionContext<'input>) -> Self::Return {
-			self.visit_children(ctx)
-		}
-
-	/**
-	 * Visit a parse tree produced by the {@code subscriptExpression}
-	 * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
-	 * @param ctx the parse tree
-	 */
-		fn visit_subscriptExpression(&mut self, ctx: &SubscriptExpressionContext<'input>) -> Self::Return {
-			self.visit_children(ctx)
-		}
-
-	/**
-	 * Visit a parse tree produced by the {@code primeExpression}
-	 * labeled alternative in {@link AsciiMath2Parser#script_op_expression}.
-	 * @param ctx the parse tree
-	 */
-		fn visit_primeExpression(&mut self, ctx: &PrimeExpressionContext<'input>) -> Self::Return {
 			self.visit_children(ctx)
 		}
 
@@ -535,6 +526,15 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 		}
 
 	/**
+	 * Visit a parse tree produced by the {@code simpleKeywordCall}
+	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_simpleKeywordCall(&mut self, ctx: &SimpleKeywordCallContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
 	 * Visit a parse tree produced by the {@code braceExpression}
 	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
 	 * @param ctx the parse tree
@@ -549,15 +549,6 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 	 * @param ctx the parse tree
 	 */
 		fn visit_absExpression(&mut self, ctx: &AbsExpressionContext<'input>) -> Self::Return {
-			self.visit_children(ctx)
-		}
-
-	/**
-	 * Visit a parse tree produced by the {@code simpleKeywordCall}
-	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
-	 * @param ctx the parse tree
-	 */
-		fn visit_simpleKeywordCall(&mut self, ctx: &SimpleKeywordCallContext<'input>) -> Self::Return {
 			self.visit_children(ctx)
 		}
 
@@ -585,15 +576,6 @@ pub trait AsciiMath2VisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= A
 	 * @param ctx the parse tree
 	 */
 		fn visit_textFunction(&mut self, ctx: &TextFunctionContext<'input>) -> Self::Return {
-			self.visit_children(ctx)
-		}
-
-	/**
-	 * Visit a parse tree produced by the {@code integralExpression}
-	 * labeled alternative in {@link AsciiMath2Parser#primary_expression}.
-	 * @param ctx the parse tree
-	 */
-		fn visit_integralExpression(&mut self, ctx: &IntegralExpressionContext<'input>) -> Self::Return {
 			self.visit_children(ctx)
 		}
 
@@ -867,8 +849,8 @@ where
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
-	fn visit_logical_expression(&mut self, ctx: &Logical_expressionContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_logical_expression(self, ctx);
+	fn visit_relationalExpression(&mut self, ctx: &RelationalExpressionContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_relationalExpression(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
@@ -907,13 +889,28 @@ where
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
+	fn visit_differential_other(&mut self, ctx: &Differential_otherContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_differential_other(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
 	fn visit_differential(&mut self, ctx: &DifferentialContext<'input>){
 		let result = <Self as AsciiMath2VisitorCompat>::visit_differential(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
-	fn visit_integral_body(&mut self, ctx: &Integral_bodyContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_integral_body(self, ctx);
+	fn visit_integralExpression(&mut self, ctx: &IntegralExpressionContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_integralExpression(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_scripted_op_expression(&mut self, ctx: &Scripted_op_expressionContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_scripted_op_expression(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_op_body(&mut self, ctx: &Op_bodyContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_op_body(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
@@ -927,21 +924,6 @@ where
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
-	fn visit_primaryExpression(&mut self, ctx: &PrimaryExpressionContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_primaryExpression(self, ctx);
-        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
-	}
-
-	fn visit_subscriptExpression(&mut self, ctx: &SubscriptExpressionContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_subscriptExpression(self, ctx);
-        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
-	}
-
-	fn visit_primeExpression(&mut self, ctx: &PrimeExpressionContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_primeExpression(self, ctx);
-        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
-	}
-
 	fn visit_parenExpression(&mut self, ctx: &ParenExpressionContext<'input>){
 		let result = <Self as AsciiMath2VisitorCompat>::visit_parenExpression(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
@@ -952,6 +934,11 @@ where
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
+	fn visit_simpleKeywordCall(&mut self, ctx: &SimpleKeywordCallContext<'input>){
+		let result = <Self as AsciiMath2VisitorCompat>::visit_simpleKeywordCall(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
 	fn visit_braceExpression(&mut self, ctx: &BraceExpressionContext<'input>){
 		let result = <Self as AsciiMath2VisitorCompat>::visit_braceExpression(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
@@ -959,11 +946,6 @@ where
 
 	fn visit_absExpression(&mut self, ctx: &AbsExpressionContext<'input>){
 		let result = <Self as AsciiMath2VisitorCompat>::visit_absExpression(self, ctx);
-        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
-	}
-
-	fn visit_simpleKeywordCall(&mut self, ctx: &SimpleKeywordCallContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_simpleKeywordCall(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
@@ -979,11 +961,6 @@ where
 
 	fn visit_textFunction(&mut self, ctx: &TextFunctionContext<'input>){
 		let result = <Self as AsciiMath2VisitorCompat>::visit_textFunction(self, ctx);
-        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
-	}
-
-	fn visit_integralExpression(&mut self, ctx: &IntegralExpressionContext<'input>){
-		let result = <Self as AsciiMath2VisitorCompat>::visit_integralExpression(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 

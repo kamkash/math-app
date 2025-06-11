@@ -73,7 +73,7 @@ impl AsciiMathStringVisitor {
             .symbol_table
             .iter()
             .map(|(sym, expr)| {
-                let value = Basic::rc_subs(expr, self.symbol_table.iter());
+                let value = Basic::rc_subs(expr, &self.symbol_table.iter().collect::<Vec<_>>());
                 (Rc::clone(sym), Rc::new(value))
             })
             .collect();
@@ -118,13 +118,6 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathStringVisitor {
         self.visit_children(ctx)
     }
 
-    fn visit_logical_expression(
-        &mut self,
-        ctx: &math_parser::gen_parsers::asciimath2parser::Logical_expressionContext<'input>,
-    ) -> Self::Return {
-        self.visit_children(ctx)
-    }
-
     fn visit_relation_expression(
         &mut self,
         ctx: &math_parser::gen_parsers::asciimath2parser::Relation_expressionContext<'input>,
@@ -160,20 +153,6 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathStringVisitor {
                 );
                 self.block_expressions.push(symeq);
             }
-        }
-        res
-    }
-
-    fn visit_integralExpression(
-        &mut self,
-        ctx: &math_parser::gen_parsers::asciimath2parser::IntegralExpressionContext<'input>,
-    ) -> Self::Return {
-        let res = self.visit_children(ctx);
-        let len = ctx.get_child_count();
-        info!("Integral expression: {} {:?}", len, ctx.get_text());
-
-        for child in ctx.get_children() {
-            info!("Child: {:?}", child.get_text());
         }
         res
     }

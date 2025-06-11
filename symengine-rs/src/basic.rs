@@ -1,5 +1,4 @@
 use crate::symengine_ffi::*;
-// use log::*;
 use std::ffi::{CStr, CString};
 use std::fmt;
 use std::rc::Rc;
@@ -233,14 +232,13 @@ impl Basic {
 
     pub fn function(name: &str, args: &Vec<Rc<Basic>>) -> Self {
         match name {
-            "sin" => Basic::sin(&args[0]), 
-            "cos" => Basic::cos(&args[0]), 
-            "tan" => Basic::tan(&args[0]), 
-            "exp" => Basic::exp(&args[0]), 
-            "log" => Basic::log(&args[0]), 
+            "sin" => Basic::sin(&args[0]),
+            "cos" => Basic::cos(&args[0]),
+            "tan" => Basic::tan(&args[0]),
+            "exp" => Basic::exp(&args[0]),
+            "log" => Basic::log(&args[0]),
             "sqrt" => Basic::sqrt(&args[0]),
-            _ => Basic::symbol(name),           // Fallback to symbol for unknown functions
-            
+            _ => Basic::symbol(name), // Fallback to symbol for unknown functions
         }
     }
 
@@ -491,10 +489,7 @@ impl Basic {
         b
     }
 
-    pub fn subs<'a, I>(exp: &Basic, pairs: I) -> Self
-    where
-        I: IntoIterator<Item = (&'a Basic, &'a Basic)>,
-    {
+    pub fn subs<'a>(exp: &Basic, pairs: &[(&'a Basic, &'a Basic)]) -> Self {
         let mb = BasicMap::from_pairs(pairs).unwrap();
         let b = Basic::new();
         unsafe {
@@ -507,16 +502,8 @@ impl Basic {
         b
     }
 
-    pub fn rc_subs<'a, I>(exp: &Basic, rcpairs: I) -> Self
-    where
-        I: IntoIterator<Item = (&'a Rc<Basic>, &'a Rc<Basic>)>,
-    {
-        let mb = BasicMap::from_rc_pairs(
-            rcpairs
-                .into_iter()
-                .map(|(k, v)| (Rc::clone(k), Rc::clone(v))),
-        )
-        .unwrap();
+    pub fn rc_subs<'a>(exp: &Basic, rcpairs: &[(&'a Rc<Basic>, &'a Rc<Basic>)]) -> Self {
+        let mb = BasicMap::from_rc_pairs(rcpairs).unwrap();
         let b = Basic::new();
         unsafe {
             basic_subs(
@@ -714,6 +701,21 @@ impl Basic {
     // ===========================
     // Conversion Functions
     // ===========================
+
+    pub fn evalf(&self, bits: u64, real: bool) -> Basic {
+        let s = Basic::new();
+
+        let real_c_int = if real { 1 } else { 0 };
+        unsafe {
+            basic_evalf(
+                s.inner as *mut basic_struct,      // s: *mut basic_struct
+                self.inner as *const basic_struct, // s: *const basic_struct
+                bits,                              // bits: c_ulong
+                real_c_int,                        // real: c_int
+            );
+        }
+        s
+    }
 
     pub fn to_f64(&self) -> Option<f64> {
         Some(Self::real_double_get_d_safe(
@@ -959,16 +961,13 @@ pub struct BasicMap {
 }
 
 impl BasicMap {
-    pub fn from_pairs<'a, I>(iter: I) -> Result<Self, &'static str>
-    where
-        I: IntoIterator<Item = (&'a Basic, &'a Basic)>,
-    {
+    pub fn from_pairs<'a>(pairs: &[(&'a Basic, &'a Basic)]) -> Result<Self, &'static str> {
         unsafe {
             let ptr = mapbasicbasic_new();
             if ptr.is_null() {
                 return Err("Failed to allocate memory for BasicMap");
             }
-            for (basic_key, basic_value) in iter {
+            for (basic_key, basic_value) in pairs {
                 mapbasicbasic_insert(
                     ptr,
                     basic_key.inner as *mut basic_struct,
@@ -981,16 +980,15 @@ impl BasicMap {
         }
     }
 
-    pub fn from_rc_pairs<I>(iter: I) -> Result<Self, &'static str>
-    where
-        I: IntoIterator<Item = (Rc<Basic>, Rc<Basic>)>,
-    {
+    pub fn from_rc_pairs<'a>(
+        pairs: &[(&'a Rc<Basic>, &'a Rc<Basic>)],
+    ) -> Result<Self, &'static str> {
         unsafe {
             let ptr = mapbasicbasic_new();
             if ptr.is_null() {
                 return Err("Failed to allocate memory for BasicMap");
             }
-            for (basic_key, basic_value) in iter {
+            for (basic_key, basic_value) in pairs {
                 mapbasicbasic_insert(
                     ptr,
                     basic_key.inner as *mut basic_struct,
