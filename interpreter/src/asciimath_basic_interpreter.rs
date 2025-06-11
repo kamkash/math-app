@@ -286,6 +286,9 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
     ) -> Self::Return {
         let res = self.visit_children(ctx);
         let child_count = ctx.get_child_count();
+        ctx.get_children().for_each(|child| {
+            dbg!(child.get_text());
+        });
         let func_name = ctx.get_child(0).unwrap().get_text();
         let mut args = Vec::new();
         for i in 2..(child_count - 1) {
@@ -318,13 +321,13 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         let constant_value = match constant_text.as_str() {
             "pi" => {
                 let pi = Rc::new(Basic::pi());
-                let pi_val = Rc::new(pi.evalf(1, true));
+                let pi_val = Rc::new(pi.evalf(Basic::DOUBLE_PRECISION_BITS, true));
                 self.symbol_table.insert(Rc::clone(&pi), Rc::clone(&pi_val));
                 pi
             }
             "e" => {
                 let e = Rc::new(Basic::e());
-                let e_val = Rc::new(e.evalf(1, true));
+                let e_val = Rc::new(e.evalf(Basic::DOUBLE_PRECISION_BITS, true));
                 self.symbol_table.insert(Rc::clone(&e), Rc::clone(&e_val));
                 e
             }

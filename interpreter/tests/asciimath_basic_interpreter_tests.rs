@@ -304,13 +304,17 @@ fn test_asciimath_basic_builtin_functions() {
     input_lines.push("z2 = sqrt(144.0)".to_string());
     checks.push(("z2", (144.0f64).sqrt()));
     input_lines.push("z3 = log(100.0)".to_string());
-    checks.push(("z3", (100.0f64).ln()));
+    checks.push(("z3", (100.0f64).log10()));
     input_lines.push("z4 = pi / 2.0".to_string());
     checks.push(("z4", std::f64::consts::PI / 2.0));
+    input_lines.push("z5 = ln(100.0)".to_string());
+    checks.push(("z5", (100.0f64).ln()));
+    input_lines.push("z6 = ln(ang)".to_string());
+    checks.push(("z6", (45.0f64).ln()));
 
     let final_input = input_lines.join("\n");
     info!(
-        "Full input block for algebraic operations:\n {:?}",
+        "Full input block for algebraic operations:\n {}",
         final_input
     );
 
@@ -355,4 +359,38 @@ fn test_asciimath_basic_builtin_functions() {
             (actual_f64 - expected_f64_val).abs()
         );
     }
+}
+
+#[test_log::test]
+fn test_asciimath_basic_subscripted_function() {
+    let x = 10.0f64;
+    let fz = x.log2();
+    let input = "x=10
+                z = log _2(x)
+                ";
+    let mut visitor = AsciiMathBasicVisitor::new();
+    let lexer = AsciiMath2Lexer::new(InputStream::new(input));
+    let token_stream = CommonTokenStream::new(lexer);
+    let mut parser = AsciiMath2Parser::new(token_stream);
+    let parse_tree = parser.block().unwrap();
+    visitor.visit(parse_tree.as_ref());
+
+    info!("input: {}", input);
+    info!("visitor block result: {:?}", visitor.block_expressions);
+    info!("visitor symbol table: {:?}", visitor.symbol_table);
+    info!("visitor result table: {:?}", visitor.result_table);
+    info!("fz: {}", fz);
+
+    let z_actual = visitor
+        .result_table
+        .get(&Basic::symbol("z"))
+        .and_then(|b| b.to_f64())
+        .unwrap();
+
+    assert!(
+        (z_actual - fz).abs() < EPSILON,
+        "actual: {}, expected: {}",
+        z_actual,
+        fz
+    );
 }

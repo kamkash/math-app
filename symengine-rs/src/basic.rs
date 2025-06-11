@@ -106,6 +106,8 @@ impl PartialEq for Basic {
 impl Eq for Basic {}
 
 impl Basic {
+    pub const DOUBLE_PRECISION_BITS: u64 = 53;
+
     fn heap_alloc() -> Result<*mut basic_struct, &'static str> {
         unsafe {
             let ptr: *mut basic_struct = basic_new_heap();
@@ -237,9 +239,46 @@ impl Basic {
             "tan" => Basic::tan(&args[0]),
             "exp" => Basic::exp(&args[0]),
             "log" => Basic::log(&args[0]),
+            "ln" => Basic::ln(&args[0]),
             "sqrt" => Basic::sqrt(&args[0]),
             _ => Basic::symbol(name), // Fallback to symbol for unknown functions
         }
+    }
+
+    // ===========================
+    // log() with base support
+    // symengine Basic::log() only supports natural logarithm (ln).
+    // ===========================
+
+    /// Computes the natural logarithm (log) of the given `Basic` instance.
+    pub fn natural_log(symbol: &Basic) -> Self {
+        let b = Basic::new();
+        unsafe {
+            basic_log(
+                b.inner as *mut basic_struct,
+                symbol.inner as *mut basic_struct,
+            );
+        }
+        b
+    }
+
+    /// Computes the natural logarithm (log) of the given `Basic` instance.
+    pub fn log(symbol: &Basic) -> Self {
+        Basic::log10(symbol)
+    }
+
+    pub fn log10(symbol: &Basic) -> Self {
+        Basic::logb(symbol, 10)
+    }
+
+    pub fn logb(symbol: &Basic, base: i64) -> Self {
+        let b = Basic::natural_log(&Basic::integer(base)).evalf(Basic::DOUBLE_PRECISION_BITS, true);
+        let n = Basic::natural_log(symbol);
+        Basic::div(&n, &b)
+    }
+
+    pub fn ln(symbol: &Basic) -> Self {
+        Basic::natural_log(symbol)
     }
 
     // ===========================
@@ -330,18 +369,6 @@ impl Basic {
             basic_sqrt(
                 b.inner as *mut basic_struct,
                 self.inner as *mut basic_struct,
-            );
-        }
-        b
-    }
-
-    /// Computes the natural logarithm (log) of the given `Basic` instance.
-    pub fn log(symbol: &Basic) -> Self {
-        let b = Basic::new();
-        unsafe {
-            basic_log(
-                b.inner as *mut basic_struct,
-                symbol.inner as *mut basic_struct,
             );
         }
         b
@@ -813,7 +840,7 @@ impl Basic {
         }
         unsafe {
             basic_solve_poly(
-                basic_set.inner as *mut CSetBasic,
+                basic_set.inner,
                 self.inner as *const basic_struct,
                 symbol.inner as *const basic_struct,
             );
@@ -942,16 +969,14 @@ impl BasicVec {
             for &b in slice {
                 vecbasic_push_back(ptr, b.inner as *mut basic_struct);
             }
-            Ok(Self {
-                inner: ptr as *mut CVecBasic,
-            })
+            Ok(Self { inner: ptr })
         }
     }
 }
 
 impl Drop for BasicVec {
     fn drop(&mut self) {
-        unsafe { vecbasic_free(self.inner as *mut CVecBasic) }
+        unsafe { vecbasic_free(self.inner) }
     }
 }
 
@@ -974,9 +999,7 @@ impl BasicMap {
                     basic_value.inner as *mut basic_struct,
                 );
             }
-            Ok(Self {
-                inner: ptr as *mut CMapBasicBasic,
-            })
+            Ok(Self { inner: ptr })
         }
     }
 
@@ -995,16 +1018,14 @@ impl BasicMap {
                     basic_value.inner as *mut basic_struct,
                 );
             }
-            Ok(Self {
-                inner: ptr as *mut CMapBasicBasic,
-            })
+            Ok(Self { inner: ptr })
         }
     }
 }
 
 impl Drop for BasicMap {
     fn drop(&mut self) {
-        unsafe { mapbasicbasic_free(self.inner as *mut CMapBasicBasic) }
+        unsafe { mapbasicbasic_free(self.inner) }
     }
 }
 
@@ -1014,7 +1035,6 @@ pub struct BasicSet {
 }
 
 impl BasicSet {
-    /// Creates a new empty BasicSet.
     pub fn new() -> Result<Self, &'static str> {
         unsafe {
             let ptr = setbasic_new();

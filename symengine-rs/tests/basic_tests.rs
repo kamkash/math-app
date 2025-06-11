@@ -294,15 +294,23 @@ fn test_basic_funcs() {
     let pi_over_4 = Basic::real(std::f64::consts::FRAC_PI_4);
     let x_val = Basic::real(100.0);
     let value_table = vec![(&angle, &pi_over_4), (&x, &x_val)];
-
     let bsin = Basic::sin(&angle);
-    let blog = Basic::log(&x);
+    let ln = Basic::log(&x);
+    let basic_log = Basic::ln(&x);
+    let log10 = Basic::log10(&x);
+    let log2 = Basic::logb(&x, 2);
 
+    let tolerance = 1e-9; // Adjusted tolerance for f64 comparisons
     let mut result = Basic::subs(&bsin, &value_table);
-    assert_eq!(result.to_f64().unwrap(), std::f64::consts::FRAC_PI_4.sin());
-
-    result = Basic::subs(&blog, &value_table);
-    assert_eq!(result.to_f64().unwrap(), x_val.to_f64().unwrap().ln());
+    assert!((result.to_f64().unwrap() - std::f64::consts::FRAC_PI_4.sin()).abs() < tolerance);
+    result = Basic::subs(&ln, &value_table);
+    assert!((result.to_f64().unwrap() - x_val.to_f64().unwrap().ln()).abs() < tolerance);
+    result = Basic::subs(&basic_log, &value_table);
+    assert!((result.to_f64().unwrap() - x_val.to_f64().unwrap().ln()).abs() < tolerance);
+    result = Basic::subs(&log10, &value_table);
+    assert!((result.to_f64().unwrap() - x_val.to_f64().unwrap().log10()).abs() < tolerance);
+    result = Basic::subs(&log2, &value_table);
+    assert!((result.to_f64().unwrap() - x_val.to_f64().unwrap().log2()).abs() < tolerance);
 }
 
 #[test]
