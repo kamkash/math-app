@@ -304,9 +304,8 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         dbg!(&children);
         if let Some(func) = create_function(children[0].as_str()) {
             // If we have a valid function, we push it onto the stack.
-            let default_base = Rc::new(Basic::real(10.0)); // Default base for log
-            let log_base = self.visitor_stack.pop().unwrap_or(default_base);
-            let sym_func = func.generate(&[log_base]);
+            let arg = self.visitor_stack.pop().unwrap(); // bad assumption: there is always one argument
+            let sym_func = func.generate(&[arg]);
             self.visitor_stack.push(sym_func);
         }
         dbg!(&self.visitor_stack);
