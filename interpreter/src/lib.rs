@@ -2,10 +2,10 @@ use log::info;
 use symengine_rs::basic::Basic;
 
 use std::{fmt, rc::Rc};
+pub mod asciimath_basic_interpreter;
 pub mod asciimath_basic_string_interpreter;
 pub mod calc_basic_interpreter;
 pub mod calc_basic_string_interpreter;
-pub mod asciimath_basic_interpreter;
 
 pub struct SymEquation {
     pub left: Rc<Basic>,
@@ -97,6 +97,39 @@ impl From<&str> for ArithmeticOp {
         }
     }
 }
+
+pub trait ExplicitFunction {
+    fn generate(&self, args: &[Rc<Basic>]) -> Rc<Basic>;
+}
+
+pub struct Logb;
+impl ExplicitFunction for Logb {
+    fn generate(&self, args: &[Rc<Basic>]) -> Rc<Basic> {
+        assert!(
+            args.len() == 1,
+            "Logb function symbol requires exactly one argument for log base, found: {:?}",
+            args.len()
+        );
+        assert!(
+            args[0].is_number(),
+            "Expected a number for log base, found: {:?}",
+            args[0]
+        );
+        let base: i64 = args[0].to_f64().unwrap().floor() as i64;
+        Rc::new(Basic::logb_func_sym(base))
+    }
+}
+
+pub fn create_function(name: &str) -> Option<Box<dyn ExplicitFunction>> {
+    match name {
+        "log" => Some(Box::new(Logb)),
+        _ => None,
+    }
+}
+
+///////////////////////////////////////////////////////////////////////
+/// interpreter module.
+///////////////////////////////////////////////////////////////////////
 
 pub fn evaluate_ascii_math(input: &str) -> String {
     info!("evaluate_ascii_math {}", input);

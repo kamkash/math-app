@@ -364,33 +364,57 @@ fn test_asciimath_basic_builtin_functions() {
 #[test_log::test]
 fn test_asciimath_basic_subscripted_function() {
     let x = 10.0f64;
-    let fz = x.log2();
-    let input = "x=10
-                z = log _2(x)
-                ";
+    let mut input_lines: Vec<String> = Vec::new();
+    let mut checks: Vec<(&str, f64)> = Vec::new();
+
+    input_lines.push("x = 10.0".to_string());
+    input_lines.push("y = log(x)".to_string());
+    input_lines.push("z = (log) _2(x)".to_string());
+
+    checks.push(("x", 10.0f64));
+    checks.push(("y", x.log10()));
+    checks.push(("z", x.log2()));
+
+    let input = input_lines.join("\n");
     let mut visitor = AsciiMathBasicVisitor::new();
-    let lexer = AsciiMath2Lexer::new(InputStream::new(input));
+    let lexer = AsciiMath2Lexer::new(InputStream::new(input.as_str()));
     let token_stream = CommonTokenStream::new(lexer);
     let mut parser = AsciiMath2Parser::new(token_stream);
     let parse_tree = parser.block().unwrap();
     visitor.visit(parse_tree.as_ref());
 
-    info!("input: {}", input);
+    info!("input: {}", input.as_str());
     info!("visitor block result: {:?}", visitor.block_expressions);
     info!("visitor symbol table: {:?}", visitor.symbol_table);
     info!("visitor result table: {:?}", visitor.result_table);
-    info!("fz: {}", fz);
 
-    let z_actual = visitor
-        .result_table
-        .get(&Basic::symbol("z"))
-        .and_then(|b| b.to_f64())
-        .unwrap();
+    let tolerance = 1e-9; // Adjusted tolerance for f64 comparisons
+    for (i, (var_name, expected_f64_val)) in checks.iter().enumerate() {
+        info!(
+            "Checking: input {}, {} = {}",
+            input_lines[i], var_name, expected_f64_val
+        );
+        let actual_basic_rc = visitor
+            .result_table
+            .get(&Basic::symbol(var_name))
+            .unwrap_or_else(|| panic!("Variable {} not found in result_table", var_name));
 
-    assert!(
-        (z_actual - fz).abs() < EPSILON,
-        "actual: {}, expected: {}",
-        z_actual,
-        fz
-    );
+        let actual_f64 = actual_basic_rc.to_f64().unwrap_or_else(|| {
+            panic!(
+                "Variable {} is not a RealDouble, it's a {:?} type: {}",
+                var_name,
+                actual_basic_rc.get_type_str(),
+                actual_basic_rc.to_string()
+            )
+        });
+
+        assert!(
+            (actual_f64 - expected_f64_val).abs() < tolerance,
+            "Failed for variable: {}. Expected: {}, Got: {}. Difference: {}",
+            var_name,
+            expected_f64_val,
+            actual_f64,
+            (actual_f64 - expected_f64_val).abs()
+        );
+    }
 }

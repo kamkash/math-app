@@ -1,7 +1,70 @@
 use crate::symengine_ffi::*;
+use lazy_static::lazy_static;
+use log::info;
+use regex::Regex;
 use std::ffi::{CStr, CString};
 use std::fmt;
 use std::rc::Rc;
+
+lazy_static! {
+    pub static ref RE_LOG_BASE: Regex = Regex::new(r"^log_(\d+)$").unwrap();
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum BuiltinFunction {
+    Sin,
+    Cos,
+    Tan,
+    Asin,
+    Acos,
+    Atan,
+    Csc,
+    Sec,
+    Exp,
+    Log,
+    Logb,
+    Ln, // natural logarithm
+    Sqrt,
+}
+impl BuiltinFunction {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            BuiltinFunction::Sin => "sin",
+            BuiltinFunction::Cos => "cos",
+            BuiltinFunction::Tan => "tan",
+            BuiltinFunction::Asin => "asin",
+            BuiltinFunction::Acos => "acos",
+            BuiltinFunction::Atan => "atan",
+            BuiltinFunction::Csc => "csc",
+            BuiltinFunction::Sec => "sec",
+            BuiltinFunction::Exp => "exp",
+            BuiltinFunction::Log => "log",
+            BuiltinFunction::Ln => "ln",
+            BuiltinFunction::Sqrt => "sqrt",
+            BuiltinFunction::Logb => "logb",
+        }
+    }
+}
+impl BuiltinFunction {
+    pub fn from_str(s: &str) -> Option<Self> {
+        match s {
+            "sin" => Some(BuiltinFunction::Sin),
+            "cos" => Some(BuiltinFunction::Cos),
+            "tan" => Some(BuiltinFunction::Tan),
+            "asin" => Some(BuiltinFunction::Asin),
+            "acos" => Some(BuiltinFunction::Acos),
+            "atan" => Some(BuiltinFunction::Atan),
+            "csc" => Some(BuiltinFunction::Csc),
+            "sec" => Some(BuiltinFunction::Sec),
+            "exp" => Some(BuiltinFunction::Exp),
+            "log" => Some(BuiltinFunction::Log),
+            s if s.contains("log_") => Some(BuiltinFunction::Logb),
+            "ln" => Some(BuiltinFunction::Ln),
+            "sqrt" => Some(BuiltinFunction::Sqrt),
+            _ => None,
+        }
+    }
+}
 
 // Operator enum for idiomatic Rust usage
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -232,7 +295,18 @@ impl Basic {
     // function constructors
     // ==========================
 
-    pub fn function(name: &str, args: &Vec<Rc<Basic>>) -> Self {
+    /// Constructs a function by name, supporting both exact and regex-based matches.
+    pub fn function(name: &str, args: &[Rc<Basic>]) -> Self {
+        assert!(
+            !name.is_empty() && args.len() > 0,
+            "Function name and args must not be empty"
+        );
+        if let Some(captures) = RE_LOG_BASE.captures(name) {
+            if let Some(cap_base) = captures.get(1) {
+                info!("log base {}", cap_base.as_str());
+                return Basic::logb(&args[0], cap_base.as_str().parse::<i64>().unwrap());
+            }
+        }
         match name {
             "sin" => Basic::sin(&args[0]),
             "cos" => Basic::cos(&args[0]),
@@ -271,14 +345,14 @@ impl Basic {
         Basic::logb(symbol, 10)
     }
 
+    pub fn ln(symbol: &Basic) -> Self {
+        Basic::natural_log(symbol)
+    }
+
     pub fn logb(symbol: &Basic, base: i64) -> Self {
         let b = Basic::natural_log(&Basic::integer(base)).evalf(Basic::DOUBLE_PRECISION_BITS, true);
         let n = Basic::natural_log(symbol);
         Basic::div(&n, &b)
-    }
-
-    pub fn ln(symbol: &Basic) -> Self {
-        Basic::natural_log(symbol)
     }
 
     // ===========================
@@ -652,6 +726,22 @@ impl Basic {
             || self.is_pow_op()
     }
 
+    /// Returns (true, base) if this Basic is a logb (log with base) function symbol, e.g. "log_2", "log_10".
+    /// Returns (false, 0) otherwise.
+    pub fn is_logb_func_sym(&self) -> (bool, i64) {
+        if self.is_symbol() {
+            let s = self.to_string();
+            if let Some(caps) = RE_LOG_BASE.captures(&s) {
+                if let Some(m) = caps.get(1) {
+                    if let Ok(base) = m.as_str().parse::<i64>() {
+                        return (true, base);
+                    }
+                }
+            }
+        }
+        (false, 0)
+    }
+
     pub fn is_default(&self) -> bool {
         self.is_null() || self.inner.is_null()
     }
@@ -723,6 +813,60 @@ impl Basic {
     }
     pub fn gte_op() -> Self {
         Basic::symbol(LogicalOperator::Gte.as_str())
+    }
+
+    /// Convenience constructors for each function
+    /// corresponding to a BuiltinFunction.
+    pub fn sin_func_sym() -> Self {
+        Basic::symbol(BuiltinFunction::Sin.as_str())
+    }
+
+    pub fn cos_func_sym() -> Self {
+        Basic::symbol(BuiltinFunction::Cos.as_str())
+    }
+
+    pub fn tan_func_sym() -> Self {
+        Basic::symbol(BuiltinFunction::Tan.as_str())
+    }
+
+    pub fn asin_func_sym() -> Self {
+        Basic::symbol(BuiltinFunction::Asin.as_str())
+    }
+    pub fn acos_func_sym() -> Self {
+        Basic::symbol(BuiltinFunction::Acos.as_str())
+    }
+    pub fn atan_func_sym() -> Self {
+        Basic::symbol(BuiltinFunction::Atan.as_str())
+    }
+    pub fn csc_func_sym() -> Self {
+        Basic::symbol(BuiltinFunction::Csc.as_str())
+    }
+    pub fn sec_func_sym() -> Self {
+        Basic::symbol(BuiltinFunction::Sec.as_str())
+    }
+    pub fn exp_func_sym() -> Self {
+        Basic::symbol(BuiltinFunction::Exp.as_str())
+    }
+    pub fn log_func_sym() -> Self {
+        Basic::symbol(BuiltinFunction::Log.as_str())
+    }
+    pub fn ln_func_sym() -> Self {
+        Basic::symbol(BuiltinFunction::Ln.as_str())
+    }
+    pub fn logb_func_sym(base: i64) -> Self {
+        let s = format!("{}_{}", BuiltinFunction::Log.as_str(), base);
+        Basic::symbol(&s)
+    }
+    pub fn sqrt_func_sym() -> Self {
+        Basic::symbol(BuiltinFunction::Sqrt.as_str())
+    }
+
+    pub fn func_sym_from_str(name: &str) -> Self {
+        if let Some(func) = BuiltinFunction::from_str(name) {
+            Basic::symbol(func.as_str())
+        } else {
+            Basic::symbol(name)
+        }
     }
 
     // ===========================
@@ -799,6 +943,12 @@ impl Basic {
         Self {
             inner: b as *mut basic,
         }
+    }
+
+    /// Checks if the given Basic is a function corresponding to a BuiltinFunction.
+    pub fn is_function(b: &Basic) -> bool {
+        let s = b.to_string();
+        BuiltinFunction::from_str(&s).is_some()
     }
 
     /// Checks if the `inner` pointer is null.

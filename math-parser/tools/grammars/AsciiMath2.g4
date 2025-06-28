@@ -53,7 +53,9 @@ integral_expression:
 	)? op_body differential EQ? # integralExpression;
 
 scripted_op_expression:
-    LPAREN? BUILTIN_KEYWORD_FUNC_NAME RPAREN? WS* (UNDERSCORE add_sub_expression)? (HAT add_sub_expression)? ;
+	LPAREN? BUILTIN_KEYWORD_FUNC_NAME RPAREN? (
+		UNDERSCORE add_sub_expression
+	)? (HAT add_sub_expression)?;
 
 op_body: LPAREN? add_sub_expression RPAREN?;
 
@@ -64,8 +66,9 @@ integral_lower_limit:
 
 // Primary expressions - the highest precedence
 primary_expression:
-	LPAREN logical_expression RPAREN														# parenExpression
-	| (BUILTIN_KEYWORD_FUNC_NAME | scripted_op_expression) LPAREN arguments RPAREN			# explicitKeywordCall // sin(x), vec(x,y,z)
+	LPAREN logical_expression RPAREN												# parenExpression
+	| (BUILTIN_KEYWORD_FUNC_NAME | scripted_op_expression) LPAREN arguments RPAREN	#
+		explicitKeywordCall // sin(x), vec(x,y,z)
 	| BUILTIN_KEYWORD_FUNC_NAME primary_expression											# simpleKeywordCall // e.g., sin x
 	| LBRACE logical_expression RBRACE														# braceExpression // e.g. {a+b}
 	| ABS logical_expression ABS															# absExpression // |expression|
@@ -97,7 +100,7 @@ primary_expression:
 paren_element_for_column_vector: LPAREN expression RPAREN;
 
 arguments: (logical_expression | unary_op_expression) (
-		COMMA (expression | unary_op_expression)
+		COMMA (logical_expression | unary_op_expression)
 	)*;
 text_argument: STRING | expression;
 wrt_argument: COMMA expression;

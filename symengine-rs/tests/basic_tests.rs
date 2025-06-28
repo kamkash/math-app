@@ -295,7 +295,7 @@ fn test_basic_funcs() {
     let x_val = Basic::real(100.0);
     let value_table = vec![(&angle, &pi_over_4), (&x, &x_val)];
     let bsin = Basic::sin(&angle);
-    let ln = Basic::log(&x);
+    let ln = Basic::ln(&x);
     let basic_log = Basic::ln(&x);
     let log10 = Basic::log10(&x);
     let log2 = Basic::logb(&x, 2);
@@ -372,3 +372,26 @@ fn test_basic_mul_add_ops() {
     assert!(!mul_expr.is_div_op());
     assert!(!div_expr.is_mul_op());
 }
+
+#[test]
+fn test_basic_functions() {
+    let [x] = Basic::symbols(["x"]);
+    assert_eq!(x.to_string(), "x");
+
+    let sin_sym = Basic::sin_func_sym();
+    dbg!(&sin_sym);
+    dbg!(sin_sym.to_string());
+    dbg!(sin_sym.get_type());
+    dbg!(Basic::is_function(&sin_sym));
+
+    let logb = Basic::logb_func_sym(2);
+    dbg!(&logb);
+    dbg!(logb.to_string());
+    dbg!(logb.get_type());
+    dbg!(Basic::is_function(&logb));
+    
+    assert!(Basic::is_function(&logb));
+}
+
+
+

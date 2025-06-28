@@ -1,3 +1,15 @@
+macro_rules! filter_optional_children_texts {
+    ($ctx:expr) => {
+        $ctx.get_children()
+            .filter(|child| {
+                let child_text = child.get_text();
+                child_text != "(" && child_text != ")"
+            })
+            .map(|child| child.get_text())
+            .collect::<Vec<_>>()
+    };
+}
+
 use std::collections::VecDeque;
 use std::rc::Rc;
 
@@ -8,14 +20,15 @@ use asciimath2lexer::AsciiMath2Lexer;
 use log::info;
 use math_parser::gen_parsers::asciimath2lexer;
 use math_parser::gen_parsers::asciimath2parser::{
-    AsciiMath2Parser, AsciiMath2ParserContextType, IdentifierAtomContext,
-    IntegralExpressionContext, MultopContext, NumberAtomContext, Power_expressionContext,
-    PowopContext, RelopContext, SumopContext,
+    AsciiMath2Parser, AsciiMath2ParserContextType, ExplicitKeywordCallContext,
+    ExplicitKeywordCallContextAttrs, IdentifierAtomContext, IntegralExpressionContext,
+    MultopContext, NumberAtomContext, Power_expressionContext, PowopContext, RelopContext,
+    Scripted_op_expressionContext, SumopContext,
 };
 use math_parser::gen_parsers::asciimath2visitor::AsciiMath2VisitorCompat;
 use symengine_rs::basic::{Basic, LogicalOperator};
 
-use crate::SymEquation;
+use crate::{create_function, SymEquation};
 
 pub struct AsciiMathBasicVisitor {
     pub tmp_result: Rc<Basic>,
@@ -280,18 +293,39 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         res
     }
 
-    fn visit_explicitKeywordCall(
+    fn visit_scripted_op_expression(
         &mut self,
-        ctx: &math_parser::gen_parsers::asciimath2parser::ExplicitKeywordCallContext<'input>,
+        ctx: &Scripted_op_expressionContext<'input>,
     ) -> Self::Return {
         let res = self.visit_children(ctx);
-        let child_count = ctx.get_child_count();
-        ctx.get_children().for_each(|child| {
-            dbg!(child.get_text());
-        });
-        let func_name = ctx.get_child(0).unwrap().get_text();
+        dbg!(&self.visitor_stack);
+        // filter optional children
+        let children: Vec<String> = filter_optional_children_texts!(ctx);
+        dbg!(&children);
+        if let Some(func) = create_function(children[0].as_str()) {
+            // If we have a valid function, we push it onto the stack.
+            let default_base = Rc::new(Basic::real(10.0)); // Default base for log
+            let log_base = self.visitor_stack.pop().unwrap_or(default_base);
+            let sym_func = func.generate(&[log_base]);
+            self.visitor_stack.push(sym_func);
+        }
+        dbg!(&self.visitor_stack);
+        dbg!(&Basic::is_function(self.visitor_stack.last().unwrap()));
+        res
+    }
+
+    fn visit_explicitKeywordCall(
+        &mut self,
+        ctx: &ExplicitKeywordCallContext<'input>,
+    ) -> Self::Return {
+        let res = self.visit_children(ctx);
+        dbg!(&self.visitor_stack);
+
+        // filter optional children
+        let children: Vec<String> = filter_optional_children_texts!(ctx);
+        // function arguments on top of the stack
         let mut args = Vec::new();
-        for i in 2..(child_count - 1) {
+        for i in 1..children.len() {
             let arg_text = ctx.get_child(i).unwrap().get_text();
             if let Some(arg_basic) = self.visitor_stack.pop() {
                 args.push(arg_basic);
@@ -300,6 +334,19 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
             }
         }
         args.reverse();
+
+        let func_name = if ctx.scripted_op_expression().is_some() {
+            let func = self.visitor_stack.pop().unwrap();
+            assert!(
+                Basic::is_function(&func),
+                "Expected a function, found: {:?}",
+                func
+            );
+            func.to_string()
+        } else {
+            ctx.get_child(0).unwrap().get_text()
+        };
+
         let func_basic = Rc::new(Basic::function(&func_name, &args));
         self.visitor_stack.push(func_basic);
         res
