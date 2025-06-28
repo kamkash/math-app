@@ -369,11 +369,21 @@ fn test_asciimath_basic_subscripted_function() {
 
     input_lines.push("x = 10.0".to_string());
     input_lines.push("y = log(x)".to_string());
-    input_lines.push("z = (log) _2(x)".to_string());
+    input_lines.push("y1 = ln(x)".to_string());
+    input_lines.push("y2 = log _10 (x)".to_string());
+    input_lines.push("z = (log)_2(x)".to_string());
+    input_lines.push("q = exp(x)".to_string());
+    input_lines.push("w = exp(x) - log _2(x)".to_string());
+    input_lines.push("u = exp(x) ^ 3 - log _2(x) ^ 2".to_string());
 
     checks.push(("x", 10.0f64));
     checks.push(("y", x.log10()));
+    checks.push(("y1", x.ln()));
+    checks.push(("y2", x.log10()));
     checks.push(("z", x.log2()));
+    checks.push(("q", x.exp()));
+    checks.push(("w", (x.exp() - x.log2())));
+    checks.push(("u", (x.exp().powf(3.0) - x.log2().powf(2.0))));
 
     let input = input_lines.join("\n");
     let mut visitor = AsciiMathBasicVisitor::new();
