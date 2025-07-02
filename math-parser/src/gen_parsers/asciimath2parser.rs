@@ -2541,10 +2541,10 @@ fn RPAREN(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>>
 fn UNDERSCORE(&self) -> Option<Rc<TerminalNode<'input,AsciiMath2ParserContextType>>> where Self:Sized{
 	self.get_token(UNDERSCORE, 0)
 }
-fn add_sub_expression_all(&self) ->  Vec<Rc<Add_sub_expressionContextAll<'input>>> where Self:Sized{
+fn relation_expression_all(&self) ->  Vec<Rc<Relation_expressionContextAll<'input>>> where Self:Sized{
 	self.children_of_type()
 }
-fn add_sub_expression(&self, i: usize) -> Option<Rc<Add_sub_expressionContextAll<'input>>> where Self:Sized{
+fn relation_expression(&self, i: usize) -> Option<Rc<Relation_expressionContextAll<'input>>> where Self:Sized{
 	self.child_of_type(i)
 }
 /// Retrieves first TerminalNode corresponding to token HAT
@@ -2608,9 +2608,9 @@ where
 				recog.base.set_state(185);
 				recog.base.match_token(UNDERSCORE,&mut recog.err_handler)?;
 
-				/*InvokeRule add_sub_expression*/
+				/*InvokeRule relation_expression*/
 				recog.base.set_state(186);
-				recog.add_sub_expression()?;
+				recog.relation_expression()?;
 
 				}
 			}
@@ -2623,9 +2623,9 @@ where
 				recog.base.set_state(189);
 				recog.base.match_token(HAT,&mut recog.err_handler)?;
 
-				/*InvokeRule add_sub_expression*/
+				/*InvokeRule relation_expression*/
 				recog.base.set_state(190);
-				recog.add_sub_expression()?;
+				recog.relation_expression()?;
 
 				}
 			}
@@ -7299,8 +7299,8 @@ const _serializedATN:&'static str =
 	\x02\u{b6}\u{b7}\x03\x02\x02\x02\u{b7}\u{b9}\x07\x12\x02\x02\u{b8}\u{ba}\
 	\x07\x68\x02\x02\u{b9}\u{b8}\x03\x02\x02\x02\u{b9}\u{ba}\x03\x02\x02\x02\
 	\u{ba}\u{bd}\x03\x02\x02\x02\u{bb}\u{bc}\x07\x54\x02\x02\u{bc}\u{be}\x05\
-	\x0c\x07\x02\u{bd}\u{bb}\x03\x02\x02\x02\u{bd}\u{be}\x03\x02\x02\x02\u{be}\
-	\u{c1}\x03\x02\x02\x02\u{bf}\u{c0}\x07\x52\x02\x02\u{c0}\u{c2}\x05\x0c\x07\
+	\x08\x05\x02\u{bd}\u{bb}\x03\x02\x02\x02\u{bd}\u{be}\x03\x02\x02\x02\u{be}\
+	\u{c1}\x03\x02\x02\x02\u{bf}\u{c0}\x07\x52\x02\x02\u{c0}\u{c2}\x05\x08\x05\
 	\x02\u{c1}\u{bf}\x03\x02\x02\x02\u{c1}\u{c2}\x03\x02\x02\x02\u{c2}\x1b\x03\
 	\x02\x02\x02\u{c3}\u{c5}\x07\x67\x02\x02\u{c4}\u{c3}\x03\x02\x02\x02\u{c4}\
 	\u{c5}\x03\x02\x02\x02\u{c5}\u{c6}\x03\x02\x02\x02\u{c6}\u{c8}\x05\x0c\x07\

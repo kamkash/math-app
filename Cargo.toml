@@ -10,7 +10,7 @@ members = [
     "calculus",
     "linear-algebra",
     "statistics",
-    "algebra", "symbolic-engine"]
+    "algebra", "symbolic-engine", "giac-rs"]
 
 [workspace.package]
 version = "0.1.0"

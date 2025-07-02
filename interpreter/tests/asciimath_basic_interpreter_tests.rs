@@ -259,8 +259,6 @@ fn test_asciimath_basic_eval_algebraic_operations() {
         visitor.result_table
     );
 
-    let tolerance = 1e-9; // Adjusted tolerance for f64 comparisons
-
     for (var_name, expected_f64_val) in checks {
         info!("Checking: {} = {}", var_name, expected_f64_val);
         let actual_basic_rc = visitor
@@ -278,7 +276,7 @@ fn test_asciimath_basic_eval_algebraic_operations() {
         });
 
         assert!(
-            (actual_f64 - expected_f64_val).abs() < tolerance,
+            (actual_f64 - expected_f64_val).abs() < EPSILON,
             "Failed for variable: {}. Expected: {}, Got: {}. Difference: {}",
             var_name,
             expected_f64_val,
@@ -330,7 +328,6 @@ fn test_asciimath_basic_builtin_functions() {
         visitor.block_expressions
     );
 
-    let tolerance = 1e-9; // Adjusted tolerance for f64 comparisons
     for (i, (var_name, expected_f64_val)) in checks.iter().enumerate() {
         info!(
             "Checking: in {}, {} = {}",
@@ -351,7 +348,7 @@ fn test_asciimath_basic_builtin_functions() {
         });
 
         assert!(
-            (actual_f64 - expected_f64_val).abs() < tolerance,
+            (actual_f64 - expected_f64_val).abs() < EPSILON,
             "Failed for variable: {}. Expected: {}, Got: {}. Difference: {}",
             var_name,
             expected_f64_val,
@@ -364,26 +361,31 @@ fn test_asciimath_basic_builtin_functions() {
 #[test_log::test]
 fn test_asciimath_basic_subscripted_function() {
     let x = 10.0f64;
+    let y = 15.0f64;
     let mut input_lines: Vec<String> = Vec::new();
     let mut checks: Vec<(&str, f64)> = Vec::new();
 
     input_lines.push("x = 10.0".to_string());
-    input_lines.push("y = log(x)".to_string());
+    input_lines.push("y = 15.0".to_string());
+    input_lines.push("y0 = log(x)".to_string());
     input_lines.push("y1 = ln(x)".to_string());
     input_lines.push("y2 = log _10 (x)".to_string());
     input_lines.push("z = (log)_2(x)".to_string());
     input_lines.push("q = exp(x)".to_string());
     input_lines.push("w = exp(x) - log _2(x)".to_string());
     input_lines.push("u = exp(x) ^ 3 - log _2(x) ^ 2".to_string());
+    input_lines.push("v = exp(x/y) ^ 3 - log _2(x*y) ^ 2".to_string());
 
-    checks.push(("x", 10.0f64));
-    checks.push(("y", x.log10()));
+    checks.push(("x", x));
+    checks.push(("y", y));
+    checks.push(("y0", x.log10()));
     checks.push(("y1", x.ln()));
     checks.push(("y2", x.log10()));
     checks.push(("z", x.log2()));
     checks.push(("q", x.exp()));
     checks.push(("w", (x.exp() - x.log2())));
     checks.push(("u", (x.exp().powf(3.0) - x.log2().powf(2.0))));
+    checks.push(("v", ((x/y).exp().powf(3.0) - (x*y).log2().powf(2.0))));
 
     let input = input_lines.join("\n");
     let mut visitor = AsciiMathBasicVisitor::new();
@@ -398,7 +400,6 @@ fn test_asciimath_basic_subscripted_function() {
     info!("visitor symbol table: {:?}", visitor.symbol_table);
     info!("visitor result table: {:?}", visitor.result_table);
 
-    let tolerance = 1e-9; // Adjusted tolerance for f64 comparisons
     for (i, (var_name, expected_f64_val)) in checks.iter().enumerate() {
         info!(
             "Checking: input {}, {} = {}",
@@ -419,7 +420,7 @@ fn test_asciimath_basic_subscripted_function() {
         });
 
         assert!(
-            (actual_f64 - expected_f64_val).abs() < tolerance,
+            (actual_f64 - expected_f64_val).abs() < EPSILON,
             "Failed for variable: {}. Expected: {}, Got: {}. Difference: {}",
             var_name,
             expected_f64_val,
