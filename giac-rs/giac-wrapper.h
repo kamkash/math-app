@@ -6,6 +6,8 @@ extern "C"
 #endif
 
     // Opaque handles
+    struct context_opaque;
+    struct gen_opaque;
     typedef struct context_opaque context_t;
     typedef struct gen_opaque gen_t;
 
@@ -21,7 +23,7 @@ extern "C"
     // Example API
     gen_t *gen_simplify(gen_t *g, context_t *ctx);
     gen_t *gen_diff(gen_t *g, const char *var, context_t *ctx);
-    gen_t *gen_integrate(gen_t *g, const char *var, context_t *ctx);
+    gen_t *gen_integrate(gen_t *g, context_t *ctx);
 
 #ifdef __cplusplus
 }

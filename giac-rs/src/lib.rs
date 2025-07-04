@@ -1,5 +1,5 @@
 #[allow(warnings)]
-pub mod symengine_ffi {
+pub mod giac_ffi {
     include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 }
 pub mod context;

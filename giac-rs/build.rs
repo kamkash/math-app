@@ -16,6 +16,8 @@ fn main() {
         .cpp(true)
         .file("giac-wrapper.cpp")
         .flag_if_supported("-std=c++17")
+        .flag("-w") // Suppress warnings
+        .flag("-mmacosx-version-min=15.5") 
         .include(&giac_include)
         .include(&gmp_include)
         .compile("giacwrapper");
@@ -62,7 +64,7 @@ fn main() {
     println!("cargo:rustc-link-search=native=/usr/lib/x86_64-linux-gnu");
 
     println!("cargo:rustc-link-search=native=/usr/local/lib");
-    println!("cargo:rustc-link-lib=symengine");
+    println!("cargo:rustc-link-lib=giac");
     println!("cargo:rustc-link-lib=gmp");
     println!("cargo:rustc-link-lib=mpfr");
 

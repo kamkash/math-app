@@ -1,26 +1,24 @@
-use std::os::raw::c_void;
+use crate::giac_ffi::*;
 
-#[repr(C)]
-pub struct ContextOpaque(c_void);
-pub type ContextPtr = *mut ContextOpaque;
-
-extern "C" {
-    fn context_new() -> ContextPtr;
-    fn context_free(ctx: ContextPtr);
-}
+use std::marker::PhantomData;
+use std::rc::Rc;
 
 pub struct Context {
-    ptr: ContextPtr,
+    ptr: *mut context_t,
+    // Prevent Send and Sync by including Rc, which is neither Send nor Sync
+    _not_send_sync: PhantomData<Rc<()>>,
 }
+
+// SAFETY: GIAC context is !Send and !Sync — don't allow cross-thread access
 
 impl Context {
     pub fn new() -> Self {
-        let ptr = unsafe { context_new() };
+        let ptr: *mut context_t = unsafe { context_new() };
         assert!(!ptr.is_null());
-        Context { ptr }
+        Context { ptr, _not_send_sync: PhantomData }
     }
 
-    pub fn as_ptr(&self) -> ContextPtr {
+    pub fn as_ptr(&self) -> *mut context_t {
         self.ptr
     }
 }
