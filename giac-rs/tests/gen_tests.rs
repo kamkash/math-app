@@ -52,7 +52,10 @@ fn test_gen_arithmetic_operators() {
     let prod = a.mul(&b).unwrap().to_string();
     let quot = a.div(&b).unwrap().to_string();
     let pow = a.pow(&b).unwrap().to_string();
-    info!("sum: {} diff: {} prod: {} quot: {} pow: {}", sum, diff, prod, quot, pow);
+    info!(
+        "sum: {} diff: {} prod: {} quot: {} pow: {}",
+        sum, diff, prod, quot, pow
+    );
     assert!(sum.contains("5"));
     assert!(diff.contains("-1") || diff.contains("1-"));
     assert!(prod.contains("6"));
@@ -79,8 +82,12 @@ fn test_gen_symbolic_operators() {
     let mult = x.symb_mult(&y).unwrap().to_string();
     let pow = x.symb_pow(&y).unwrap().to_string();
     info!("plus: {} mult: {} pow: {}", plus, mult, pow);
-    assert!(plus.contains("x") && plus.contains("y") && (plus.contains("+") || plus.contains("plus")));
-    assert!(mult.contains("x") && mult.contains("y") && (mult.contains("*") || mult.contains("mult")));
+    assert!(
+        plus.contains("x") && plus.contains("y") && (plus.contains("+") || plus.contains("plus"))
+    );
+    assert!(
+        mult.contains("x") && mult.contains("y") && (mult.contains("*") || mult.contains("mult"))
+    );
     assert!(pow.contains("x") && pow.contains("y") && (pow.contains("^") || pow.contains("pow")));
 }
 
@@ -90,7 +97,9 @@ fn test_gen_subs() {
     let expr = Gen::new("x+y", &ctx).unwrap();
     let x_val = Gen::from_f64(2.0, &ctx).unwrap();
     let y_val = Gen::from_f64(3.0, &ctx).unwrap();
-    let subs = expr.subs(&["x", "y"], &[&x_val, &y_val]).expect("subs failed");
+    let subs = expr
+        .subs(&["x", "y"], &[&x_val, &y_val])
+        .expect("subs failed");
     let s = subs.to_string();
     info!("Substituted: {}", s);
     let evaluated = subs.eval().expect("eval failed");
@@ -106,4 +115,11 @@ fn test_gen_eval() {
     let s = evaluated.to_string();
     info!("Evaluated: {}", s);
     assert!(s == "5" || s.contains("5"));
+
+    let exp1 = Gen::new("x := 5", &ctx).unwrap();
+    exp1.eval().expect("Failed to evaluate assignment");
+    let expr2 = Gen::new("x^2 + 2*x + 1", &ctx).unwrap();
+    let evaluated2 = expr2.eval().expect("eval failed");
+    info!("Evaluated expression with assignment: {}", evaluated2.to_string());
+    assert!(evaluated2.to_string().contains("36"));
 }
