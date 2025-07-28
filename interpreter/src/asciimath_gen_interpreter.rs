@@ -34,12 +34,24 @@ macro_rules! filter_optional_children_texts {
 pub struct SymEquationGen {
     pub left: Rc<Gen>,
     pub right: Rc<Gen>,
-    pub op: String, // Store operator as string for Gen
+    pub op: Rc<Gen>,
 }
 
 impl SymEquationGen {
-    pub fn new(left: Rc<Gen>, right: Rc<Gen>, op: String) -> Self {
+    pub fn new(left: Rc<Gen>, right: Rc<Gen>, op: Rc<Gen>) -> Self {
         SymEquationGen { left, right, op }
+    }
+}
+
+impl std::fmt::Debug for SymEquationGen {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?} {:?} {:?}", self.left, self.op, self.right)
+    }
+}
+
+impl std::fmt::Display for SymEquationGen {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{} {} {}", self.left, self.op, self.right)
     }
 }
 
@@ -141,9 +153,9 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathGenVisitor {
         let len = self.visitor_stack.len();
         if len >= 3 {
             let right = self.visitor_stack.pop().unwrap();
-            let op_str = self.visitor_stack.pop().unwrap().to_string(); // Operator is now a string representation of Gen
+            let op = self.visitor_stack.pop().unwrap(); // Operator is now a string representation of Gen
             let left = self.visitor_stack.pop().unwrap();
-            let equation = SymEquationGen::new(Rc::clone(&left), Rc::clone(&right), op_str);
+            let equation = SymEquationGen::new(left, right, op);
             self.block_expressions.push(equation);
         }
         res
@@ -167,12 +179,10 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathGenVisitor {
         &mut self,
         ctx: &math_parser::gen_parsers::asciimath2parser::Add_sub_expressionContext<'input>,
     ) -> Self::Return {
-        // dbg!(ctx.get_text());
         let res = self.visit_children(ctx);
         let len = ctx.get_child_count();
         let stack_len = self.visitor_stack.len();
         if len > 1 {
-            // dbg!(&self.visitor_stack);
             let remove_at = stack_len - len;
             let mut left = self.visitor_stack.remove(remove_at);
             for _ in 0..(len - 1) / 2 {
@@ -229,7 +239,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathGenVisitor {
                     right = Rc::clone(&mult_stack.pop_back().unwrap());
                 }
                 if op.is_mul() {
-                    left = Rc::new(left.mul(&right).unwrap());
+                    left = Rc::new(left.symb_mult(&right).unwrap());
                 } else if op.is_div() {
                     left = Rc::new(left.div(&right).unwrap());
                 } else {
@@ -255,7 +265,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathGenVisitor {
                 let op_gen = self.visitor_stack.remove(remove_at);
                 if op_gen.is_pow() {
                     let right = self.visitor_stack.remove(remove_at);
-                    left = Rc::new(left.pow(&right).unwrap());
+                    left = Rc::new(left.symb_pow(&right).unwrap());
                 } else {
                     info!(
                         "Unexpected operator in power_expression: {}",
@@ -270,10 +280,8 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathGenVisitor {
 
     fn visit_identifierAtom(&mut self, ctx: &IdentifierAtomContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
-        let len = ctx.get_child_count();
-        assert_eq!(len, 1);
         let var_text = ctx.get_text();
-        let var_symbol = Rc::new(Gen::new(&var_text, &self.giac_context).unwrap());
+        let var_symbol = Rc::new(Gen::symbol(&var_text, &self.giac_context).unwrap());
         self.visitor_stack.push(var_symbol);
         res
     }
@@ -336,9 +344,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathGenVisitor {
         ctx: &Scripted_op_expressionContext<'input>,
     ) -> Self::Return {
         let res = self.visit_children(ctx);
-        dbg!(&self.visitor_stack);
         let children: Vec<String> = filter_optional_children_texts!(ctx);
-        dbg!(&children);
 
         // For Gen, we need to construct the function call as a string or use specific Gen functions if available.
         // This is a placeholder and needs proper mapping from AsciiMath functions to Giac functions.
@@ -352,7 +358,6 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathGenVisitor {
             let sym_func = Rc::new(Gen::new(&func_call_str, &self.giac_context).unwrap());
             self.visitor_stack.push(sym_func);
         }
-        dbg!(&self.visitor_stack);
         res
     }
 
@@ -361,7 +366,6 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathGenVisitor {
         ctx: &ExplicitKeywordCallContext<'input>,
     ) -> Self::Return {
         let res = self.visit_children(ctx);
-        dbg!(&self.visitor_stack);
 
         let children: Vec<String> = filter_optional_children_texts!(ctx);
         let mut args = Vec::new();

@@ -215,6 +215,16 @@ impl Gen {
         }
     }
 
+    /// Returns the symbolic division of self and other (i.e., symbolic(at_divide, ...)).
+    pub fn symb_div(&self, other: &Gen) -> Option<Self> {
+        let ptr = unsafe { gen_symb_div(self.ptr, other.ptr, self.ctx) };
+        if ptr.is_null() {
+            None
+        } else {
+            Some(Gen { ptr, ctx: self.ctx })
+        }
+    }
+
     pub fn symb_pow(&self, other: &Gen) -> Option<Self> {
         let ptr = unsafe { gen_symb_pow(self.ptr, other.ptr, self.ctx) };
         if ptr.is_null() {
@@ -429,7 +439,7 @@ impl Gen {
 
     pub fn logical_op(op: LogicalOperator) -> Option<Gen> {
         match op {
-            LogicalOperator::Eq=> Some(GEN_EQ.clone()), 
+            LogicalOperator::Eq => Some(GEN_EQ.clone()),
             LogicalOperator::DoubleEq => Some(GEN_EQ.clone()),
             LogicalOperator::Lt => Some(GEN_LT.clone()),
             LogicalOperator::Gt => Some(GEN_GT.clone()),
@@ -524,6 +534,33 @@ impl Gen {
             })
         }
     }
+
+    /// Creates a new symbolic variable with the given name in the given context.
+    pub fn symbol(name: &str, ctx: &crate::context::Context) -> Option<Self> {
+        let cstr = CString::new(name).ok()?;
+        let ptr = unsafe { gen_new(cstr.as_ptr(), ctx.as_ptr()) };
+        if ptr.is_null() {
+            None
+        } else {
+            Some(Gen {
+                ptr,
+                ctx: ctx.as_ptr() as *mut context_opaque,
+            })
+        }
+    }
+
+    /// Attempts to convert the Gen to an f64 if it represents a number.
+    pub fn to_f64(&self) -> Option<f64> {
+        unsafe {
+            let mut out: f64 = 0.0;
+            let success = gen_to_f64(self.ptr, &mut out as *mut f64);
+            if success == 1 {
+                Some(out)
+            } else {
+                None
+            }
+        }
+    }
 }
 
 impl Default for Gen {
@@ -572,7 +609,4 @@ impl Clone for Gen {
             Gen { ptr, ctx: self.ctx }
         }
     }
-}
-extern "C" {
-    pub fn gen_new_from_double(value: f64, ctx: *mut context_t) -> *mut gen_t;
 }

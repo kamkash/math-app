@@ -99,6 +99,8 @@ extern "C"
     gen_t *get_le_op();
     gen_t *get_gt_op();
     gen_t *get_ge_op();
+
+    int gen_to_f64(gen_t *g, double *out_ptr);
     
 #ifdef __cplusplus
 }

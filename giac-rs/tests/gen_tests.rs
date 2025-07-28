@@ -205,3 +205,32 @@ fn test_gen_is_some_op() {
     assert!(div_op.is_op());
     assert!(pow_op.is_op());
 }
+
+#[test_log::test]
+fn test_gen_to_f64() {
+    let ctx = Context::new();
+    let g = Gen::new("3.14159", &ctx).unwrap();
+    let val = g.to_f64();
+    assert!(val.is_some(), "to_f64 should succeed for numeric value");
+    let v = val.unwrap();
+    assert!(
+        (v - 3.14159).abs() < 1e-8,
+        "to_f64 value should be close to 3.14159, got {}",
+        v
+    );
+
+    let g2 = Gen::new("2+2", &ctx).unwrap();
+    let val2 = g2.to_f64().unwrap();
+    // Should be None, because it's not a direct number, but after eval it should work
+    assert!(
+        val2 - 4.0 < 1e-8,
+        "to_f64 should fail for unevaluated expression"
+    );
+    let g2_eval = g2.eval().unwrap();
+    let val2_eval = g2_eval.to_f64();
+    assert_eq!(val2_eval, Some(4.0));
+
+    let g3 = Gen::new("x", &ctx).unwrap();
+    let val3 = g3.to_f64();
+    assert!(val3.is_none(), "to_f64 should fail for symbolic variable");
+}

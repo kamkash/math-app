@@ -1,3 +1,5 @@
+// Convert a gen_t to f64 if possible. Returns 1 on success, 0 on failure. Writes result to out_ptr.
+
 #include "giac-wrapper.h"
 
 #include "gen.h"
@@ -694,4 +696,37 @@ gen_t *get_ge_op()
 gen_t *get_ne_op()
 {
     return &GEN_NE;
+}
+
+int gen_to_f64(gen_t *g, double *out_ptr)
+{
+    std::lock_guard<std::mutex> lock(giac_mutex);
+    try
+    {
+        if (!g || !out_ptr)
+            return 0;
+        // Try to convert to double using gen::to_double()
+        double val = 0.0;
+        if (g->value.type == _DOUBLE_ || g->value.type == _FLOAT_ || g->value.type == _REAL ||
+            g->value.type == _INT_ || g->value.type == _ZINT || g->value.type == _FRAC)
+        {
+            val = g->value.to_double(nullptr);
+            *out_ptr = val;
+            return 1;
+        }
+        // Try to evaluate to a number if possible
+        gen evaluated = g->value.evalf(1, 0);
+        if (evaluated.type == _DOUBLE_ || evaluated.type == _FLOAT_ || evaluated.type == _REAL ||
+            evaluated.type == _INT_ || evaluated.type == _ZINT || evaluated.type == _FRAC)
+        {
+            val = evaluated.to_double(nullptr);
+            *out_ptr = val;
+            return 1;
+        }
+        return 0;
+    }
+    catch (...)
+    {
+        return 0;
+    }
 }

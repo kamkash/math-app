@@ -17,5 +17,7 @@
 ```
 MACOSX_DEPLOYMENT_TARGET=15.5 cargo  build
 MACOSX_DEPLOYMENT_TARGET=15.5 cargo  test
+cargo test -- --test-threads=1
+
 ```
 
