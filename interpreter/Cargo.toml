@@ -10,8 +10,8 @@ test-log = { workspace = true }
 serde = { workspace = true }
 math-parser = { path = "../math-parser" }
 symengine-rs = { workspace = true }
+giac-rs = { workspace = true }
 antlr-rust = { workspace = true }
+math-core = { workspace = true }
 
 [dev-dependencies]
-math-parser = { path = "../math-parser" }
-symengine-rs = { workspace = true }

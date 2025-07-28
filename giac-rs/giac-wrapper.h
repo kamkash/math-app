@@ -42,10 +42,64 @@ extern "C"
     gen_t *gen_symb_plus(gen_t *a, gen_t *b, context_t *ctx);
     gen_t *gen_symb_mult(gen_t *a, gen_t *b, context_t *ctx);
     gen_t *gen_symb_pow(gen_t *a, gen_t *b, context_t *ctx);
+    gen_t *gen_symb_sub(gen_t *a, gen_t *b, context_t *ctx);
+    gen_t *gen_symb_div(gen_t *a, gen_t *b, context_t *ctx);
 
+    // Trigonometric functions
+    gen_t *gen_symb_sin(gen_t *a, context_t *ctx);
+    gen_t *gen_symb_cos(gen_t *a, context_t *ctx);
+    gen_t *gen_symb_tan(gen_t *a, context_t *ctx);
+
+    // logs
+    gen_t *gen_symb_log(gen_t *a, context_t *ctx);
+    gen_t *gen_symb_ln(gen_t *a, context_t *ctx);
+    gen_t *gen_symb_exp(gen_t *a, context_t *ctx);
+
+    // Evaluation and substitution
     gen_t *gen_subs(gen_t *expr, const char **vars, gen_t **values, size_t n, context_t *ctx);
     gen_t *gen_eval(gen_t *expr, context_t *ctx);
 
+    gen_t *gen_clone(gen_t *g, context_t *ctx);
+
+    int is_symbol(const gen_t *g);
+    int is_number(const gen_t *g);
+    int is_constant(const gen_t *g);
+
+    int equals(const gen_t *a, const gen_t *b);
+
+    int is_add(const gen_t *g);
+    int is_sub(const gen_t *g);
+    int is_mul(const gen_t *g);
+    int is_div(const gen_t *g);
+    int is_pow(const gen_t *g);
+
+    int is_not(const gen_t *g);
+    int is_and(const gen_t *g);
+    int is_or(const gen_t *g);
+    int is_eq(const gen_t *g);
+    int is_ne(const gen_t *g);
+    int is_lt(const gen_t *g);
+    int is_le(const gen_t *g);
+    int is_gt(const gen_t *g);
+    int is_ge(const gen_t *g);
+
+    gen_t *get_add_op();
+    gen_t *get_sub_op();
+    gen_t *get_mul_op();
+    gen_t *get_div_op();
+    gen_t *get_pow_op();
+    gen_t *get_neg_op();
+    gen_t *get_inv_op();
+    gen_t *get_not_op();
+    gen_t *get_and_op();
+    gen_t *get_or_op();
+    gen_t *get_eq_op();
+    gen_t *get_ne_op();
+    gen_t *get_lt_op();
+    gen_t *get_le_op();
+    gen_t *get_gt_op();
+    gen_t *get_ge_op();
+    
 #ifdef __cplusplus
 }
 #endif

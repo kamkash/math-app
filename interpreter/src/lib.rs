@@ -3,6 +3,7 @@ use symengine_rs::basic::Basic;
 
 use std::{fmt, rc::Rc};
 pub mod asciimath_basic_interpreter;
+pub mod asciimath_gen_interpreter;
 pub mod asciimath_basic_string_interpreter;
 pub mod calc_basic_interpreter;
 pub mod calc_basic_string_interpreter;

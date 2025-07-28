@@ -18,7 +18,8 @@ use antlr_rust::tree::{ParseTreeVisitorCompat, Tree};
 use antlr_rust::TidExt;
 use antlr_rust::{recognizer, InputStream, Parser};
 use log::info;
-use symengine_rs::basic::{Basic, LogicalOperator};
+use math_core::common::LogicalOperator;
+use symengine_rs::basic::Basic;
 
 use math_parser::gen_parsers::calculatorparser::{
     calculatorParserContextType, AtomContext, BlockContext, ConstantContext, CurrencyContext,

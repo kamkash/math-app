@@ -13,6 +13,8 @@ log = { workspace = true }
 test-log = { workspace = true }
 lazy_static = { version = "1.5.0", features = [] }
 regex = "1.11.1"
+math-core = { workspace = true }
 
 [lib]
-crate-type = ["rlib"]  # or ["cdylib"] for Rust-specific linkage
+crate-type = ["rlib"] # or ["cdylib"] for Rust-specific linkage
+

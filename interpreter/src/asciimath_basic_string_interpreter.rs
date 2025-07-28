@@ -6,12 +6,13 @@ use antlr_rust::InputStream;
 use antlr_rust::TidExt;
 use asciimath2lexer::AsciiMath2Lexer;
 use log::info;
+use math_core::common::LogicalOperator;
 use math_parser::gen_parsers::asciimath2lexer;
 use math_parser::gen_parsers::asciimath2parser::{
     AsciiMath2Parser, AsciiMath2ParserContextType, D_by_dContext, Deriv_functionContext,
     DerivativeContext,
 };
-use symengine_rs::basic::{Basic, LogicalOperator};
+use symengine_rs::basic::Basic;
 
 use crate::SymEquation;
 use math_parser::gen_parsers::asciimath2visitor::AsciiMath2VisitorCompat;

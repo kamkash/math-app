@@ -13,3 +13,9 @@
 
  ## Possible UI
  ![Design](./design.png)
+
+```
+MACOSX_DEPLOYMENT_TARGET=15.5 cargo  build
+MACOSX_DEPLOYMENT_TARGET=15.5 cargo  test
+```
+

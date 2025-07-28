@@ -1,0 +1,12 @@
+[package]
+name = "math-core"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+
+[dependencies]
+log = { workspace = true }
+test-log = { workspace = true }
+
+[lib]
+crate-type = ["rlib"]  # or ["cdylib"] for Rust-specific linkage

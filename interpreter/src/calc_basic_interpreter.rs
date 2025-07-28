@@ -17,6 +17,7 @@ use antlr_rust::InputStream;
 use antlr_rust::TidExt;
 use log::info;
 
+use math_core::common::LogicalOperator;
 use math_parser::gen_parsers::calculatorparser::{
     calculatorParserContextType, AtomContext, BlockContext, ConstantContext, CurrencyContext,
     EquationContext, EquationContextAttrs, ExpressionContext, ExpressionContextAttrs, Func_Context,
@@ -30,7 +31,7 @@ use math_parser::gen_parsers::calculatorvisitor::calculatorVisitorCompat;
 use math_parser::gen_parsers::{
     calculatorlexer::calculatorLexer, calculatorparser::calculatorParser,
 };
-use symengine_rs::basic::{Basic, LogicalOperator};
+use symengine_rs::basic::Basic;
 
 pub struct CalcBasicVisitor {
     pub tmp_result: Rc<Basic>,
