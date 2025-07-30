@@ -239,7 +239,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathGenVisitor {
                     right = Rc::clone(&mult_stack.pop_back().unwrap());
                 }
                 if op.is_mul() {
-                    left = Rc::new(left.symb_mult(&right).unwrap());
+                    left = Rc::new(left.mul(&right).unwrap());
                 } else if op.is_div() {
                     left = Rc::new(left.div(&right).unwrap());
                 } else {

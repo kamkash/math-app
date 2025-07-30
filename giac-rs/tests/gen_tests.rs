@@ -234,3 +234,46 @@ fn test_gen_to_f64() {
     let val3 = g3.to_f64();
     assert!(val3.is_none(), "to_f64 should fail for symbolic variable");
 }
+
+#[test_log::test]
+fn test_gen_function_calls() {
+    let ctx = Context::new();
+    let [x, xx, y] = Gen::symbols(["x", "xx", "y"], &ctx);
+
+    let log_fn = Gen::log(x).expect("Failed to create log function");
+    let ln_fn = Gen::ln(y).expect("Failed to create ln function");
+    let logb_fn = Gen::logb(xx, 2.0).expect("Failed to create logb function");
+    info!(
+        "functions: {} {} {}",
+        log_fn.to_string(),
+        ln_fn.to_string(),
+        logb_fn.to_string()
+    );
+
+    let log_subs = log_fn
+        .subs(&["x"], &[&Gen::from_f64(10.0, &ctx).unwrap()])
+        .expect("Failed to substitute in log function");
+    let log_eval = log_subs.eval().expect("Failed to evaluate log function");
+    info!("Log evaluated: {}", log_eval.to_string());
+    assert!(
+        log_eval.to_f64().unwrap() - 10.0f64.log10() < 1e-8,
+        "Log should be close to 10.0"
+    );
+
+    let ln_subs = ln_fn
+        .subs(&["y"], &[&Gen::from_f64(5.0, &ctx).unwrap()])
+        .expect("Failed to substitute in ln function");
+    let ln_eval = ln_subs.eval().expect("Failed to evaluate ln function");
+    info!("Ln evaluated: {}", ln_eval.to_string());
+    assert!(ln_eval.to_f64().unwrap() - 5.0f64.ln() < 1e-8, "Ln should be close to 5.0");
+
+    let logb_subs = logb_fn
+        .subs(&["xx"], &[&Gen::from_f64(10.0, &ctx).unwrap()])
+        .expect("Failed to substitute in logb function");
+    let logb_eval = logb_subs.eval().expect("Failed to evaluate logb function");
+    info!("Logb evaluated: {}", logb_eval.to_string());
+    assert!(
+        logb_eval.to_f64().unwrap() - 10.0f64.log2() < 1e-8,
+        "Logb should be close to 10.0"
+    );
+}

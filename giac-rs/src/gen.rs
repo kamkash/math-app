@@ -1,7 +1,7 @@
 use math_core::common::LogicalOperator;
 use regex::Regex;
 
-use crate::giac_ffi::*;
+use crate::{context::Context, giac_ffi::*};
 use std::{
     ffi::{CStr, CString},
     fmt,
@@ -115,6 +115,12 @@ impl Gen {
                 ctx: ctx.as_ptr() as *mut context_opaque,
             })
         }
+    }
+
+    pub fn symbols<const N: usize>(names: [&str; N], ctx: &crate::context::Context) -> [Gen; N] {
+        names.map(|name| Gen::symbol(name, ctx ).unwrap_or_else(|| {
+            panic!("Failed to create symbol for '{}'", name);
+        }))
     }
 
     pub fn to_string(&self) -> String {
@@ -507,6 +513,18 @@ impl Gen {
                 ctx: symbol.ctx,
             })
         }
+    }
+
+    pub fn logb(symbol: Gen, base: f64) -> Option<Self> {
+        let ctx = Context::new();
+        let base_gen = Gen::from_f64(base, &ctx);
+        let b = Gen::ln(base_gen?);
+        let n = Gen::ln(symbol)?;
+        n.div(&b?)
+    }
+
+    pub fn log10(symbol: Gen) -> Option<Self> {
+        Gen::logb(symbol, 10.0)
     }
 
     /// Returns the symbolic natural logarithm (ln) of the given Gen.
