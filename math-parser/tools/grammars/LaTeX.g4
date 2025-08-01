@@ -10,13 +10,195 @@
  the repository. This will regenerate the code in `sympy/parsing/latex/_antlr/*.py`.
  */
 
+
+// ANTLR4 LaTeX Math Grammar
+// Enhanced: Added 'block' rule for parsing multiple expressions, clarified precedence hierarchy.
 grammar LaTeX;
 
-options {
-	language = Python3;
-}
+// --- Top-level block rule for multiple expressions ---
+block
+	: (relation | expr) (SEPARATOR (relation | expr))* SEPARATOR* EOF
+	;
 
-WS: [ \t\r\n]+ -> skip;
+
+// @formatter:off
+// astyle:off
+// --- Operator precedence hierarchy (highest at bottom) ---
+// block
+//   └─ relation (==, !=, <, >, <=, >=)
+//        └─ additive (+, -)
+//             └─ mp (*, /, etc.)
+//                  └─ unary (+, -)
+//                       └─ postfix (!, eval_at)
+//                            └─ exp (^)
+//                                 └─ comp (group, abs, func, atom, floor, ceil)
+
+math: relation;
+
+relation:
+	relation relop relation
+	| expr ;
+
+equality: expr EQUAL expr;
+
+expr: additive;
+
+sumop: ADD | SUB;
+multop: MUL | CMD_TIMES | CMD_CDOT | DIV | CMD_DIV | COLON;
+relop: EQUAL | LT | LTE | GT | GTE | NEQ;
+powop: CARET;
+
+additive: additive sumop mp
+| mp ;
+
+// mult part
+//mp:
+//	mp multop mp
+//	| exp
+//	| unary ;
+//
+
+// Recommended cleanup for the multiplicative expression rule
+mp:
+	mp multop unary // A multiplicative expression is a series of unary expressions
+	| unary;
+
+mp_nofunc:
+	mp_nofunc multop mp_nofunc
+	| unary_nofunc;
+
+unary: sumop unary
+	| postfix+    ;
+
+unary_nofunc:
+	sumop unary_nofunc
+	| postfix postfix_nofunc*;
+
+postfix: exp postfix_op*;
+postfix_nofunc: exp_nofunc postfix_op*;
+postfix_op: BANG | eval_at;
+
+eval_at:
+	BAR (eval_at_sup | eval_at_sub | eval_at_sup eval_at_sub);
+
+eval_at_sub: UNDERSCORE L_BRACE (expr | equality) R_BRACE;
+
+eval_at_sup: CARET L_BRACE (expr | equality) R_BRACE;
+
+exp: exp powop (atom | L_BRACE expr R_BRACE) subexpr? | comp;
+
+exp_nofunc:
+	exp_nofunc powop (atom | L_BRACE expr R_BRACE) subexpr?
+	| comp_nofunc;
+
+comp:
+	group
+	| abs_group
+	| func
+	| atom
+	| floor
+	| ceil;
+
+comp_nofunc:
+	group
+	| abs_group
+	| atom
+	| floor
+	| ceil;
+
+group:
+	L_PAREN expr R_PAREN
+	| L_BRACKET expr R_BRACKET
+	| L_BRACE expr R_BRACE
+	| L_BRACE_LITERAL expr R_BRACE_LITERAL;
+
+abs_group: BAR expr BAR;
+
+number: DIGIT+ (',' DIGIT DIGIT DIGIT)* ('.' DIGIT+)?;
+
+atom: (VAR | SYMBOL) (subexpr? SINGLE_QUOTES? | SINGLE_QUOTES? subexpr?) # atomVariable
+	| number                                                              # atomNumber
+	| DIFFERENTIAL                                                        # atomDifferential
+	| mathit                                                              # atomMathit
+	| frac                                                                # atomFrac
+	| binom                                                               # atomBinom
+	| bra                                                                 # atomBra
+	| ket                                                                 # atomKet
+	;
+
+
+bra: L_ANGLE expr (R_BAR | BAR);
+ket: (L_BAR | BAR) expr R_ANGLE;
+
+mathit: CMD_MATHIT L_BRACE mathit_text R_BRACE;
+mathit_text: VAR?;
+
+frac: CMD_FRAC (upperd = DIGIT | L_BRACE upper = expr R_BRACE)
+	(lowerd = DIGIT | L_BRACE lower = expr R_BRACE);
+
+binom:
+	(CMD_BINOM | CMD_DBINOM | CMD_TBINOM) L_BRACE n = expr R_BRACE L_BRACE k = expr R_BRACE;
+
+floor: L_FLOOR val = expr R_FLOOR;
+ceil: L_CEIL val = expr R_CEIL;
+
+func_normal:
+	FUNC_EXP
+	| FUNC_LOG
+	| FUNC_LG
+	| FUNC_LN
+	| FUNC_SIN
+	| FUNC_COS
+	| FUNC_TAN
+	| FUNC_CSC
+	| FUNC_SEC
+	| FUNC_COT
+	| FUNC_ARCSIN
+	| FUNC_ARCCOS
+	| FUNC_ARCTAN
+	| FUNC_ARCCSC
+	| FUNC_ARCSEC
+	| FUNC_ARCCOT
+	| FUNC_SINH
+	| FUNC_COSH
+	| FUNC_TANH
+	| FUNC_ARSINH
+	| FUNC_ARCOSH
+	| FUNC_ARTANH;
+
+func:
+	func_normal (subexpr? supexpr? | supexpr? subexpr?) (
+		L_PAREN func_arg R_PAREN
+		| func_arg_noparens
+	)
+	| (VAR | SYMBOL) (subexpr? SINGLE_QUOTES? | SINGLE_QUOTES? subexpr?) // e.g. f(x), f_1'(x)
+	L_PAREN args R_PAREN
+	| FUNC_INT (subexpr supexpr | supexpr subexpr)? (
+		additive? DIFFERENTIAL
+		| frac
+		| additive
+	)
+	| FUNC_SQRT (L_BRACKET root = expr R_BRACKET)? L_BRACE base = expr R_BRACE
+	| FUNC_OVERLINE L_BRACE base = expr R_BRACE
+	| (FUNC_SUM | FUNC_PROD) (subeq supexpr | supexpr subeq) mp
+	| FUNC_LIM limit_sub mp;
+
+args: (expr ',' args) | expr;
+
+limit_sub:
+	UNDERSCORE L_BRACE (VAR | SYMBOL) LIM_APPROACH_SYM expr (
+		CARET ((L_BRACE sumop R_BRACE) | sumop)
+	)? R_BRACE;
+
+func_arg: expr | (expr ',' func_arg);
+func_arg_noparens: mp_nofunc;
+
+subexpr: UNDERSCORE (atom | L_BRACE expr R_BRACE);
+supexpr: CARET (atom | L_BRACE expr R_BRACE);
+
+subeq: UNDERSCORE L_BRACE equality R_BRACE;
+supeq: UNDERSCORE L_BRACE equality R_BRACE;
+
 THINSPACE: ('\\,' | '\\thinspace') -> skip;
 MEDSPACE: ('\\:' | '\\medspace') -> skip;
 THICKSPACE: ('\\;' | '\\thickspace') -> skip;
@@ -74,8 +256,8 @@ LIM_APPROACH_SYM:
 	| '\\longrightarrow'
 	| '\\Longrightarrow';
 FUNC_INT:
-    '\\int'
-    | '\\int\\limits';
+	'\\int'
+	| '\\int\\limits';
 FUNC_SUM: '\\sum';
 FUNC_PROD: '\\prod';
 
@@ -116,9 +298,9 @@ CMD_TIMES: '\\times';
 CMD_CDOT: '\\cdot';
 CMD_DIV: '\\div';
 CMD_FRAC:
-    '\\frac'
-    | '\\dfrac'
-    | '\\tfrac';
+	'\\frac'
+	| '\\dfrac'
+	| '\\tfrac';
 CMD_BINOM: '\\binom';
 CMD_DBINOM: '\\dbinom';
 CMD_TBINOM: '\\tbinom';
@@ -132,8 +314,8 @@ COLON: ':';
 fragment WS_CHAR: [ \t\r\n];
 DIFFERENTIAL: 'd' WS_CHAR*? ([a-zA-Z] | '\\' [a-zA-Z]+);
 
-LETTER: [a-zA-Z];
 DIGIT: [0-9];
+VAR: [a-zA-Z]+;
 
 EQUAL: (('&' WS_CHAR*?)? '=') | ('=' (WS_CHAR*? '&')?);
 NEQ: '\\neq';
@@ -148,165 +330,9 @@ GTE: ('\\geq' | '\\ge' | GTE_Q | GTE_S);
 GTE_Q: '\\geqq';
 GTE_S: '\\geqslant';
 
+WS: [ \t]+ -> skip;
 BANG: '!';
-
 SINGLE_QUOTES: '\''+;
-
 SYMBOL: '\\' [a-zA-Z]+;
-
-math: relation;
-
-relation:
-	relation (EQUAL | LT | LTE | GT | GTE | NEQ) relation
-	| expr;
-
-equality: expr EQUAL expr;
-
-expr: additive;
-
-additive: additive (ADD | SUB) additive | mp;
-
-// mult part
-mp:
-	mp (MUL | CMD_TIMES | CMD_CDOT | DIV | CMD_DIV | COLON) mp
-	| unary;
-
-mp_nofunc:
-	mp_nofunc (
-		MUL
-		| CMD_TIMES
-		| CMD_CDOT
-		| DIV
-		| CMD_DIV
-		| COLON
-	) mp_nofunc
-	| unary_nofunc;
-
-unary: (ADD | SUB) unary | postfix+;
-
-unary_nofunc:
-	(ADD | SUB) unary_nofunc
-	| postfix postfix_nofunc*;
-
-postfix: exp postfix_op*;
-postfix_nofunc: exp_nofunc postfix_op*;
-postfix_op: BANG | eval_at;
-
-eval_at:
-	BAR (eval_at_sup | eval_at_sub | eval_at_sup eval_at_sub);
-
-eval_at_sub: UNDERSCORE L_BRACE (expr | equality) R_BRACE;
-
-eval_at_sup: CARET L_BRACE (expr | equality) R_BRACE;
-
-exp: exp CARET (atom | L_BRACE expr R_BRACE) subexpr? | comp;
-
-exp_nofunc:
-	exp_nofunc CARET (atom | L_BRACE expr R_BRACE) subexpr?
-	| comp_nofunc;
-
-comp:
-	group
-	| abs_group
-	| func
-	| atom
-	| floor
-	| ceil;
-
-comp_nofunc:
-	group
-	| abs_group
-	| atom
-	| floor
-	| ceil;
-
-group:
-	L_PAREN expr R_PAREN
-	| L_BRACKET expr R_BRACKET
-	| L_BRACE expr R_BRACE
-	| L_BRACE_LITERAL expr R_BRACE_LITERAL;
-
-abs_group: BAR expr BAR;
-
-number: DIGIT+ (',' DIGIT DIGIT DIGIT)* ('.' DIGIT+)?;
-
-atom: (LETTER | SYMBOL) (subexpr? SINGLE_QUOTES? | SINGLE_QUOTES? subexpr?)
-	| number
-	| DIFFERENTIAL
-	| mathit
-	| frac
-	| binom
-	| bra
-	| ket;
-
-bra: L_ANGLE expr (R_BAR | BAR);
-ket: (L_BAR | BAR) expr R_ANGLE;
-
-mathit: CMD_MATHIT L_BRACE mathit_text R_BRACE;
-mathit_text: LETTER*;
-
-frac: CMD_FRAC (upperd = DIGIT | L_BRACE upper = expr R_BRACE)
-    (lowerd = DIGIT | L_BRACE lower = expr R_BRACE);
-
-binom:
-	(CMD_BINOM | CMD_DBINOM | CMD_TBINOM) L_BRACE n = expr R_BRACE L_BRACE k = expr R_BRACE;
-
-floor: L_FLOOR val = expr R_FLOOR;
-ceil: L_CEIL val = expr R_CEIL;
-
-func_normal:
-	FUNC_EXP
-	| FUNC_LOG
-	| FUNC_LG
-	| FUNC_LN
-	| FUNC_SIN
-	| FUNC_COS
-	| FUNC_TAN
-	| FUNC_CSC
-	| FUNC_SEC
-	| FUNC_COT
-	| FUNC_ARCSIN
-	| FUNC_ARCCOS
-	| FUNC_ARCTAN
-	| FUNC_ARCCSC
-	| FUNC_ARCSEC
-	| FUNC_ARCCOT
-	| FUNC_SINH
-	| FUNC_COSH
-	| FUNC_TANH
-	| FUNC_ARSINH
-	| FUNC_ARCOSH
-	| FUNC_ARTANH;
-
-func:
-	func_normal (subexpr? supexpr? | supexpr? subexpr?) (
-		L_PAREN func_arg R_PAREN
-		| func_arg_noparens
-	)
-	| (LETTER | SYMBOL) (subexpr? SINGLE_QUOTES? | SINGLE_QUOTES? subexpr?) // e.g. f(x), f_1'(x)
-	L_PAREN args R_PAREN
-	| FUNC_INT (subexpr supexpr | supexpr subexpr)? (
-		additive? DIFFERENTIAL
-		| frac
-		| additive
-	)
-	| FUNC_SQRT (L_BRACKET root = expr R_BRACKET)? L_BRACE base = expr R_BRACE
-	| FUNC_OVERLINE L_BRACE base = expr R_BRACE
-	| (FUNC_SUM | FUNC_PROD) (subeq supexpr | supexpr subeq) mp
-	| FUNC_LIM limit_sub mp;
-
-args: (expr ',' args) | expr;
-
-limit_sub:
-	UNDERSCORE L_BRACE (LETTER | SYMBOL) LIM_APPROACH_SYM expr (
-		CARET ((L_BRACE (ADD | SUB) R_BRACE) | ADD | SUB)
-	)? R_BRACE;
-
-func_arg: expr | (expr ',' func_arg);
-func_arg_noparens: mp_nofunc;
-
-subexpr: UNDERSCORE (atom | L_BRACE expr R_BRACE);
-supexpr: CARET (atom | L_BRACE expr R_BRACE);
-
-subeq: UNDERSCORE L_BRACE equality R_BRACE;
-supeq: UNDERSCORE L_BRACE equality R_BRACE;
+SEPARATOR: NEWLINE;
+fragment NEWLINE: '\r'? '\n' | '\r';

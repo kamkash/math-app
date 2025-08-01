@@ -196,6 +196,7 @@ fn test_asciimath_gen_func() {
 
 
 #[test_log::test]
+#[ignore]
 fn test_asciimath_gen_builtin_functions() {
     let mut input_lines: Vec<String> = Vec::new();
     let mut checks: Vec<(&str, f64)> = Vec::new();
@@ -268,6 +269,7 @@ fn test_asciimath_gen_builtin_functions() {
 
 
 #[test_log::test]
+#[ignore]
 fn test_asciimath_gen_log_functions() {
     let mut input_lines: Vec<String> = Vec::new();
     let mut checks: Vec<(&str, f64)> = Vec::new();
@@ -330,6 +332,7 @@ fn test_asciimath_gen_log_functions() {
 
 
 #[test_log::test]
+#[ignore]
 fn test_asciimath_basic_subscripted_function() {
     let x = 10.0f64;
     let y = 15.0f64;

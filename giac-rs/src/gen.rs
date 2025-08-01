@@ -92,7 +92,7 @@ impl std::hash::Hash for Gen {
 }
 
 impl Gen {
-    pub fn new(expr: &str, ctx: &crate::context::Context) -> Option<Self> {
+    pub fn new(expr: &str, ctx: &Context) -> Option<Self> {
         let cstr = CString::new(expr).ok()?;
         let ptr = unsafe { gen_new(cstr.as_ptr(), ctx.as_ptr()) };
         if ptr.is_null() {
@@ -105,7 +105,7 @@ impl Gen {
         }
     }
 
-    pub fn from_f64(value: f64, ctx: &crate::context::Context) -> Option<Self> {
+    pub fn from_f64(value: f64, ctx: &Context) -> Option<Self> {
         let ptr = unsafe { gen_new_from_double(value, ctx.as_ptr()) };
         if ptr.is_null() {
             None
@@ -117,7 +117,7 @@ impl Gen {
         }
     }
 
-    pub fn symbols<const N: usize>(names: [&str; N], ctx: &crate::context::Context) -> [Gen; N] {
+    pub fn symbols<const N: usize>(names: [&str; N], ctx: &Context) -> [Gen; N] {
         names.map(|name| Gen::symbol(name, ctx ).unwrap_or_else(|| {
             panic!("Failed to create symbol for '{}'", name);
         }))
@@ -294,7 +294,7 @@ impl Gen {
         }
     }
 
-    pub fn pi(ctx: &crate::context::Context) -> Option<Self> {
+    pub fn pi(ctx: &Context) -> Option<Self> {
         let ptr = unsafe { gen_pi(ctx.as_ptr()) };
         if ptr.is_null() {
             None
@@ -306,7 +306,7 @@ impl Gen {
         }
     }
 
-    pub fn e(ctx: &crate::context::Context) -> Option<Self> {
+    pub fn e(ctx: &Context) -> Option<Self> {
         let ptr = unsafe { gen_e(ctx.as_ptr()) };
         if ptr.is_null() {
             None
@@ -322,9 +322,9 @@ impl Gen {
         if vars.len() != values.len() || vars.is_empty() {
             return None;
         }
-        let c_vars: Vec<std::ffi::CString> = vars
+        let c_vars: Vec<CString> = vars
             .iter()
-            .map(|&v| std::ffi::CString::new(v).ok())
+            .map(|&v| CString::new(v).ok())
             .collect::<Option<_>>()?;
         let c_vars_ptrs: Vec<*const std::os::raw::c_char> =
             c_vars.iter().map(|c| c.as_ptr()).collect();
@@ -554,7 +554,7 @@ impl Gen {
     }
 
     /// Creates a new symbolic variable with the given name in the given context.
-    pub fn symbol(name: &str, ctx: &crate::context::Context) -> Option<Self> {
+    pub fn symbol(name: &str, ctx: &Context) -> Option<Self> {
         let cstr = CString::new(name).ok()?;
         let ptr = unsafe { gen_new(cstr.as_ptr(), ctx.as_ptr()) };
         if ptr.is_null() {
@@ -567,7 +567,7 @@ impl Gen {
         }
     }
 
-    /// Attempts to convert the Gen to an f64 if it represents a number.
+    /// Attempts to convert the Gen to a f64 if it represents a number.
     pub fn to_f64(&self) -> Option<f64> {
         unsafe {
             let mut out: f64 = 0.0;

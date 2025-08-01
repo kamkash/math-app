@@ -300,18 +300,18 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         ctx: &Scripted_op_expressionContext<'input>,
     ) -> Self::Return {
         let res = self.visit_children(ctx);
-        dbg!(&self.visitor_stack);
+        // dbg!(&self.visitor_stack);
         // filter optional children
         let children: Vec<String> = filter_optional_children_texts!(ctx);
-        dbg!(&children);
+        // dbg!(&children);
         if let Some(func) = create_function(children[0].as_str()) {
             // If we have a valid function, we push it onto the stack.
             let arg = self.visitor_stack.pop().unwrap(); // bad assumption: there is always one argument
             let sym_func = func.generate(&[arg]);
             self.visitor_stack.push(sym_func);
         }
-        dbg!(&self.visitor_stack);
-        dbg!(&Basic::is_function(self.visitor_stack.last().unwrap()));
+        // dbg!(&self.visitor_stack);
+        // dbg!(&Basic::is_function(self.visitor_stack.last().unwrap()));
         res
     }
 
@@ -320,7 +320,7 @@ impl<'input> AsciiMath2VisitorCompat<'input> for AsciiMathBasicVisitor {
         ctx: &ExplicitKeywordCallContext<'input>,
     ) -> Self::Return {
         let res = self.visit_children(ctx);
-        dbg!(&self.visitor_stack);
+        // dbg!(&self.visitor_stack);
 
         // filter optional children
         let children: Vec<String> = filter_optional_children_texts!(ctx);

@@ -3,7 +3,7 @@ use std::error::Error;
 use std::process::Command;
 
 fn main() {
-    let grammars = vec!["calculator", "AsciiMath2"];
+    let grammars = vec!["calculator", "AsciiMath2", "LaTeX"];
     let additional_args = vec![Some("-visitor"); grammars.len()];
     let antlr_file = "antlr4-4.8-2-SNAPSHOT-complete.jar";
     let path_buf = env::current_dir().unwrap();

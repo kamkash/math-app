@@ -7,6 +7,8 @@ pub mod asciimath_gen_interpreter;
 pub mod asciimath_basic_string_interpreter;
 pub mod calc_basic_interpreter;
 pub mod calc_basic_string_interpreter;
+pub mod latex_basic_interpreter;
+pub mod latex_gen_interpreter;
 
 pub struct SymEquation {
     pub left: Rc<Basic>,

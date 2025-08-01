@@ -9,3 +9,7 @@ pub mod asciimath2lexer;
 pub mod asciimath2listener;
 pub mod asciimath2parser;
 pub mod asciimath2visitor;
+pub mod latexlexer;
+pub mod latexlistener;
+pub mod latexparser;
+pub mod latexvisitor;
