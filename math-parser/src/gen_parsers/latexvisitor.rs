@@ -281,10 +281,53 @@ pub trait LaTeXVisitor<'input>: ParseTreeVisitor<'input,LaTeXParserContextType>{
 	fn visit_func_normal(&mut self, ctx: &Func_normalContext<'input>) { self.visit_children(ctx) }
 
 	/**
-	 * Visit a parse tree produced by {@link LaTeXParser#func}.
+	 * Visit a parse tree produced by the {@code fn_normal}
+	 * labeled alternative in {@link LaTeXParser#func}.
 	 * @param ctx the parse tree
 	 */
-	fn visit_func(&mut self, ctx: &FuncContext<'input>) { self.visit_children(ctx) }
+	fn visit_fn_normal(&mut self, ctx: &Fn_normalContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by the {@code fn_symbol}
+	 * labeled alternative in {@link LaTeXParser#func}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_fn_symbol(&mut self, ctx: &Fn_symbolContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by the {@code fn_int}
+	 * labeled alternative in {@link LaTeXParser#func}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_fn_int(&mut self, ctx: &Fn_intContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by the {@code fn_sqrt}
+	 * labeled alternative in {@link LaTeXParser#func}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_fn_sqrt(&mut self, ctx: &Fn_sqrtContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by the {@code fn_overline}
+	 * labeled alternative in {@link LaTeXParser#func}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_fn_overline(&mut self, ctx: &Fn_overlineContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by the {@code fn_sum}
+	 * labeled alternative in {@link LaTeXParser#func}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_fn_sum(&mut self, ctx: &Fn_sumContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by the {@code fn_limit}
+	 * labeled alternative in {@link LaTeXParser#func}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_fn_limit(&mut self, ctx: &Fn_limitContext<'input>) { self.visit_children(ctx) }
 
 	/**
 	 * Visit a parse tree produced by {@link LaTeXParser#args}.
@@ -698,10 +741,65 @@ pub trait LaTeXVisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= LaTeXP
 		}
 
 	/**
-	 * Visit a parse tree produced by {@link LaTeXParser#func}.
+	 * Visit a parse tree produced by the {@code fn_normal}
+	 * labeled alternative in {@link LaTeXParser#func}.
 	 * @param ctx the parse tree
 	 */
-		fn visit_func(&mut self, ctx: &FuncContext<'input>) -> Self::Return {
+		fn visit_fn_normal(&mut self, ctx: &Fn_normalContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by the {@code fn_symbol}
+	 * labeled alternative in {@link LaTeXParser#func}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_fn_symbol(&mut self, ctx: &Fn_symbolContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by the {@code fn_int}
+	 * labeled alternative in {@link LaTeXParser#func}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_fn_int(&mut self, ctx: &Fn_intContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by the {@code fn_sqrt}
+	 * labeled alternative in {@link LaTeXParser#func}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_fn_sqrt(&mut self, ctx: &Fn_sqrtContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by the {@code fn_overline}
+	 * labeled alternative in {@link LaTeXParser#func}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_fn_overline(&mut self, ctx: &Fn_overlineContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by the {@code fn_sum}
+	 * labeled alternative in {@link LaTeXParser#func}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_fn_sum(&mut self, ctx: &Fn_sumContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by the {@code fn_limit}
+	 * labeled alternative in {@link LaTeXParser#func}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_fn_limit(&mut self, ctx: &Fn_limitContext<'input>) -> Self::Return {
 			self.visit_children(ctx)
 		}
 
@@ -995,8 +1093,38 @@ where
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
-	fn visit_func(&mut self, ctx: &FuncContext<'input>){
-		let result = <Self as LaTeXVisitorCompat>::visit_func(self, ctx);
+	fn visit_fn_normal(&mut self, ctx: &Fn_normalContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_fn_normal(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_fn_symbol(&mut self, ctx: &Fn_symbolContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_fn_symbol(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_fn_int(&mut self, ctx: &Fn_intContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_fn_int(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_fn_sqrt(&mut self, ctx: &Fn_sqrtContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_fn_sqrt(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_fn_overline(&mut self, ctx: &Fn_overlineContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_fn_overline(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_fn_sum(&mut self, ctx: &Fn_sumContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_fn_sum(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_fn_limit(&mut self, ctx: &Fn_limitContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_fn_limit(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 

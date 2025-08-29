@@ -170,18 +170,18 @@ func:
 	func_normal (subexpr? supexpr? | supexpr? subexpr?) (
 		L_PAREN func_arg R_PAREN
 		| func_arg_noparens
-	)
+	) #fn_normal
 	| (VAR | SYMBOL) (subexpr? SINGLE_QUOTES? | SINGLE_QUOTES? subexpr?) // e.g. f(x), f_1'(x)
-	L_PAREN args R_PAREN
+	L_PAREN args R_PAREN  #fn_symbol
 	| FUNC_INT (subexpr supexpr | supexpr subexpr)? (
 		additive? DIFFERENTIAL
 		| frac
 		| additive
-	)
-	| FUNC_SQRT (L_BRACKET root = expr R_BRACKET)? L_BRACE base = expr R_BRACE
-	| FUNC_OVERLINE L_BRACE base = expr R_BRACE
-	| (FUNC_SUM | FUNC_PROD) (subeq supexpr | supexpr subeq) mp
-	| FUNC_LIM limit_sub mp;
+	) #fn_int
+	| FUNC_SQRT (L_BRACKET root = expr R_BRACKET)? L_BRACE sqrbase = expr R_BRACE #fn_sqrt
+	| FUNC_OVERLINE L_BRACE olbase = expr R_BRACE #fn_overline
+	| (FUNC_SUM | FUNC_PROD) (subeq supexpr | supexpr subeq) mp #fn_sum
+	| FUNC_LIM limit_sub mp #fn_limit;
 
 args: (expr ',' args) | expr;
 
@@ -315,7 +315,8 @@ fragment WS_CHAR: [ \t\r\n];
 DIFFERENTIAL: 'd' WS_CHAR*? ([a-zA-Z] | '\\' [a-zA-Z]+);
 
 DIGIT: [0-9];
-VAR: [a-zA-Z]+;
+// VAR: [a-zA-Z]+;
+VAR: [_]* [a-zA-Z] [a-zA-Z0-9_]*;
 
 EQUAL: (('&' WS_CHAR*?)? '=') | ('=' (WS_CHAR*? '&')?);
 NEQ: '\\neq';

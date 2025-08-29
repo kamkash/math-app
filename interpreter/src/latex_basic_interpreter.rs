@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, VecDeque};
 use std::rc::Rc;
 
 use crate::SymEquation;
@@ -9,12 +9,14 @@ use log::info;
 use math_core::common::LogicalOperator;
 use math_parser::gen_parsers::latexlexer::LaTeXLexer;
 use math_parser::gen_parsers::latexparser::{
-    AdditiveContext, AtomNumberContext, AtomVariableContext, BlockContext, LaTeXParser,
-    LaTeXParserContextType, MpContext, MultopContext, PowopContext, RelationContext, RelopContext,
-    SumopContext,
+    AdditiveContext, AtomNumberContext, AtomVariableContext, BlockContext, Fn_sqrtContext, LaTeXParser, LaTeXParserContextType, MpContext, MultopContext, PowopContext, RelationContext, RelopContext, SumopContext
 };
 use math_parser::gen_parsers::latexvisitor::LaTeXVisitorCompat;
 use symengine_rs::basic::Basic;
+
+fn _dump_stack(visitor: &LaTeXBasicVisitor) {
+    dbg!(&visitor.visitor_stack);
+}
 
 pub struct LaTeXBasicVisitor {
     pub tmp_result: Rc<Basic>,
@@ -101,20 +103,22 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXBasicVisitor {
     }
 
     fn visit_additive(&mut self, ctx: &AdditiveContext<'input>) -> Self::Return {
+        // dbg!(ctx.get_text());
         let res = self.visit_children(ctx);
         let len = ctx.get_child_count();
+        let stack_len = self.visitor_stack.len();
         if len > 1 {
-            let mut left = self.visitor_stack.remove(self.visitor_stack.len() - len);
-            for i in 1..len {
-                let op = self
-                    .visitor_stack
-                    .remove(self.visitor_stack.len() - len + i);
-                let right = self
-                    .visitor_stack
-                    .remove(self.visitor_stack.len() - len + i);
+            // dbg!(&self.visitor_stack);
+            let remove_at = stack_len - len;
+            let mut left = self.visitor_stack.remove(remove_at);
+            for _ in 0..(len - 1) / 2 {
+                let op = self.visitor_stack.remove(remove_at);
+                assert!(op.is_op());
                 if op.is_add_op() {
+                    let right = self.visitor_stack.remove(remove_at);
                     left = Rc::new(left.add(&right));
                 } else {
+                    let right = self.visitor_stack.remove(remove_at);
                     left = Rc::new(left.sub(&right));
                 }
             }
@@ -126,15 +130,38 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXBasicVisitor {
     fn visit_mp(&mut self, ctx: &MpContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
         let len = ctx.get_child_count();
+        let stack_len = self.visitor_stack.len();
         if len > 1 {
-            let mut left = self.visitor_stack.remove(self.visitor_stack.len() - len);
-            for i in 1..len {
-                let op = self
-                    .visitor_stack
-                    .remove(self.visitor_stack.len() - len + i);
-                let right = self
-                    .visitor_stack
-                    .remove(self.visitor_stack.len() - len + i);
+            // dbg!(&self.visitor_stack);
+            // implicit multiplication add missing multop
+            let remove_at = stack_len - len;
+            let mut mult_stack: VecDeque<Rc<Basic>> = VecDeque::new();
+            for index in 0..len {
+                let left_item = self.visitor_stack.remove(remove_at);
+                if index % 2 == 0 {
+                    mult_stack.push_front(left_item);
+                } else {
+                    if left_item.is_op() {
+                        mult_stack.push_front(left_item);
+                    } else {
+                        mult_stack.push_front(Rc::new(Basic::mul_op()));
+                        mult_stack.push_front(left_item);
+                    }
+                }
+            }
+            let mut left: Rc<Basic> = Rc::new(Basic::default());
+            let mut right: Rc<Basic>;
+            let mut op: Rc<Basic>;
+            while mult_stack.len() > 0 {
+                if left.is_default() {
+                    left = Rc::clone(&mult_stack.pop_back().unwrap());
+                    op = Rc::clone(&mult_stack.pop_back().unwrap());
+                    right = Rc::clone(&mult_stack.pop_back().unwrap());
+                } else {
+                    op = Rc::clone(&mult_stack.pop_back().unwrap());
+                    right = Rc::clone(&mult_stack.pop_back().unwrap());
+                }
+                assert!(op.is_op());
                 if op.is_mul_op() {
                     left = Rc::new(left.mul(&right));
                 } else {
@@ -143,6 +170,33 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXBasicVisitor {
             }
             self.visitor_stack.push(left);
         }
+        res
+    }
+
+    fn visit_exp(
+        &mut self,
+        ctx: &math_parser::gen_parsers::latexparser::ExpContext<'input>,
+    ) -> Self::Return {
+        let res = self.visit_children(ctx);
+        let len = ctx.get_child_count();
+        let stack_len = self.visitor_stack.len();
+        if len > 1 {
+            // dbg!(&self.visitor_stack);
+            let remove_at = stack_len - len;
+            let mut left = self.visitor_stack.remove(remove_at);
+            for _ in 0..(len - 1) / 2 {
+                let op = self.visitor_stack.remove(remove_at);
+                assert!(op.is_pow_op());
+                let right = self.visitor_stack.remove(remove_at);
+                left = Rc::new(left.pow(&right));
+            }
+            self.visitor_stack.push(left);
+        }
+        res
+    }
+
+    fn visit_fn_sqrt(&mut self, ctx: &Fn_sqrtContext<'input>) -> Self::Return {
+        let res = self.visit_children(ctx);
         res
     }
 

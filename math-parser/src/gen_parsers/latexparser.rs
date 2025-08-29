@@ -6506,35 +6506,62 @@ where
 	}
 }
 //------------------- func ----------------
-pub type FuncContextAll<'input> = FuncContext<'input>;
+#[derive(Debug)]
+pub enum FuncContextAll<'input>{
+	Fn_symbolContext(Fn_symbolContext<'input>),
+	Fn_intContext(Fn_intContext<'input>),
+	Fn_limitContext(Fn_limitContext<'input>),
+	Fn_normalContext(Fn_normalContext<'input>),
+	Fn_sqrtContext(Fn_sqrtContext<'input>),
+	Fn_overlineContext(Fn_overlineContext<'input>),
+	Fn_sumContext(Fn_sumContext<'input>),
+Error(FuncContext<'input>)
+}
+antlr_rust::tid!{FuncContextAll<'a>}
+
+impl<'input> antlr_rust::parser_rule_context::DerefSeal for FuncContextAll<'input>{}
+
+impl<'input> LaTeXParserContext<'input> for FuncContextAll<'input>{}
+
+impl<'input> Deref for FuncContextAll<'input>{
+	type Target = dyn FuncContextAttrs<'input> + 'input;
+	fn deref(&self) -> &Self::Target{
+		use FuncContextAll::*;
+		match self{
+			Fn_symbolContext(inner) => inner,
+			Fn_intContext(inner) => inner,
+			Fn_limitContext(inner) => inner,
+			Fn_normalContext(inner) => inner,
+			Fn_sqrtContext(inner) => inner,
+			Fn_overlineContext(inner) => inner,
+			Fn_sumContext(inner) => inner,
+Error(inner) => inner
+		}
+	}
+}
+impl<'input,'a> Visitable<dyn LaTeXVisitor<'input> + 'a> for FuncContextAll<'input>{
+	fn accept(&self, visitor: &mut (dyn LaTeXVisitor<'input> + 'a)) { self.deref().accept(visitor) }
+}
+impl<'input,'a> Listenable<dyn LaTeXListener<'input> + 'a> for FuncContextAll<'input>{
+    fn enter(&self, listener: &mut (dyn LaTeXListener<'input> + 'a)) { self.deref().enter(listener) }
+    fn exit(&self, listener: &mut (dyn LaTeXListener<'input> + 'a)) { self.deref().exit(listener) }
+}
+
 
 
 pub type FuncContext<'input> = BaseParserRuleContext<'input,FuncContextExt<'input>>;
 
 #[derive(Clone)]
 pub struct FuncContextExt<'input>{
-	pub root: Option<Rc<ExprContextAll<'input>>>,
-	pub base: Option<Rc<ExprContextAll<'input>>>,
 ph:PhantomData<&'input str>
 }
 
 impl<'input> LaTeXParserContext<'input> for FuncContext<'input>{}
 
 impl<'input,'a> Listenable<dyn LaTeXListener<'input> + 'a> for FuncContext<'input>{
-		fn enter(&self,listener: &mut (dyn LaTeXListener<'input> + 'a)) {
-			listener.enter_every_rule(self);
-			listener.enter_func(self);
-		}
-		fn exit(&self,listener: &mut (dyn LaTeXListener<'input> + 'a)) {
-			listener.exit_func(self);
-			listener.exit_every_rule(self);
-		}
 }
 
 impl<'input,'a> Visitable<dyn LaTeXVisitor<'input> + 'a> for FuncContext<'input>{
-	fn accept(&self,visitor: &mut (dyn LaTeXVisitor<'input> + 'a)) {
-		visitor.visit_func(self);
-	}
 }
 
 impl<'input> CustomRuleContext<'input> for FuncContextExt<'input>{
@@ -6548,139 +6575,617 @@ antlr_rust::tid!{FuncContextExt<'a>}
 impl<'input> FuncContextExt<'input>{
 	fn new(parent: Option<Rc<dyn LaTeXParserContext<'input> + 'input > >, invoking_state: isize) -> Rc<FuncContextAll<'input>> {
 		Rc::new(
+		FuncContextAll::Error(
 			BaseParserRuleContext::new_parser_ctx(parent, invoking_state,FuncContextExt{
-				root: None, base: None, 
 				ph:PhantomData
 			}),
+		)
 		)
 	}
 }
 
 pub trait FuncContextAttrs<'input>: LaTeXParserContext<'input> + BorrowMut<FuncContextExt<'input>>{
 
-fn func_normal(&self) -> Option<Rc<Func_normalContextAll<'input>>> where Self:Sized{
-	self.child_of_type(0)
-}
-/// Retrieves first TerminalNode corresponding to token L_PAREN
-/// Returns `None` if there is no child corresponding to token L_PAREN
-fn L_PAREN(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
-	self.get_token(L_PAREN, 0)
-}
-fn func_arg(&self) -> Option<Rc<Func_argContextAll<'input>>> where Self:Sized{
-	self.child_of_type(0)
-}
-/// Retrieves first TerminalNode corresponding to token R_PAREN
-/// Returns `None` if there is no child corresponding to token R_PAREN
-fn R_PAREN(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
-	self.get_token(R_PAREN, 0)
-}
-fn func_arg_noparens(&self) -> Option<Rc<Func_arg_noparensContextAll<'input>>> where Self:Sized{
-	self.child_of_type(0)
-}
-fn subexpr(&self) -> Option<Rc<SubexprContextAll<'input>>> where Self:Sized{
-	self.child_of_type(0)
-}
-fn supexpr(&self) -> Option<Rc<SupexprContextAll<'input>>> where Self:Sized{
-	self.child_of_type(0)
-}
-fn args(&self) -> Option<Rc<ArgsContextAll<'input>>> where Self:Sized{
-	self.child_of_type(0)
-}
-/// Retrieves first TerminalNode corresponding to token VAR
-/// Returns `None` if there is no child corresponding to token VAR
-fn VAR(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
-	self.get_token(VAR, 0)
-}
-/// Retrieves first TerminalNode corresponding to token SYMBOL
-/// Returns `None` if there is no child corresponding to token SYMBOL
-fn SYMBOL(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
-	self.get_token(SYMBOL, 0)
-}
-/// Retrieves first TerminalNode corresponding to token SINGLE_QUOTES
-/// Returns `None` if there is no child corresponding to token SINGLE_QUOTES
-fn SINGLE_QUOTES(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
-	self.get_token(SINGLE_QUOTES, 0)
-}
-/// Retrieves first TerminalNode corresponding to token FUNC_INT
-/// Returns `None` if there is no child corresponding to token FUNC_INT
-fn FUNC_INT(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
-	self.get_token(FUNC_INT, 0)
-}
-/// Retrieves first TerminalNode corresponding to token DIFFERENTIAL
-/// Returns `None` if there is no child corresponding to token DIFFERENTIAL
-fn DIFFERENTIAL(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
-	self.get_token(DIFFERENTIAL, 0)
-}
-fn frac(&self) -> Option<Rc<FracContextAll<'input>>> where Self:Sized{
-	self.child_of_type(0)
-}
-fn additive(&self) -> Option<Rc<AdditiveContextAll<'input>>> where Self:Sized{
-	self.child_of_type(0)
-}
-/// Retrieves first TerminalNode corresponding to token FUNC_SQRT
-/// Returns `None` if there is no child corresponding to token FUNC_SQRT
-fn FUNC_SQRT(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
-	self.get_token(FUNC_SQRT, 0)
-}
-/// Retrieves first TerminalNode corresponding to token L_BRACE
-/// Returns `None` if there is no child corresponding to token L_BRACE
-fn L_BRACE(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
-	self.get_token(L_BRACE, 0)
-}
-/// Retrieves first TerminalNode corresponding to token R_BRACE
-/// Returns `None` if there is no child corresponding to token R_BRACE
-fn R_BRACE(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
-	self.get_token(R_BRACE, 0)
-}
-fn expr_all(&self) ->  Vec<Rc<ExprContextAll<'input>>> where Self:Sized{
-	self.children_of_type()
-}
-fn expr(&self, i: usize) -> Option<Rc<ExprContextAll<'input>>> where Self:Sized{
-	self.child_of_type(i)
-}
-/// Retrieves first TerminalNode corresponding to token L_BRACKET
-/// Returns `None` if there is no child corresponding to token L_BRACKET
-fn L_BRACKET(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
-	self.get_token(L_BRACKET, 0)
-}
-/// Retrieves first TerminalNode corresponding to token R_BRACKET
-/// Returns `None` if there is no child corresponding to token R_BRACKET
-fn R_BRACKET(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
-	self.get_token(R_BRACKET, 0)
-}
-/// Retrieves first TerminalNode corresponding to token FUNC_OVERLINE
-/// Returns `None` if there is no child corresponding to token FUNC_OVERLINE
-fn FUNC_OVERLINE(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
-	self.get_token(FUNC_OVERLINE, 0)
-}
-fn mp(&self) -> Option<Rc<MpContextAll<'input>>> where Self:Sized{
-	self.child_of_type(0)
-}
-/// Retrieves first TerminalNode corresponding to token FUNC_SUM
-/// Returns `None` if there is no child corresponding to token FUNC_SUM
-fn FUNC_SUM(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
-	self.get_token(FUNC_SUM, 0)
-}
-/// Retrieves first TerminalNode corresponding to token FUNC_PROD
-/// Returns `None` if there is no child corresponding to token FUNC_PROD
-fn FUNC_PROD(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
-	self.get_token(FUNC_PROD, 0)
-}
-fn subeq(&self) -> Option<Rc<SubeqContextAll<'input>>> where Self:Sized{
-	self.child_of_type(0)
-}
-/// Retrieves first TerminalNode corresponding to token FUNC_LIM
-/// Returns `None` if there is no child corresponding to token FUNC_LIM
-fn FUNC_LIM(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
-	self.get_token(FUNC_LIM, 0)
-}
-fn limit_sub(&self) -> Option<Rc<Limit_subContextAll<'input>>> where Self:Sized{
-	self.child_of_type(0)
-}
 
 }
 
 impl<'input> FuncContextAttrs<'input> for FuncContext<'input>{}
+
+pub type Fn_symbolContext<'input> = BaseParserRuleContext<'input,Fn_symbolContextExt<'input>>;
+
+pub trait Fn_symbolContextAttrs<'input>: LaTeXParserContext<'input>{
+	/// Retrieves first TerminalNode corresponding to token L_PAREN
+	/// Returns `None` if there is no child corresponding to token L_PAREN
+	fn L_PAREN(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
+		self.get_token(L_PAREN, 0)
+	}
+	fn args(&self) -> Option<Rc<ArgsContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+	/// Retrieves first TerminalNode corresponding to token R_PAREN
+	/// Returns `None` if there is no child corresponding to token R_PAREN
+	fn R_PAREN(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
+		self.get_token(R_PAREN, 0)
+	}
+	/// Retrieves first TerminalNode corresponding to token VAR
+	/// Returns `None` if there is no child corresponding to token VAR
+	fn VAR(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
+		self.get_token(VAR, 0)
+	}
+	/// Retrieves first TerminalNode corresponding to token SYMBOL
+	/// Returns `None` if there is no child corresponding to token SYMBOL
+	fn SYMBOL(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
+		self.get_token(SYMBOL, 0)
+	}
+	fn subexpr(&self) -> Option<Rc<SubexprContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+	/// Retrieves first TerminalNode corresponding to token SINGLE_QUOTES
+	/// Returns `None` if there is no child corresponding to token SINGLE_QUOTES
+	fn SINGLE_QUOTES(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
+		self.get_token(SINGLE_QUOTES, 0)
+	}
+}
+
+impl<'input> Fn_symbolContextAttrs<'input> for Fn_symbolContext<'input>{}
+
+pub struct Fn_symbolContextExt<'input>{
+	base:FuncContextExt<'input>,
+	ph:PhantomData<&'input str>
+}
+
+antlr_rust::tid!{Fn_symbolContextExt<'a>}
+
+impl<'input> LaTeXParserContext<'input> for Fn_symbolContext<'input>{}
+
+impl<'input,'a> Listenable<dyn LaTeXListener<'input> + 'a> for Fn_symbolContext<'input>{
+	fn enter(&self,listener: &mut (dyn LaTeXListener<'input> + 'a)) {
+		listener.enter_every_rule(self);
+		listener.enter_fn_symbol(self);
+	}
+	fn exit(&self,listener: &mut (dyn LaTeXListener<'input> + 'a)) {
+		listener.exit_fn_symbol(self);
+		listener.exit_every_rule(self);
+	}
+}
+
+impl<'input,'a> Visitable<dyn LaTeXVisitor<'input> + 'a> for Fn_symbolContext<'input>{
+	fn accept(&self,visitor: &mut (dyn LaTeXVisitor<'input> + 'a)) {
+		visitor.visit_fn_symbol(self);
+	}
+}
+
+impl<'input> CustomRuleContext<'input> for Fn_symbolContextExt<'input>{
+	type TF = LocalTokenFactory<'input>;
+	type Ctx = LaTeXParserContextType;
+	fn get_rule_index(&self) -> usize { RULE_func }
+	//fn type_rule_index() -> usize where Self: Sized { RULE_func }
+}
+
+impl<'input> Borrow<FuncContextExt<'input>> for Fn_symbolContext<'input>{
+	fn borrow(&self) -> &FuncContextExt<'input> { &self.base }
+}
+impl<'input> BorrowMut<FuncContextExt<'input>> for Fn_symbolContext<'input>{
+	fn borrow_mut(&mut self) -> &mut FuncContextExt<'input> { &mut self.base }
+}
+
+impl<'input> FuncContextAttrs<'input> for Fn_symbolContext<'input> {}
+
+impl<'input> Fn_symbolContextExt<'input>{
+	fn new(ctx: &dyn FuncContextAttrs<'input>) -> Rc<FuncContextAll<'input>>  {
+		Rc::new(
+			FuncContextAll::Fn_symbolContext(
+				BaseParserRuleContext::copy_from(ctx,Fn_symbolContextExt{
+        			base: ctx.borrow().clone(),
+        			ph:PhantomData
+				})
+			)
+		)
+	}
+}
+
+pub type Fn_intContext<'input> = BaseParserRuleContext<'input,Fn_intContextExt<'input>>;
+
+pub trait Fn_intContextAttrs<'input>: LaTeXParserContext<'input>{
+	/// Retrieves first TerminalNode corresponding to token FUNC_INT
+	/// Returns `None` if there is no child corresponding to token FUNC_INT
+	fn FUNC_INT(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
+		self.get_token(FUNC_INT, 0)
+	}
+	/// Retrieves first TerminalNode corresponding to token DIFFERENTIAL
+	/// Returns `None` if there is no child corresponding to token DIFFERENTIAL
+	fn DIFFERENTIAL(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
+		self.get_token(DIFFERENTIAL, 0)
+	}
+	fn frac(&self) -> Option<Rc<FracContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+	fn additive(&self) -> Option<Rc<AdditiveContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+	fn subexpr(&self) -> Option<Rc<SubexprContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+	fn supexpr(&self) -> Option<Rc<SupexprContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+}
+
+impl<'input> Fn_intContextAttrs<'input> for Fn_intContext<'input>{}
+
+pub struct Fn_intContextExt<'input>{
+	base:FuncContextExt<'input>,
+	ph:PhantomData<&'input str>
+}
+
+antlr_rust::tid!{Fn_intContextExt<'a>}
+
+impl<'input> LaTeXParserContext<'input> for Fn_intContext<'input>{}
+
+impl<'input,'a> Listenable<dyn LaTeXListener<'input> + 'a> for Fn_intContext<'input>{
+	fn enter(&self,listener: &mut (dyn LaTeXListener<'input> + 'a)) {
+		listener.enter_every_rule(self);
+		listener.enter_fn_int(self);
+	}
+	fn exit(&self,listener: &mut (dyn LaTeXListener<'input> + 'a)) {
+		listener.exit_fn_int(self);
+		listener.exit_every_rule(self);
+	}
+}
+
+impl<'input,'a> Visitable<dyn LaTeXVisitor<'input> + 'a> for Fn_intContext<'input>{
+	fn accept(&self,visitor: &mut (dyn LaTeXVisitor<'input> + 'a)) {
+		visitor.visit_fn_int(self);
+	}
+}
+
+impl<'input> CustomRuleContext<'input> for Fn_intContextExt<'input>{
+	type TF = LocalTokenFactory<'input>;
+	type Ctx = LaTeXParserContextType;
+	fn get_rule_index(&self) -> usize { RULE_func }
+	//fn type_rule_index() -> usize where Self: Sized { RULE_func }
+}
+
+impl<'input> Borrow<FuncContextExt<'input>> for Fn_intContext<'input>{
+	fn borrow(&self) -> &FuncContextExt<'input> { &self.base }
+}
+impl<'input> BorrowMut<FuncContextExt<'input>> for Fn_intContext<'input>{
+	fn borrow_mut(&mut self) -> &mut FuncContextExt<'input> { &mut self.base }
+}
+
+impl<'input> FuncContextAttrs<'input> for Fn_intContext<'input> {}
+
+impl<'input> Fn_intContextExt<'input>{
+	fn new(ctx: &dyn FuncContextAttrs<'input>) -> Rc<FuncContextAll<'input>>  {
+		Rc::new(
+			FuncContextAll::Fn_intContext(
+				BaseParserRuleContext::copy_from(ctx,Fn_intContextExt{
+        			base: ctx.borrow().clone(),
+        			ph:PhantomData
+				})
+			)
+		)
+	}
+}
+
+pub type Fn_limitContext<'input> = BaseParserRuleContext<'input,Fn_limitContextExt<'input>>;
+
+pub trait Fn_limitContextAttrs<'input>: LaTeXParserContext<'input>{
+	/// Retrieves first TerminalNode corresponding to token FUNC_LIM
+	/// Returns `None` if there is no child corresponding to token FUNC_LIM
+	fn FUNC_LIM(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
+		self.get_token(FUNC_LIM, 0)
+	}
+	fn limit_sub(&self) -> Option<Rc<Limit_subContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+	fn mp(&self) -> Option<Rc<MpContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+}
+
+impl<'input> Fn_limitContextAttrs<'input> for Fn_limitContext<'input>{}
+
+pub struct Fn_limitContextExt<'input>{
+	base:FuncContextExt<'input>,
+	ph:PhantomData<&'input str>
+}
+
+antlr_rust::tid!{Fn_limitContextExt<'a>}
+
+impl<'input> LaTeXParserContext<'input> for Fn_limitContext<'input>{}
+
+impl<'input,'a> Listenable<dyn LaTeXListener<'input> + 'a> for Fn_limitContext<'input>{
+	fn enter(&self,listener: &mut (dyn LaTeXListener<'input> + 'a)) {
+		listener.enter_every_rule(self);
+		listener.enter_fn_limit(self);
+	}
+	fn exit(&self,listener: &mut (dyn LaTeXListener<'input> + 'a)) {
+		listener.exit_fn_limit(self);
+		listener.exit_every_rule(self);
+	}
+}
+
+impl<'input,'a> Visitable<dyn LaTeXVisitor<'input> + 'a> for Fn_limitContext<'input>{
+	fn accept(&self,visitor: &mut (dyn LaTeXVisitor<'input> + 'a)) {
+		visitor.visit_fn_limit(self);
+	}
+}
+
+impl<'input> CustomRuleContext<'input> for Fn_limitContextExt<'input>{
+	type TF = LocalTokenFactory<'input>;
+	type Ctx = LaTeXParserContextType;
+	fn get_rule_index(&self) -> usize { RULE_func }
+	//fn type_rule_index() -> usize where Self: Sized { RULE_func }
+}
+
+impl<'input> Borrow<FuncContextExt<'input>> for Fn_limitContext<'input>{
+	fn borrow(&self) -> &FuncContextExt<'input> { &self.base }
+}
+impl<'input> BorrowMut<FuncContextExt<'input>> for Fn_limitContext<'input>{
+	fn borrow_mut(&mut self) -> &mut FuncContextExt<'input> { &mut self.base }
+}
+
+impl<'input> FuncContextAttrs<'input> for Fn_limitContext<'input> {}
+
+impl<'input> Fn_limitContextExt<'input>{
+	fn new(ctx: &dyn FuncContextAttrs<'input>) -> Rc<FuncContextAll<'input>>  {
+		Rc::new(
+			FuncContextAll::Fn_limitContext(
+				BaseParserRuleContext::copy_from(ctx,Fn_limitContextExt{
+        			base: ctx.borrow().clone(),
+        			ph:PhantomData
+				})
+			)
+		)
+	}
+}
+
+pub type Fn_normalContext<'input> = BaseParserRuleContext<'input,Fn_normalContextExt<'input>>;
+
+pub trait Fn_normalContextAttrs<'input>: LaTeXParserContext<'input>{
+	fn func_normal(&self) -> Option<Rc<Func_normalContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+	/// Retrieves first TerminalNode corresponding to token L_PAREN
+	/// Returns `None` if there is no child corresponding to token L_PAREN
+	fn L_PAREN(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
+		self.get_token(L_PAREN, 0)
+	}
+	fn func_arg(&self) -> Option<Rc<Func_argContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+	/// Retrieves first TerminalNode corresponding to token R_PAREN
+	/// Returns `None` if there is no child corresponding to token R_PAREN
+	fn R_PAREN(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
+		self.get_token(R_PAREN, 0)
+	}
+	fn func_arg_noparens(&self) -> Option<Rc<Func_arg_noparensContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+	fn subexpr(&self) -> Option<Rc<SubexprContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+	fn supexpr(&self) -> Option<Rc<SupexprContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+}
+
+impl<'input> Fn_normalContextAttrs<'input> for Fn_normalContext<'input>{}
+
+pub struct Fn_normalContextExt<'input>{
+	base:FuncContextExt<'input>,
+	ph:PhantomData<&'input str>
+}
+
+antlr_rust::tid!{Fn_normalContextExt<'a>}
+
+impl<'input> LaTeXParserContext<'input> for Fn_normalContext<'input>{}
+
+impl<'input,'a> Listenable<dyn LaTeXListener<'input> + 'a> for Fn_normalContext<'input>{
+	fn enter(&self,listener: &mut (dyn LaTeXListener<'input> + 'a)) {
+		listener.enter_every_rule(self);
+		listener.enter_fn_normal(self);
+	}
+	fn exit(&self,listener: &mut (dyn LaTeXListener<'input> + 'a)) {
+		listener.exit_fn_normal(self);
+		listener.exit_every_rule(self);
+	}
+}
+
+impl<'input,'a> Visitable<dyn LaTeXVisitor<'input> + 'a> for Fn_normalContext<'input>{
+	fn accept(&self,visitor: &mut (dyn LaTeXVisitor<'input> + 'a)) {
+		visitor.visit_fn_normal(self);
+	}
+}
+
+impl<'input> CustomRuleContext<'input> for Fn_normalContextExt<'input>{
+	type TF = LocalTokenFactory<'input>;
+	type Ctx = LaTeXParserContextType;
+	fn get_rule_index(&self) -> usize { RULE_func }
+	//fn type_rule_index() -> usize where Self: Sized { RULE_func }
+}
+
+impl<'input> Borrow<FuncContextExt<'input>> for Fn_normalContext<'input>{
+	fn borrow(&self) -> &FuncContextExt<'input> { &self.base }
+}
+impl<'input> BorrowMut<FuncContextExt<'input>> for Fn_normalContext<'input>{
+	fn borrow_mut(&mut self) -> &mut FuncContextExt<'input> { &mut self.base }
+}
+
+impl<'input> FuncContextAttrs<'input> for Fn_normalContext<'input> {}
+
+impl<'input> Fn_normalContextExt<'input>{
+	fn new(ctx: &dyn FuncContextAttrs<'input>) -> Rc<FuncContextAll<'input>>  {
+		Rc::new(
+			FuncContextAll::Fn_normalContext(
+				BaseParserRuleContext::copy_from(ctx,Fn_normalContextExt{
+        			base: ctx.borrow().clone(),
+        			ph:PhantomData
+				})
+			)
+		)
+	}
+}
+
+pub type Fn_sqrtContext<'input> = BaseParserRuleContext<'input,Fn_sqrtContextExt<'input>>;
+
+pub trait Fn_sqrtContextAttrs<'input>: LaTeXParserContext<'input>{
+	/// Retrieves first TerminalNode corresponding to token FUNC_SQRT
+	/// Returns `None` if there is no child corresponding to token FUNC_SQRT
+	fn FUNC_SQRT(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
+		self.get_token(FUNC_SQRT, 0)
+	}
+	/// Retrieves first TerminalNode corresponding to token L_BRACE
+	/// Returns `None` if there is no child corresponding to token L_BRACE
+	fn L_BRACE(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
+		self.get_token(L_BRACE, 0)
+	}
+	/// Retrieves first TerminalNode corresponding to token R_BRACE
+	/// Returns `None` if there is no child corresponding to token R_BRACE
+	fn R_BRACE(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
+		self.get_token(R_BRACE, 0)
+	}
+	fn expr_all(&self) ->  Vec<Rc<ExprContextAll<'input>>> where Self:Sized{
+		self.children_of_type()
+	}
+	fn expr(&self, i: usize) -> Option<Rc<ExprContextAll<'input>>> where Self:Sized{
+		self.child_of_type(i)
+	}
+	/// Retrieves first TerminalNode corresponding to token L_BRACKET
+	/// Returns `None` if there is no child corresponding to token L_BRACKET
+	fn L_BRACKET(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
+		self.get_token(L_BRACKET, 0)
+	}
+	/// Retrieves first TerminalNode corresponding to token R_BRACKET
+	/// Returns `None` if there is no child corresponding to token R_BRACKET
+	fn R_BRACKET(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
+		self.get_token(R_BRACKET, 0)
+	}
+}
+
+impl<'input> Fn_sqrtContextAttrs<'input> for Fn_sqrtContext<'input>{}
+
+pub struct Fn_sqrtContextExt<'input>{
+	base:FuncContextExt<'input>,
+	pub root: Option<Rc<ExprContextAll<'input>>>,
+	pub sqrbase: Option<Rc<ExprContextAll<'input>>>,
+	ph:PhantomData<&'input str>
+}
+
+antlr_rust::tid!{Fn_sqrtContextExt<'a>}
+
+impl<'input> LaTeXParserContext<'input> for Fn_sqrtContext<'input>{}
+
+impl<'input,'a> Listenable<dyn LaTeXListener<'input> + 'a> for Fn_sqrtContext<'input>{
+	fn enter(&self,listener: &mut (dyn LaTeXListener<'input> + 'a)) {
+		listener.enter_every_rule(self);
+		listener.enter_fn_sqrt(self);
+	}
+	fn exit(&self,listener: &mut (dyn LaTeXListener<'input> + 'a)) {
+		listener.exit_fn_sqrt(self);
+		listener.exit_every_rule(self);
+	}
+}
+
+impl<'input,'a> Visitable<dyn LaTeXVisitor<'input> + 'a> for Fn_sqrtContext<'input>{
+	fn accept(&self,visitor: &mut (dyn LaTeXVisitor<'input> + 'a)) {
+		visitor.visit_fn_sqrt(self);
+	}
+}
+
+impl<'input> CustomRuleContext<'input> for Fn_sqrtContextExt<'input>{
+	type TF = LocalTokenFactory<'input>;
+	type Ctx = LaTeXParserContextType;
+	fn get_rule_index(&self) -> usize { RULE_func }
+	//fn type_rule_index() -> usize where Self: Sized { RULE_func }
+}
+
+impl<'input> Borrow<FuncContextExt<'input>> for Fn_sqrtContext<'input>{
+	fn borrow(&self) -> &FuncContextExt<'input> { &self.base }
+}
+impl<'input> BorrowMut<FuncContextExt<'input>> for Fn_sqrtContext<'input>{
+	fn borrow_mut(&mut self) -> &mut FuncContextExt<'input> { &mut self.base }
+}
+
+impl<'input> FuncContextAttrs<'input> for Fn_sqrtContext<'input> {}
+
+impl<'input> Fn_sqrtContextExt<'input>{
+	fn new(ctx: &dyn FuncContextAttrs<'input>) -> Rc<FuncContextAll<'input>>  {
+		Rc::new(
+			FuncContextAll::Fn_sqrtContext(
+				BaseParserRuleContext::copy_from(ctx,Fn_sqrtContextExt{
+        			root:None, sqrbase:None, 
+        			base: ctx.borrow().clone(),
+        			ph:PhantomData
+				})
+			)
+		)
+	}
+}
+
+pub type Fn_overlineContext<'input> = BaseParserRuleContext<'input,Fn_overlineContextExt<'input>>;
+
+pub trait Fn_overlineContextAttrs<'input>: LaTeXParserContext<'input>{
+	/// Retrieves first TerminalNode corresponding to token FUNC_OVERLINE
+	/// Returns `None` if there is no child corresponding to token FUNC_OVERLINE
+	fn FUNC_OVERLINE(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
+		self.get_token(FUNC_OVERLINE, 0)
+	}
+	/// Retrieves first TerminalNode corresponding to token L_BRACE
+	/// Returns `None` if there is no child corresponding to token L_BRACE
+	fn L_BRACE(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
+		self.get_token(L_BRACE, 0)
+	}
+	/// Retrieves first TerminalNode corresponding to token R_BRACE
+	/// Returns `None` if there is no child corresponding to token R_BRACE
+	fn R_BRACE(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
+		self.get_token(R_BRACE, 0)
+	}
+	fn expr(&self) -> Option<Rc<ExprContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+}
+
+impl<'input> Fn_overlineContextAttrs<'input> for Fn_overlineContext<'input>{}
+
+pub struct Fn_overlineContextExt<'input>{
+	base:FuncContextExt<'input>,
+	pub olbase: Option<Rc<ExprContextAll<'input>>>,
+	ph:PhantomData<&'input str>
+}
+
+antlr_rust::tid!{Fn_overlineContextExt<'a>}
+
+impl<'input> LaTeXParserContext<'input> for Fn_overlineContext<'input>{}
+
+impl<'input,'a> Listenable<dyn LaTeXListener<'input> + 'a> for Fn_overlineContext<'input>{
+	fn enter(&self,listener: &mut (dyn LaTeXListener<'input> + 'a)) {
+		listener.enter_every_rule(self);
+		listener.enter_fn_overline(self);
+	}
+	fn exit(&self,listener: &mut (dyn LaTeXListener<'input> + 'a)) {
+		listener.exit_fn_overline(self);
+		listener.exit_every_rule(self);
+	}
+}
+
+impl<'input,'a> Visitable<dyn LaTeXVisitor<'input> + 'a> for Fn_overlineContext<'input>{
+	fn accept(&self,visitor: &mut (dyn LaTeXVisitor<'input> + 'a)) {
+		visitor.visit_fn_overline(self);
+	}
+}
+
+impl<'input> CustomRuleContext<'input> for Fn_overlineContextExt<'input>{
+	type TF = LocalTokenFactory<'input>;
+	type Ctx = LaTeXParserContextType;
+	fn get_rule_index(&self) -> usize { RULE_func }
+	//fn type_rule_index() -> usize where Self: Sized { RULE_func }
+}
+
+impl<'input> Borrow<FuncContextExt<'input>> for Fn_overlineContext<'input>{
+	fn borrow(&self) -> &FuncContextExt<'input> { &self.base }
+}
+impl<'input> BorrowMut<FuncContextExt<'input>> for Fn_overlineContext<'input>{
+	fn borrow_mut(&mut self) -> &mut FuncContextExt<'input> { &mut self.base }
+}
+
+impl<'input> FuncContextAttrs<'input> for Fn_overlineContext<'input> {}
+
+impl<'input> Fn_overlineContextExt<'input>{
+	fn new(ctx: &dyn FuncContextAttrs<'input>) -> Rc<FuncContextAll<'input>>  {
+		Rc::new(
+			FuncContextAll::Fn_overlineContext(
+				BaseParserRuleContext::copy_from(ctx,Fn_overlineContextExt{
+        			olbase:None, 
+        			base: ctx.borrow().clone(),
+        			ph:PhantomData
+				})
+			)
+		)
+	}
+}
+
+pub type Fn_sumContext<'input> = BaseParserRuleContext<'input,Fn_sumContextExt<'input>>;
+
+pub trait Fn_sumContextAttrs<'input>: LaTeXParserContext<'input>{
+	fn mp(&self) -> Option<Rc<MpContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+	/// Retrieves first TerminalNode corresponding to token FUNC_SUM
+	/// Returns `None` if there is no child corresponding to token FUNC_SUM
+	fn FUNC_SUM(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
+		self.get_token(FUNC_SUM, 0)
+	}
+	/// Retrieves first TerminalNode corresponding to token FUNC_PROD
+	/// Returns `None` if there is no child corresponding to token FUNC_PROD
+	fn FUNC_PROD(&self) -> Option<Rc<TerminalNode<'input,LaTeXParserContextType>>> where Self:Sized{
+		self.get_token(FUNC_PROD, 0)
+	}
+	fn subeq(&self) -> Option<Rc<SubeqContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+	fn supexpr(&self) -> Option<Rc<SupexprContextAll<'input>>> where Self:Sized{
+		self.child_of_type(0)
+	}
+}
+
+impl<'input> Fn_sumContextAttrs<'input> for Fn_sumContext<'input>{}
+
+pub struct Fn_sumContextExt<'input>{
+	base:FuncContextExt<'input>,
+	ph:PhantomData<&'input str>
+}
+
+antlr_rust::tid!{Fn_sumContextExt<'a>}
+
+impl<'input> LaTeXParserContext<'input> for Fn_sumContext<'input>{}
+
+impl<'input,'a> Listenable<dyn LaTeXListener<'input> + 'a> for Fn_sumContext<'input>{
+	fn enter(&self,listener: &mut (dyn LaTeXListener<'input> + 'a)) {
+		listener.enter_every_rule(self);
+		listener.enter_fn_sum(self);
+	}
+	fn exit(&self,listener: &mut (dyn LaTeXListener<'input> + 'a)) {
+		listener.exit_fn_sum(self);
+		listener.exit_every_rule(self);
+	}
+}
+
+impl<'input,'a> Visitable<dyn LaTeXVisitor<'input> + 'a> for Fn_sumContext<'input>{
+	fn accept(&self,visitor: &mut (dyn LaTeXVisitor<'input> + 'a)) {
+		visitor.visit_fn_sum(self);
+	}
+}
+
+impl<'input> CustomRuleContext<'input> for Fn_sumContextExt<'input>{
+	type TF = LocalTokenFactory<'input>;
+	type Ctx = LaTeXParserContextType;
+	fn get_rule_index(&self) -> usize { RULE_func }
+	//fn type_rule_index() -> usize where Self: Sized { RULE_func }
+}
+
+impl<'input> Borrow<FuncContextExt<'input>> for Fn_sumContext<'input>{
+	fn borrow(&self) -> &FuncContextExt<'input> { &self.base }
+}
+impl<'input> BorrowMut<FuncContextExt<'input>> for Fn_sumContext<'input>{
+	fn borrow_mut(&mut self) -> &mut FuncContextExt<'input> { &mut self.base }
+}
+
+impl<'input> FuncContextAttrs<'input> for Fn_sumContext<'input> {}
+
+impl<'input> Fn_sumContextExt<'input>{
+	fn new(ctx: &dyn FuncContextAttrs<'input>) -> Rc<FuncContextAll<'input>>  {
+		Rc::new(
+			FuncContextAll::Fn_sumContext(
+				BaseParserRuleContext::copy_from(ctx,Fn_sumContextExt{
+        			base: ctx.borrow().clone(),
+        			ph:PhantomData
+				})
+			)
+		)
+	}
+}
 
 impl<'input, I, H> LaTeXParser<'input, I, H>
 where
@@ -6705,8 +7210,9 @@ where
 			 FUNC_ARCCSC | FUNC_ARCSEC | FUNC_ARCCOT | FUNC_SINH | FUNC_COSH | FUNC_TANH |
 			 FUNC_ARSINH | FUNC_ARCOSH | FUNC_ARTANH 
 				=> {
-					//recog.base.enter_outer_alt(_localctx.clone(), 1);
-					recog.base.enter_outer_alt(None, 1);
+					let tmp = Fn_normalContextExt::new(&**_localctx);
+					recog.base.enter_outer_alt(Some(tmp.clone()), 1);
+					_localctx = tmp;
 					{
 					/*InvokeRule func_normal*/
 					recog.base.set_state(414);
@@ -6809,8 +7315,9 @@ where
 
 			 VAR | SYMBOL 
 				=> {
-					//recog.base.enter_outer_alt(_localctx.clone(), 2);
-					recog.base.enter_outer_alt(None, 2);
+					let tmp = Fn_symbolContextExt::new(&**_localctx);
+					recog.base.enter_outer_alt(Some(tmp.clone()), 2);
+					_localctx = tmp;
 					{
 					recog.base.set_state(436);
 					_la = recog.base.input.la(1);
@@ -6899,8 +7406,9 @@ where
 
 			 FUNC_INT 
 				=> {
-					//recog.base.enter_outer_alt(_localctx.clone(), 3);
-					recog.base.enter_outer_alt(None, 3);
+					let tmp = Fn_intContextExt::new(&**_localctx);
+					recog.base.enter_outer_alt(Some(tmp.clone()), 3);
+					_localctx = tmp;
 					{
 					recog.base.set_state(455);
 					recog.base.match_token(FUNC_INT,&mut recog.err_handler)?;
@@ -6999,8 +7507,9 @@ where
 
 			 FUNC_SQRT 
 				=> {
-					//recog.base.enter_outer_alt(_localctx.clone(), 4);
-					recog.base.enter_outer_alt(None, 4);
+					let tmp = Fn_sqrtContextExt::new(&**_localctx);
+					recog.base.enter_outer_alt(Some(tmp.clone()), 4);
+					_localctx = tmp;
 					{
 					recog.base.set_state(472);
 					recog.base.match_token(FUNC_SQRT,&mut recog.err_handler)?;
@@ -7016,8 +7525,8 @@ where
 						/*InvokeRule expr*/
 						recog.base.set_state(474);
 						let tmp = recog.expr()?;
-						 cast_mut::<_,FuncContext >(&mut _localctx).root = Some(tmp.clone());
-						  
+						if let FuncContextAll::Fn_sqrtContext(ctx) = cast_mut::<_,FuncContextAll >(&mut _localctx){
+						ctx.root = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 						recog.base.set_state(475);
 						recog.base.match_token(R_BRACKET,&mut recog.err_handler)?;
@@ -7031,8 +7540,8 @@ where
 					/*InvokeRule expr*/
 					recog.base.set_state(480);
 					let tmp = recog.expr()?;
-					 cast_mut::<_,FuncContext >(&mut _localctx).base = Some(tmp.clone());
-					  
+					if let FuncContextAll::Fn_sqrtContext(ctx) = cast_mut::<_,FuncContextAll >(&mut _localctx){
+					ctx.sqrbase = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(481);
 					recog.base.match_token(R_BRACE,&mut recog.err_handler)?;
@@ -7042,8 +7551,9 @@ where
 
 			 FUNC_OVERLINE 
 				=> {
-					//recog.base.enter_outer_alt(_localctx.clone(), 5);
-					recog.base.enter_outer_alt(None, 5);
+					let tmp = Fn_overlineContextExt::new(&**_localctx);
+					recog.base.enter_outer_alt(Some(tmp.clone()), 5);
+					_localctx = tmp;
 					{
 					recog.base.set_state(483);
 					recog.base.match_token(FUNC_OVERLINE,&mut recog.err_handler)?;
@@ -7054,8 +7564,8 @@ where
 					/*InvokeRule expr*/
 					recog.base.set_state(485);
 					let tmp = recog.expr()?;
-					 cast_mut::<_,FuncContext >(&mut _localctx).base = Some(tmp.clone());
-					  
+					if let FuncContextAll::Fn_overlineContext(ctx) = cast_mut::<_,FuncContextAll >(&mut _localctx){
+					ctx.olbase = Some(tmp.clone()); } else {unreachable!("cant cast");}  
 
 					recog.base.set_state(486);
 					recog.base.match_token(R_BRACE,&mut recog.err_handler)?;
@@ -7065,8 +7575,9 @@ where
 
 			 FUNC_SUM | FUNC_PROD 
 				=> {
-					//recog.base.enter_outer_alt(_localctx.clone(), 6);
-					recog.base.enter_outer_alt(None, 6);
+					let tmp = Fn_sumContextExt::new(&**_localctx);
+					recog.base.enter_outer_alt(Some(tmp.clone()), 6);
+					_localctx = tmp;
 					{
 					recog.base.set_state(488);
 					_la = recog.base.input.la(1);
@@ -7121,8 +7632,9 @@ where
 
 			 FUNC_LIM 
 				=> {
-					//recog.base.enter_outer_alt(_localctx.clone(), 7);
-					recog.base.enter_outer_alt(None, 7);
+					let tmp = Fn_limitContextExt::new(&**_localctx);
+					recog.base.enter_outer_alt(Some(tmp.clone()), 7);
+					_localctx = tmp;
 					{
 					recog.base.set_state(499);
 					recog.base.match_token(FUNC_LIM,&mut recog.err_handler)?;

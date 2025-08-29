@@ -1,19 +1,23 @@
-use std::collections::VecDeque;
-use std::rc::Rc;
+use crate::asciimath_gen_interpreter::SymEquationGen;
 use antlr_rust::common_token_stream::CommonTokenStream;
 use antlr_rust::tree::{ParseTree, ParseTreeVisitorCompat, TerminalNode, Tree};
 use antlr_rust::InputStream;
-use math_core::common::LogicalOperator;
-use giac_rs::gen::Gen;
-use giac_rs::gen::{GEN_ADD, GEN_SUB, GEN_MUL, GEN_DIV, GEN_POW};
-use crate::asciimath_gen_interpreter::SymEquationGen;
 use giac_rs::context::Context;
+use giac_rs::gen::Gen;
+use giac_rs::gen::{GEN_ADD, GEN_DIV, GEN_MUL, GEN_POW, GEN_SUB};
+use math_core::common::LogicalOperator;
+use std::collections::VecDeque;
+use std::rc::Rc;
 
 use log::{error, info};
 // Import the generated parser context type
-use math_parser::gen_parsers::latexparser::{AdditiveContext, AtomVariableContext, BlockContext, EqualityContext, ExpContext, ExprContext, FuncContext, LaTeXParser, LaTeXParserContextType, MathContext, MpContext, MultopContext, NumberContext, PowopContext, RelationContext, RelopContext, SumopContext};
-use math_parser::gen_parsers::latexvisitor::LaTeXVisitorCompat;
 use math_parser::gen_parsers::latexlexer::LaTeXLexer;
+use math_parser::gen_parsers::latexparser::{
+    AdditiveContext, AtomVariableContext, BlockContext, EqualityContext, ExpContext, ExprContext,
+    FuncContext, LaTeXParser, LaTeXParserContextType, MathContext, MpContext, MultopContext,
+    NumberContext, PowopContext, RelationContext, RelopContext, SumopContext,
+};
+use math_parser::gen_parsers::latexvisitor::LaTeXVisitorCompat;
 
 pub struct LaTeXGenVisitor {
     pub visitor_stack: Vec<Rc<Gen>>,
@@ -183,7 +187,10 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
     fn visit_number(&mut self, ctx: &NumberContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
         let sci_text = ctx.get_text();
-        let filtered: String = sci_text.chars().filter(|c| c.is_numeric() || *c == '.' || *c == '-').collect();
+        let filtered: String = sci_text
+            .chars()
+            .filter(|c| c.is_numeric() || *c == '.' || *c == '-')
+            .collect();
         let value: f64 = filtered.parse().unwrap_or(0.0);
         let result = Rc::new(Gen::from_f64(value, &self.giac_context).unwrap());
         self.visitor_stack.push(result);
@@ -228,46 +235,5 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
             self.visitor_stack.push(Rc::new(GEN_POW.clone()));
         }
         res
-    }
-
-    fn visit_func(&mut self, ctx: &FuncContext<'input>) -> Self::Return {
-        let res = self.visit_children(ctx);
-        let children_count = ctx.get_child_count();
-        if children_count > 0 {
-            let func_name = ctx.get_child(0).unwrap().get_text();
-            let mut args = Vec::new();
-            for _ in 1..children_count {
-                if let Some(arg_gen) = self.visitor_stack.pop() {
-                    args.push(arg_gen);
-                }
-            }
-            args.reverse();
-            let args_str: Vec<String> = args.iter().map(|arg| arg.to_string()).collect();
-            let func_call_str = format!("{}({})", func_name, args_str.join(", "));
-            let func_gen = Rc::new(Gen::new(&func_call_str, &self.giac_context).unwrap());
-            self.visitor_stack.push(func_gen);
-        }
-        res
-    }
-}
-
-pub fn evaluate_latex_block_gen(input: &str) -> Result<String, String> {
-    info!("evaluate_latex_block_gen: {}", input);
-    let mut visitor = LaTeXGenVisitor::new();
-    let lexer = LaTeXLexer::new(InputStream::new(input));
-    let token_stream = CommonTokenStream::new(lexer);
-    let mut parser = LaTeXParser::new(token_stream);
-    let result = parser.block();
-    match result {
-        Ok(context) => {
-            let _ = visitor.visit(&*context);
-            let formatted_results: Vec<String> = visitor
-                .block_expressions
-                .iter()
-                .map(|eq| eq.to_string())
-                .collect();
-            Ok(format!("{{ {} }}", formatted_results.join(", ")))
-        }
-        Err(e) => Err(format!("parser error {}", e).to_string()),
     }
 }
