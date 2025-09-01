@@ -1,0 +1,42 @@
+# License
+
+This project is licensed under the GNU General Public License v3.0 (GPL-3.0).
+
+Copyright (C) 2025 Kamran
+
+This program is free software: you can redistribute it and/or modify  
+it under the terms of the GNU General Public License as published by  
+the Free Software Foundation, either version 3 of the License, or  
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,  
+but WITHOUT ANY WARRANTY; without even the implied warranty of  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the  
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License  
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+---
+
+## 📦 Third-Party Dependencies
+
+This project integrates the following open-source libraries:
+
+### 🔢 Giac
+- **License**: GNU General Public License v3.0
+- **Source**: [https://www-fourier.ujf-grenoble.fr/~parisse/giac.html](https://www-fourier.ujf-grenoble.fr/~parisse/giac.html)
+- **Usage**: Symbolic computation engine for algebraic and calculus operations.
+
+### 🧮 SymEngine
+- **License**: MIT License
+- **Source**: [https://github.com/symengine/symengine](https://github.com/symengine/symengine)
+- **Usage**: Fast symbolic math engine used for lightweight symbolic manipulation.
+
+### 🧠 llama.cpp
+- **License**: MIT License
+- **Source**: [https://github.com/ggerganov/llama.cpp](https://github.com/ggerganov/llama.cpp)
+- **Usage**: Local LLM inference engine for AI-assisted symbolic reasoning and explanation.
+
+All dependencies are used in accordance with their respective licenses.  
+MIT-licensed components are compatible with GPL-3.0 and do not impose additional restrictions.

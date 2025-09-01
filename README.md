@@ -21,3 +21,8 @@ cargo test -- --test-threads=1
 
 ```
 
+Note on CI: The project uses a GIAC FFI which is not fully thread-safe. For deterministic
+test runs in CI when tests exercise the GIAC FFI, run the test suite single-threaded:
+
+RUST_TEST_THREADS=1 cargo test --workspace
+

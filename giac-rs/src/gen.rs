@@ -1,7 +1,23 @@
+//! GIAC FFI ownership and usage notes
+//!
+//! - Ownership model:
+//!   - `Gen` is an owning wrapper for the underlying `gen_t` returned by the GIAC FFI.
+//!     It calls the FFI `gen_free` in `Drop` (unless the `ctx` is null for library-owned singletons).
+//!   - `Clone`/`deep_clone()` create an owned duplicate via the FFI `gen_clone`.
+//!   - Use `Gen::deep_clone()` when you need a separate owned copy of the underlying `gen_t`.
+//! - Cheap, non-owning views:
+//!   - `GenRef` is a lightweight, non-owning, `Copy` view containing the raw pointers.
+//!     It does not manage memory and must not outlive the owning `Gen` or its `Context`.
+//!   - Prefer passing `&Gen` (or `GenRef`) to APIs rather than moving `Gen` by value.
+//! - CI/tests:
+//!   - The underlying GIAC library is not guaranteed thread-safe. For deterministic tests
+//!     that exercise the GIAC FFI, run test suites single-threaded in CI:
+//!       RUST_TEST_THREADS=1 cargo test --workspace
 use math_core::common::LogicalOperator;
 use regex::Regex;
 
 use crate::{context::Context, giac_ffi::*};
+use crate::giac_vec;
 use std::{
     ffi::{CStr, CString},
     fmt,
@@ -78,6 +94,55 @@ pub struct Gen {
     ctx: *mut context_t,
 }
 
+/// A lightweight, non-owning view of a `Gen` suitable for cheap copies.
+///
+/// `GenRef` is `Copy` and `Clone` and simply contains the raw pointers
+/// from a `Gen`. It does not manage the underlying memory and therefore
+/// must not outlive the owning `Gen` (or the context it refers to).
+/// Use `Gen::as_ref()` to obtain a `GenRef` from a `&Gen`.
+#[derive(Copy, Clone)]
+pub struct GenRef {
+    ptr: *mut gen_t,
+    ctx: *mut context_t,
+}
+impl GenRef {
+    pub fn ptr(&self) -> *mut gen_t {
+        self.ptr
+    }
+
+    pub fn ctx(&self) -> *mut context_t {
+        self.ctx
+    }
+
+    pub fn to_string(&self) -> String {
+        unsafe {
+            let cstr = gen_to_string(self.ptr, self.ctx as *mut context_opaque);
+            CStr::from_ptr(cstr).to_string_lossy().into_owned()
+        }
+    }
+}
+
+impl fmt::Display for GenRef {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.to_string())
+    }
+}
+
+impl fmt::Debug for GenRef {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.to_string())
+    }
+}
+
+impl Gen {
+    /// Return a non-owning, Copyable view of this `Gen`.
+    pub fn as_ref(&self) -> GenRef {
+        GenRef {
+            ptr: self.ptr,
+            ctx: self.ctx,
+        }
+    }
+}
 // SAFETY: Gen only contains raw pointers and does not manage thread-local state.
 // You must ensure thread safety when using Gen across threads.
 unsafe impl Send for Gen {}
@@ -118,9 +183,11 @@ impl Gen {
     }
 
     pub fn symbols<const N: usize>(names: [&str; N], ctx: &Context) -> [Gen; N] {
-        names.map(|name| Gen::symbol(name, ctx ).unwrap_or_else(|| {
-            panic!("Failed to create symbol for '{}'", name);
-        }))
+        names.map(|name| {
+            Gen::symbol(name, ctx).unwrap_or_else(|| {
+                panic!("Failed to create symbol for '{}'", name);
+            })
+        })
     }
 
     pub fn to_string(&self) -> String {
@@ -294,6 +361,48 @@ impl Gen {
         }
     }
 
+    /// Returns the symbolic square root of the given Gen (implemented as symb_pow(x, 1/2)).
+    pub fn symb_sqrt(&self) -> Option<Self> {
+        unsafe {
+            let ptr = gen_symb_sqrt(self.ptr, self.ctx);
+            if ptr.is_null() {
+                return None;
+            }
+            // try to evaluate the symbolic sqrt to get a plain numeric when possible
+            let eval_ptr = gen_eval(ptr, self.ctx);
+            if !eval_ptr.is_null() {
+                // free original symbolic pointer and use evaluated pointer
+                gen_free(ptr);
+                return Some(Gen {
+                    ptr: eval_ptr,
+                    ctx: self.ctx,
+                });
+            }
+            Some(Gen { ptr, ctx: self.ctx })
+        }
+    }
+
+    /// Returns the symbolic nth root of the given Gen (i.e., x^(1/n)).
+    pub fn symb_root(&self, n: f64) -> Option<Self> {
+        if n == 0.0 {
+            return None;
+        }
+        unsafe {
+            let exp = 1.0f64 / n;
+            let exp_ptr = gen_new_from_double(exp, self.ctx);
+            if exp_ptr.is_null() {
+                return None;
+            }
+            let ptr = gen_symb_pow(self.ptr, exp_ptr, self.ctx);
+            gen_free(exp_ptr);
+            if ptr.is_null() {
+                None
+            } else {
+                Some(Gen { ptr, ctx: self.ctx })
+            }
+        }
+    }
+
     pub fn pi(ctx: &Context) -> Option<Self> {
         let ptr = unsafe { gen_pi(ctx.as_ptr()) };
         if ptr.is_null() {
@@ -464,7 +573,7 @@ impl Gen {
     }
 
     /// Returns the symbolic sine of the given Gen.
-    pub fn sin(symbol: Gen) -> Option<Self> {
+    pub fn sin(symbol: &Gen) -> Option<Self> {
         let ptr = unsafe { gen_symb_sin(symbol.ptr, symbol.ctx) };
         if ptr.is_null() {
             None
@@ -477,7 +586,7 @@ impl Gen {
     }
 
     /// Returns the symbolic cosine of the given Gen.
-    pub fn cos(symbol: Gen) -> Option<Self> {
+    pub fn cos(symbol: &Gen) -> Option<Self> {
         let ptr = unsafe { gen_symb_cos(symbol.ptr, symbol.ctx) };
         if ptr.is_null() {
             None
@@ -490,7 +599,7 @@ impl Gen {
     }
 
     /// Returns the symbolic tangent of the given Gen.
-    pub fn tan(symbol: Gen) -> Option<Self> {
+    pub fn tan(symbol: &Gen) -> Option<Self> {
         let ptr = unsafe { gen_symb_tan(symbol.ptr, symbol.ctx) };
         if ptr.is_null() {
             None
@@ -503,7 +612,7 @@ impl Gen {
     }
 
     /// Returns the symbolic logarithm (base 10) of the given Gen.
-    pub fn log(symbol: Gen) -> Option<Self> {
+    pub fn log(symbol: &Gen) -> Option<Self> {
         let ptr = unsafe { gen_symb_log(symbol.ptr, symbol.ctx) };
         if ptr.is_null() {
             None
@@ -515,20 +624,20 @@ impl Gen {
         }
     }
 
-    pub fn logb(symbol: Gen, base: f64) -> Option<Self> {
+    pub fn logb(symbol: &Gen, base: f64) -> Option<Self> {
         let ctx = Context::new();
-        let base_gen = Gen::from_f64(base, &ctx);
-        let b = Gen::ln(base_gen?);
+        let base_gen = Gen::from_f64(base, &ctx)?;
+        let b = Gen::ln(&base_gen)?;
         let n = Gen::ln(symbol)?;
-        n.div(&b?)
+        n.div(&b)
     }
 
-    pub fn log10(symbol: Gen) -> Option<Self> {
+    pub fn log10(symbol: &Gen) -> Option<Self> {
         Gen::logb(symbol, 10.0)
     }
 
     /// Returns the symbolic natural logarithm (ln) of the given Gen.
-    pub fn ln(symbol: Gen) -> Option<Self> {
+    pub fn ln(symbol: &Gen) -> Option<Self> {
         let ptr = unsafe { gen_symb_ln(symbol.ptr, symbol.ctx) };
         if ptr.is_null() {
             None
@@ -541,7 +650,7 @@ impl Gen {
     }
 
     /// Returns the symbolic exponential of the given Gen.
-    pub fn exp(symbol: Gen) -> Option<Self> {
+    pub fn exp(symbol: &Gen) -> Option<Self> {
         let ptr = unsafe { gen_symb_exp(symbol.ptr, symbol.ctx) };
         if ptr.is_null() {
             None
@@ -573,10 +682,69 @@ impl Gen {
             let mut out: f64 = 0.0;
             let success = gen_to_f64(self.ptr, &mut out as *mut f64);
             if success == 1 {
-                Some(out)
-            } else {
-                None
+                return Some(out);
             }
+            // Fallback: some GIAC operations return a singleton vecteur (e.g. "[10.0]").
+            // Try to extract a numeric element from a singleton vecteur using the FFI helpers.
+            if !self.ptr.is_null() && !self.ctx.is_null() && giac_vec::is_vecteur(self.ptr as *const gen_t, self.ctx) {
+                let len = giac_vec::vecteur_len(self.ptr as *const gen_t, self.ctx);
+                if len == 1 {
+                    let elem_ptr = giac_vec::vecteur_get(self.ptr as *const gen_t, 0, self.ctx);
+                    if !elem_ptr.is_null() {
+                        let mut out2: f64 = 0.0;
+                        let ok = gen_to_f64(elem_ptr as *mut gen_t, &mut out2 as *mut f64);
+                        gen_free(elem_ptr as *mut gen_t);
+                        if ok == 1 {
+                            return Some(out2);
+                        }
+                    }
+                }
+            }
+            None
+        }
+    }
+
+    /// If this Gen represents a singleton list (e.g. `[10.0]`) return its numeric element.
+    /// This uses the C++ vecteur helpers to avoid brittle string parsing.
+    pub fn extract_singleton_f64(&self) -> Option<f64> {
+        unsafe {
+            // direct numeric
+            if let Some(v) = self.to_f64() {
+                return Some(v);
+            }
+            // check vecteur using the context
+            if giac_vec::is_vecteur(self.ptr as *const gen_t, self.ctx) {
+                let len = giac_vec::vecteur_len(self.ptr as *const gen_t, self.ctx);
+                if len == 1 {
+                    let elem_ptr = giac_vec::vecteur_get(self.ptr as *const gen_t, 0, self.ctx);
+                    if elem_ptr.is_null() {
+                        return None;
+                    }
+                    // elem_ptr was allocated by the C++ wrapper; try to convert to f64
+                    let mut out: f64 = 0.0;
+                    let ok = gen_to_f64(elem_ptr as *mut gen_t, &mut out as *mut f64);
+                    // free the temporary gen_t returned by vecteur_get
+                    gen_free(elem_ptr as *mut gen_t);
+                    if ok == 1 {
+                        return Some(out);
+                    }
+                }
+            }
+            None
+        }
+    }
+
+    /// Create an owned duplicate of the underlying `gen_t` using the FFI `gen_clone`.
+    /// Returns `None` if cloning failed.
+    pub fn deep_clone(&self) -> Option<Self> {
+        if self.ptr.is_null() {
+            return None;
+        }
+        let ptr = unsafe { gen_clone(self.ptr, self.ctx) };
+        if ptr.is_null() {
+            None
+        } else {
+            Some(Gen { ptr, ctx: self.ctx })
         }
     }
 }
@@ -610,10 +778,19 @@ impl PartialEq for Gen {
 
 impl Eq for Gen {}
 
+// Note: `Gen` is intentionally Copy and Clone (trivial bitwise copy).
+// Cloning is a cheap pointer copy. If you need an owned duplicate of the
+// underlying `gen_t`, call the FFI `gen_clone` manually via a helper if
+// required (not provided here to keep the type Copy).
 impl Drop for Gen {
     fn drop(&mut self) {
+        // Only free if we have a non-null context; static or library-owned
+        // gen_t pointers are created with a null context in this crate
+        // (see the GEN_* lazy_static values) and must not be freed here.
         unsafe {
-            gen_free(self.ptr);
+            if !self.ptr.is_null() && !self.ctx.is_null() {
+                gen_free(self.ptr);
+            }
         }
     }
 }

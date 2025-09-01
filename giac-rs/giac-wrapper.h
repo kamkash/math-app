@@ -49,6 +49,8 @@ extern "C"
     gen_t *gen_symb_sin(gen_t *a, context_t *ctx);
     gen_t *gen_symb_cos(gen_t *a, context_t *ctx);
     gen_t *gen_symb_tan(gen_t *a, context_t *ctx);
+    // Square root (symbolic)
+    gen_t *gen_symb_sqrt(gen_t *a, context_t *ctx);
 
     // logs
     gen_t *gen_symb_log(gen_t *a, context_t *ctx);
@@ -58,6 +60,12 @@ extern "C"
     // Evaluation and substitution
     gen_t *gen_subs(gen_t *expr, const char **vars, gen_t **values, size_t n, context_t *ctx);
     gen_t *gen_eval(gen_t *expr, context_t *ctx);
+
+    // Vecteur (list) helpers: detect and access elements
+    // Note: these helpers accept a context pointer to produce reliable string output
+    int gen_is_vecteur(const gen_t *g, context_t *ctx);
+    size_t gen_vecteur_len(const gen_t *g, context_t *ctx);
+    gen_t *gen_vecteur_get(const gen_t *g, size_t i, context_t *ctx);
 
     gen_t *gen_clone(gen_t *g, context_t *ctx);
 

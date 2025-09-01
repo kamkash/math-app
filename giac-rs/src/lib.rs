@@ -4,3 +4,4 @@ pub mod giac_ffi {
 }
 pub mod context;
 pub mod gen;
+pub mod giac_vec;

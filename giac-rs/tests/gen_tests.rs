@@ -84,18 +84,21 @@ fn test_gen_symbolic_operators() {
     let b = Gen::new("3", &ctx).unwrap();
     let x = Gen::new("x", &ctx).unwrap();
     let y = Gen::new("y", &ctx).unwrap();
-    let plus = x.symb_plus(&y).unwrap();
-    let plusab = a.symb_plus(&b).unwrap();
+    let plusxy = x.symb_plus(&y).unwrap();
+    let plusabsym = a.symb_plus(&b).unwrap();
+    let plusab = a.add(&b).unwrap();
     let mult = x.symb_mult(&y).unwrap();
+    let mulab = a.mul(&b).unwrap();
+    let mulxy = x.mul(&y).unwrap();
     let pow = x.symb_pow(&y).unwrap();
     info!(
-        "plus: {} mult: {} pow: {}, plusab: {}",
-        plus, mult, pow, plusab
+        "plus: {} mult: {} pow: {}, plusab: {}, mulab: {}, mulxy: {}",
+        plusxy, mult, pow, plusab, mulab, mulxy
     );
     assert!(
-        plus.to_string().contains("x")
-            && plus.to_string().contains("y")
-            && (plus.to_string().contains("+") || plus.to_string().contains("plus"))
+        plusxy.to_string().contains("x")
+            && plusxy.to_string().contains("y")
+            && (plusxy.to_string().contains("+") || plusxy.to_string().contains("plus"))
     );
     assert!(
         mult.to_string().contains("x")
@@ -107,10 +110,18 @@ fn test_gen_symbolic_operators() {
             && pow.to_string().contains("y")
             && (pow.to_string().contains("^") || pow.to_string().contains("pow"))
     );
+    assert!(plusab.to_string().contains("5"));
+    assert!(mulab.to_string().contains("6"));
+    assert!(mulxy.to_string().contains("x") || mulxy.to_string().contains("y"));
+    assert!(
+        plusabsym.to_string().contains("a")
+            || plusabsym.to_string().contains("b")
+            || plusabsym.to_string().contains("+")
+    );
 
     let x_val = Gen::from_f64(2.0, &ctx).unwrap();
     let y_val = Gen::from_f64(3.0, &ctx).unwrap();
-    let subs = plus
+    let subs = plusxy
         .subs(&["x", "y"], &[&x_val, &y_val])
         .expect("subs failed");
     let s = subs.to_string();
@@ -236,13 +247,13 @@ fn test_gen_to_f64() {
 }
 
 #[test_log::test]
-fn test_gen_function_calls() {
+fn test_gen_math_function() {
     let ctx = Context::new();
     let [x, xx, y] = Gen::symbols(["x", "xx", "y"], &ctx);
 
-    let log_fn = Gen::log(x).expect("Failed to create log function");
-    let ln_fn = Gen::ln(y).expect("Failed to create ln function");
-    let logb_fn = Gen::logb(xx, 2.0).expect("Failed to create logb function");
+    let log_fn = Gen::log(&x).expect("Failed to create log function");
+    let ln_fn = Gen::ln(&y).expect("Failed to create ln function");
+    let logb_fn = Gen::logb(&xx, 2.0).expect("Failed to create logb function");
     info!(
         "functions: {} {} {}",
         log_fn.to_string(),
@@ -254,7 +265,7 @@ fn test_gen_function_calls() {
         .subs(&["x"], &[&Gen::from_f64(10.0, &ctx).unwrap()])
         .expect("Failed to substitute in log function");
     let log_eval = log_subs.eval().expect("Failed to evaluate log function");
-    info!("Log evaluated: {}", log_eval.to_string());
+    info!("Log(10) evaluated: {}", log_eval.to_string());
     assert!(
         log_eval.to_f64().unwrap() - 10.0f64.log10() < 1e-8,
         "Log should be close to 10.0"
@@ -264,16 +275,63 @@ fn test_gen_function_calls() {
         .subs(&["y"], &[&Gen::from_f64(5.0, &ctx).unwrap()])
         .expect("Failed to substitute in ln function");
     let ln_eval = ln_subs.eval().expect("Failed to evaluate ln function");
-    info!("Ln evaluated: {}", ln_eval.to_string());
-    assert!(ln_eval.to_f64().unwrap() - 5.0f64.ln() < 1e-8, "Ln should be close to 5.0");
+    info!("Ln(5) evaluated: {}", ln_eval.to_string());
+    assert!(
+        ln_eval.to_f64().unwrap() - 5.0f64.ln() < 1e-8,
+        "Ln should be close to 5.0"
+    );
 
     let logb_subs = logb_fn
         .subs(&["xx"], &[&Gen::from_f64(10.0, &ctx).unwrap()])
         .expect("Failed to substitute in logb function");
     let logb_eval = logb_subs.eval().expect("Failed to evaluate logb function");
-    info!("Logb evaluated: {}", logb_eval.to_string());
+    info!("Log2(10) evaluated: {}", logb_eval.to_string());
     assert!(
         logb_eval.to_f64().unwrap() - 10.0f64.log2() < 1e-8,
-        "Logb should be close to 10.0"
+        "Log2 should be close to 10.0"
+    );
+
+    let sqrt_2 = x.symb_sqrt().unwrap();
+    let root_3 = x.symb_root(3.0f64).unwrap();
+    info!(
+        "sqrt: {} root(3): {}",
+        sqrt_2.to_string(),
+        root_3.to_string()
+    );
+    let sqrt_subs = sqrt_2
+        .subs(&["x"], &[&Gen::from_f64(100.0, &ctx).unwrap()])
+        .expect("Failed to substitute in logb function");
+    let sqrt_eval = sqrt_subs.eval().expect("Failed to evaluate logb function");
+    info!("sqrt(100) evaluated: {}", sqrt_eval.to_string());
+    assert!(
+        sqrt_eval.to_f64().unwrap() - 100.0f64.sqrt() < 1e-8,
+        "sqrt should be close to 10.0"
+    );
+
+    let root_3_subs = root_3
+        .subs(&["x"], &[&Gen::from_f64(1000.0, &ctx).unwrap()])
+        .expect("Failed to substitute in root(3) function");
+    let root_3_eval = root_3_subs
+        .eval()
+        .expect("Failed to evaluate root(3) function");
+    info!("root(3)(1000) evaluated: {}", root_3_eval.to_string());
+    assert!(
+        root_3_eval.to_f64().unwrap() - 1000.0f64.powf(1.0/3.0) < 1e-8,
+        "root(3) should be close to 10.0"
+    );
+}
+
+#[test_log::test]
+fn test_gen_deep_clone() {
+    let ctx = Context::new();
+    let g = Gen::new("x^2 + 1", &ctx).unwrap();
+    let g_clone = g.deep_clone().expect("deep_clone failed");
+    // They should be structurally equal
+    assert!(g.equals(&g_clone));
+    // But own different underlying pointers
+    assert_ne!(
+        g.ptr(),
+        g_clone.ptr(),
+        "deep_clone should create a new underlying gen_t"
     );
 }

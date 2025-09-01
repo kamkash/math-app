@@ -1,38 +1,80 @@
 use crate::asciimath_gen_interpreter::SymEquationGen;
-use antlr_rust::common_token_stream::CommonTokenStream;
 use antlr_rust::tree::{ParseTree, ParseTreeVisitorCompat, TerminalNode, Tree};
-use antlr_rust::InputStream;
 use giac_rs::context::Context;
 use giac_rs::gen::Gen;
 use giac_rs::gen::{GEN_ADD, GEN_DIV, GEN_MUL, GEN_POW, GEN_SUB};
 use math_core::common::LogicalOperator;
-use std::collections::VecDeque;
+use std::collections::{HashMap, VecDeque};
 use std::rc::Rc;
 
 use log::{error, info};
 // Import the generated parser context type
-use math_parser::gen_parsers::latexlexer::LaTeXLexer;
 use math_parser::gen_parsers::latexparser::{
     AdditiveContext, AtomVariableContext, BlockContext, EqualityContext, ExpContext, ExprContext,
-    FuncContext, LaTeXParser, LaTeXParserContextType, MathContext, MpContext, MultopContext,
-    NumberContext, PowopContext, RelationContext, RelopContext, SumopContext,
+    LaTeXParserContextType, MathContext, MpContext, MultopContext, NumberContext, PowopContext,
+    RelationContext, RelopContext, SumopContext,
 };
 use math_parser::gen_parsers::latexvisitor::LaTeXVisitorCompat;
 
 pub struct LaTeXGenVisitor {
+    pub tmp_result: Rc<Gen>,
     pub visitor_stack: Vec<Rc<Gen>>,
     pub block_expressions: Vec<SymEquationGen>,
     pub giac_context: Rc<Context>,
+    pub symbol_table: HashMap<Rc<Gen>, Rc<Gen>>,
+    pub result_table: HashMap<Rc<Gen>, Rc<Gen>>,
 }
 
 impl LaTeXGenVisitor {
     pub fn new() -> Self {
         let ctx = Rc::new(Context::new());
         Self {
+            tmp_result: Rc::new(Gen::new("0", &ctx).unwrap()),
             visitor_stack: Vec::new(),
             block_expressions: Vec::new(),
             giac_context: ctx,
+            symbol_table: HashMap::new(),
+            result_table: HashMap::new(),
         }
+    }
+
+    fn build_symbol_table(&mut self) {
+        self.symbol_table
+            .extend(self.block_expressions.iter().filter_map(|sym_eq| {
+                if sym_eq.left.is_symbol() {
+                    Some((Rc::clone(&sym_eq.left), Rc::clone(&sym_eq.right)))
+                } else if sym_eq.right.is_symbol() {
+                    Some((Rc::clone(&sym_eq.right), Rc::clone(&sym_eq.left)))
+                } else {
+                    None
+                }
+            }));
+        info!("symbol table: {:?}", self.symbol_table);
+    }
+
+    fn build_result_table(&mut self) {
+        // evaluate and store assignables in giac context
+        self.symbol_table
+            .iter()
+            .filter(|(_sym, expr)| expr.is_number())
+            .for_each(|(sym, expr)| {
+                let e = format!("{} := {}", sym, expr);
+                Gen::new(e.as_str(), &self.giac_context).unwrap().eval();
+            });
+
+        self.result_table = self
+            .symbol_table
+            .iter()
+            .map(|(sym, expr)| {
+                if expr.is_number() {
+                    (Rc::clone(sym), Rc::clone(expr))
+                } else {
+                    let value = expr.eval().unwrap();
+                    (Rc::clone(sym), Rc::new(value))
+                }
+            })
+            .collect();
+        info!("result table: {:?}", self.result_table);
     }
 }
 
@@ -41,7 +83,7 @@ impl<'input> ParseTreeVisitorCompat<'input> for LaTeXGenVisitor {
     type Return = Rc<Gen>;
 
     fn temp_result(&mut self) -> &mut Self::Return {
-        panic!("Not used");
+        &mut self.tmp_result
     }
 
     fn aggregate_results(&self, _aggregate: Self::Return, next: Self::Return) -> Self::Return {
@@ -56,12 +98,16 @@ impl<'input> ParseTreeVisitorCompat<'input> for LaTeXGenVisitor {
 impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
     fn visit_block(&mut self, ctx: &BlockContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
-        // Optionally build symbol/result tables here if needed
+        self.build_symbol_table();
+        self.build_result_table();
         res
     }
 
     fn visit_math(&mut self, ctx: &MathContext<'input>) -> Self::Return {
-        self.visit_children(ctx)
+        let res = self.visit_children(ctx);
+        self.build_symbol_table();
+        self.build_result_table();
+        res
     }
 
     fn visit_relation(&mut self, ctx: &RelationContext<'input>) -> Self::Return {
@@ -172,6 +218,36 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
                 }
             }
             self.visitor_stack.push(left);
+        }
+        res
+    }
+
+    fn visit_fn_sqrt(
+        &mut self,
+        ctx: &math_parser::gen_parsers::latexparser::Fn_sqrtContext<'input>,
+    ) -> Self::Return {
+        let res = self.visit_children(ctx);
+
+        // Get the base expression (sqrbase)
+        let base = self.visitor_stack.pop().unwrap();
+
+        // Check if a root parameter is specified
+        if let Some(_root_expr) = &ctx.root {
+            // If we have a root parameter, we need to pop it from the stack too
+            // The root parameter is the second-to-last item on the stack
+            if self.visitor_stack.len() > 0 {
+                let root = self.visitor_stack.pop().unwrap();
+                let nth_root = Rc::new(base.symb_root(root.to_f64().unwrap()).unwrap());
+                self.visitor_stack.push(nth_root);
+            } else {
+                // Fallback to square root if something went wrong
+                let sqrt = Rc::new(base.symb_sqrt().unwrap());
+                self.visitor_stack.push(sqrt);
+            }
+        } else {
+            // No root parameter, just calculate the square root
+            let sqrt = Rc::new(base.symb_sqrt().unwrap());
+            self.visitor_stack.push(sqrt);
         }
         res
     }
