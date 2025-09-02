@@ -1,5 +1,6 @@
 # symmath.app
 # Yet another semi intelligent symbolic math calculator application
+
 ## Planned features:
     1. Symbolic algebra, calculus, linear algebra, statistics solver
     2. Math notes style UI with charts
@@ -11,18 +12,19 @@
     8. AI based OCR image to math LaTex generator for handwriting recognition 
  
 
- ## Possible UI
+ ## AI designed UI 
  ![Design](./design.png)
+
+## Notes
+The project uses a GIAC FFI which is not fully thread-safe. For deterministic
+test runs, when tests exercise the GIAC FFI, run the test suite single-threaded.
 
 ```
 MACOSX_DEPLOYMENT_TARGET=15.5 cargo  build
 MACOSX_DEPLOYMENT_TARGET=15.5 cargo  test
 cargo test -- --test-threads=1
-
+RUST_TEST_THREADS=1 cargo test --workspace
 ```
 
-Note on CI: The project uses a GIAC FFI which is not fully thread-safe. For deterministic
-test runs in CI when tests exercise the GIAC FFI, run the test suite single-threaded:
 
-RUST_TEST_THREADS=1 cargo test --workspace
 
