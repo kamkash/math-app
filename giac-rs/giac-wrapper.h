@@ -18,6 +18,8 @@ extern "C"
 
     // Gen management
     gen_t *gen_new(const char *expr, context_t *ctx);
+    // Parse string into a gen_t (alias for gen_new)
+    gen_t *gen_parse(const char *expr, context_t *ctx);
     gen_t *gen_new_from_double(double value, context_t *ctx);
     const char *gen_to_string(gen_t *g, context_t *ctx);
     void gen_free(gen_t *g);

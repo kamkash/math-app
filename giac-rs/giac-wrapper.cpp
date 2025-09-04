@@ -87,6 +87,14 @@ gen_t *gen_new(const char *expr, context_t *ctx)
     }
 }
 
+// Parse API: explicit alias for creating a gen from a string.
+// Kept as a separate function to make intent clear to C callers.
+gen_t *gen_parse(const char *expr, context_t *ctx)
+{
+    // Delegate to gen_new which already wraps giac::gen
+    return gen_new(expr, ctx);
+}
+
 gen_t *gen_new_from_double(double value, context_t *ctx)
 {
     GIAC_LOCK();

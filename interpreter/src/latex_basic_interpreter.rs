@@ -273,7 +273,7 @@ pub fn evaluate_latex_block(input: &str) -> Result<String, String> {
     match result {
         Ok(context) => {
             let _ = visitor.visit(&*context);
-            let result = format!("{:?}", visitor.visitor_stack);
+            let result = format!("{:?}", visitor.result_table);
             Ok(result)
         }
         Err(e) => Err(format!("parser error {}", e).to_string()),

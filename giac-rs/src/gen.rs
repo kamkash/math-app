@@ -170,6 +170,21 @@ impl Gen {
         }
     }
 
+    /// Parse a string expression into a `Gen` using the explicit C parse wrapper.
+    /// This delegates to the FFI `gen_parse` which is an alias around `giac::gen`.
+    pub fn parse(expr: &str, ctx: &Context) -> Option<Self> {
+        let cstr = CString::new(expr).ok()?;
+        let ptr = unsafe { gen_parse(cstr.as_ptr(), ctx.as_ptr()) };
+        if ptr.is_null() {
+            None
+        } else {
+            Some(Gen {
+                ptr,
+                ctx: ctx.as_ptr() as *mut context_opaque,
+            })
+        }
+    }
+
     pub fn from_f64(value: f64, ctx: &Context) -> Option<Self> {
         let ptr = unsafe { gen_new_from_double(value, ctx.as_ptr()) };
         if ptr.is_null() {

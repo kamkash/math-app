@@ -27,6 +27,7 @@
         /* Changed from 500px to 100% to allow toolbar to span full width */
         width: 100%;
     }
+
     .title {
         font-size: 1.6rem;
         font-weight: 600;
@@ -94,22 +95,22 @@
 
     math-field {
         font-family: "STIX Two Math", "Latin Modern Math", "Cambria Math",
-            "Noto Sans Math", "XITS Math", "Asana Math", serif;
+        "Noto Sans Math", "XITS Math", "Asana Math", serif;
     }
 </style>
 <div class="body">
     <div class="toolbar">
         <div class="icon-row">
             <button id="math-solver" class="icon" title="Calculator" aria-label="Solve">
-                <img src="/src/assets/calculator.svg" alt="Solve" />
+                <img src="/src/assets/calculator.svg" alt="Solve"/>
             </button>
             <button id="llm-solver" class="icon" title="Magic" aria-label="LLM">
-                <img src="/src/assets/magic_wand.svg" alt="LLM" />
+                <img src="/src/assets/magic_wand.svg" alt="LLM"/>
             </button>
         </div>
     </div>
 </div>
-<math-field id="prompt-input" class="input-area" placeholder="\textit{Enter expressions to solve}"
-    ></math-field>
+<math-field id="prompt-input" class="input-area" mode="auto" placeholder="\textit{Enter expressions to solve}"
+></math-field>
 <div class="label">Solution</div>
-<math-field id="response-output" class="output-area" readonly ></math-field>
+<math-field id="response-output" class="output-area" readonly></math-field>

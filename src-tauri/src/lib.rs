@@ -1,7 +1,7 @@
 use lazy_static::lazy_static;
 use libloading::{Library, Symbol};
 use log::{debug, error, info, warn};
-use interpreter::asciimath_basic_interpreter;
+use interpreter::latex_gen_interpreter;
 use std::ffi::CStr;
 use std::ffi::CString;
 use std::ffi::{c_char, c_int};
@@ -29,6 +29,9 @@ lazy_static! {
 #[cfg(target_os = "macos")]
 lazy_static! {
     static ref GGML_BASE_LIB: (PathBuf, Library) = load_library("libggml-base.dylib");
+    static ref GGML_METAL_LIB: (PathBuf, Library) = load_library("libggml-metal.dylib");
+    static ref GGML_BLAS_LIB: (PathBuf, Library) = load_library("libggml-blas.dylib");
+    static ref GGML_CPU_LIB: (PathBuf, Library) = load_library("libggml-cpu.dylib");
     static ref GGML_LIB: (PathBuf, Library) = load_library("libggml.dylib");
     static ref LLAMA_LIB: (PathBuf, Library) = load_library("libllama.dylib");
     static ref MATHAPP_LIB: (PathBuf, Library) = load_library("libmathapp.dylib");
@@ -130,6 +133,9 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .setup(move |_app| {
             debug!("loading: {:?}", GGML_BASE_LIB.0);
+            debug!("loading: {:?}", GGML_CPU_LIB.0);
+            debug!("loading: {:?}", GGML_BLAS_LIB.0);
+            debug!("loading: {:?}", GGML_METAL_LIB.0);
             debug!("loading: {:?}", GGML_LIB.0);
             debug!("loading: {:?}", LLAMA_LIB.0);
             debug!("loading: {:?}", MATHAPP_LIB.0);
@@ -191,7 +197,7 @@ pub fn echo_rust(estr: &str) -> Result<String, String> {
 
 // fixme:: error handling
 pub fn run_solver_rust(prompt: &str) -> Result<String, String> {
-    let res = asciimath_basic_interpreter::evaluate_ascii_math_block(prompt)?;
+    let res = latex_gen_interpreter::evaluate_latex_block(prompt)?;
     Ok(res)
 }
 

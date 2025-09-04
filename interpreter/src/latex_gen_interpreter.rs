@@ -1,21 +1,21 @@
 use crate::asciimath_gen_interpreter::SymEquationGen;
+use antlr_rust::InputStream;
+use antlr_rust::common_token_stream::CommonTokenStream;
 use antlr_rust::tree::{ParseTree, ParseTreeVisitorCompat, TerminalNode, Tree};
 use giac_rs::context::Context;
 use giac_rs::gen::Gen;
 use giac_rs::gen::{GEN_ADD, GEN_DIV, GEN_MUL, GEN_POW, GEN_SUB};
 use math_core::common::LogicalOperator;
+use math_parser::gen_parsers::latexlexer::LaTeXLexer;
 use std::collections::{HashMap, VecDeque};
 use std::rc::Rc;
 
 use log::{error, info};
 // Import the generated parser context type
 use math_parser::gen_parsers::latexparser::{
-    AdditiveContext, AtomVariableContext, BlockContext, EqualityContext, ExpContext, ExprContext,
-    LaTeXParserContextType, MathContext, MpContext, MultopContext, NumberContext, PowopContext,
-    RelationContext, RelopContext, SumopContext,
+    AdditiveContext, AtomVariableContext, BlockContext, EqualityContext, ExpContext, ExprContext, LaTeXParser, LaTeXParserContextType, MathContext, MpContext, MultopContext, NumberContext, PowopContext, RelationContext, RelopContext, SumopContext
 };
 use math_parser::gen_parsers::latexvisitor::LaTeXVisitorCompat;
-
 pub struct LaTeXGenVisitor {
     pub tmp_result: Rc<Gen>,
     pub visitor_stack: Vec<Rc<Gen>>,
@@ -105,13 +105,12 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
 
     fn visit_math(&mut self, ctx: &MathContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
-        self.build_symbol_table();
-        self.build_result_table();
         res
     }
 
     fn visit_relation(&mut self, ctx: &RelationContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
+        // dbg!(ctx.get_text());
         let len = ctx.get_child_count();
         let stack_len = self.visitor_stack.len();
         if len >= 3 && stack_len >= 3 {
@@ -158,6 +157,7 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
 
     fn visit_mp(&mut self, ctx: &MpContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
+        // dbg!(ctx.get_text());
         let len = ctx.get_child_count();
         let stack_len = self.visitor_stack.len();
         if len > 1 && stack_len >= len {
@@ -311,5 +311,22 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
             self.visitor_stack.push(Rc::new(GEN_POW.clone()));
         }
         res
+    }
+}
+
+pub fn evaluate_latex_block(input: &str) -> Result<String, String> {
+    info!("evaluate_latex_block: {}", input);
+    let mut visitor = LaTeXGenVisitor::new();
+    let lexer = LaTeXLexer::new(InputStream::new(input));
+    let token_stream = CommonTokenStream::new(lexer);
+    let mut parser = LaTeXParser::new(token_stream);
+    let result = parser.block();
+    match result {
+        Ok(context) => {
+            let _ = visitor.visit(&*context);
+            let result = format!("{:?}", visitor.result_table);
+            Ok(result)
+        }
+        Err(e) => Err(format!("parser error {}", e).to_string()),
     }
 }

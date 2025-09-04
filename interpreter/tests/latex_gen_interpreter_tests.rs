@@ -249,3 +249,99 @@ fn test_latex_gen_eval() {
         );
     }
 }
+
+#[test_log::test]
+fn test_latex_gen_implicit_multiply() {
+    let mut visitor = LaTeXGenVisitor::new();
+    let mut input_lines: Vec<String> = Vec::new();
+    let mut checks: Vec<(&str, f64)> = Vec::new();
+
+    // Variable assignments
+    input_lines.push("a = 10.0".to_string());
+    checks.push(("a", 10.0));
+    input_lines.push("b = 3.1415926".to_string());
+    checks.push(("b", 3.1415926));
+    // input_lines.push("y = 2a".to_string());
+    // checks.push(("y", 2.0 * 10.0));
+    input_lines.push("y_p = 2*a".to_string());
+    checks.push(("y_p", 2.0 * 10.0));
+    input_lines.push("t = 2*a*b".to_string());
+    checks.push(("t", 2.0 * 10.0 * 3.1415926));
+
+    // t=2ab : todo
+
+    let final_input = input_lines.join("\n");
+    info!(
+        "Full input block for algebraic operations:\n{}",
+        final_input
+    );
+
+    let lexer = LaTeXLexer::new(InputStream::new(final_input.as_str()));
+    let token_stream = CommonTokenStream::new(lexer);
+    let mut parser = LaTeXParser::new(token_stream);
+    let parse_tree = parser.block().unwrap();
+    visitor.visit(parse_tree.as_ref());
+
+    info!(
+        "Visitor block expressions after algebraic tests: {:?}",
+        visitor.block_expressions
+    );
+
+    for (var_name, expected_f64_val) in checks {
+        info!("Checking: {} = {}", var_name, expected_f64_val);
+        let actual_f64 = eval_symbol_to_f64(&mut visitor, var_name);
+
+        assert!(
+            (actual_f64 - expected_f64_val).abs() < EPSILON,
+            "Failed for variable: {}. Expected: {}, Got: {}. Difference: {}",
+            var_name,
+            expected_f64_val,
+            actual_f64,
+            (actual_f64 - expected_f64_val).abs()
+        );
+    }
+}
+
+
+#[test_log::test]
+fn test_latex_gen_group() {
+    let mut visitor = LaTeXGenVisitor::new();
+    let mut input_lines: Vec<String> = Vec::new();
+    let mut checks: Vec<(&str, f64)> = Vec::new();
+
+    input_lines.push("a = 10.0".to_string());
+    checks.push(("a", 10.0));
+    input_lines.push("b = 2.0*(1.0 + a)".to_string());
+    checks.push(("b", 2.0 * (1.0 + 10.0)));
+
+    let final_input = input_lines.join("\n");
+    info!(
+        "Full input block for algebraic operations:\n{}",
+        final_input
+    );
+
+    let lexer = LaTeXLexer::new(InputStream::new(final_input.as_str()));
+    let token_stream = CommonTokenStream::new(lexer);
+    let mut parser = LaTeXParser::new(token_stream);
+    let parse_tree = parser.block().unwrap();
+    visitor.visit(parse_tree.as_ref());
+
+    info!(
+        "Visitor block expressions after algebraic tests: {:?}",
+        visitor.block_expressions
+    );
+
+    for (var_name, expected_f64_val) in checks {
+        info!("Checking: {} = {}", var_name, expected_f64_val);
+        let actual_f64 = eval_symbol_to_f64(&mut visitor, var_name);
+
+        assert!(
+            (actual_f64 - expected_f64_val).abs() < EPSILON,
+            "Failed for variable: {}. Expected: {}, Got: {}. Difference: {}",
+            var_name,
+            expected_f64_val,
+            actual_f64,
+            (actual_f64 - expected_f64_val).abs()
+        );
+    }
+}

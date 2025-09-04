@@ -26,12 +26,12 @@ export async function run_solver(
     _solverName?: string // Added for consistency with potential future use, though currently unused by backend
 ) {
     if (responseOutputEl && promptInputEl && promptInputEl.value) {
-        let prompt = convertLatexToAsciiMath(promptInputEl.value);
+        // let prompt = convertLatexToAsciiMath(promptInputEl.value);
         // console.log(`MathML: ${convertLatexToMathMl(promptInputEl.value)}`);
         // console.log("AsciiMath input", prompt);
         console.log(promptInputEl.value)
         const res = await invoke("run_solver", {
-            input: prompt,
+            input:promptInputEl.value,
         });
         responseOutputEl.setValue(res as string, {mode: "text"});
     }

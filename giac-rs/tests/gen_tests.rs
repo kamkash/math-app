@@ -316,7 +316,7 @@ fn test_gen_math_function() {
         .expect("Failed to evaluate root(3) function");
     info!("root(3)(1000) evaluated: {}", root_3_eval.to_string());
     assert!(
-        root_3_eval.to_f64().unwrap() - 1000.0f64.powf(1.0/3.0) < 1e-8,
+        root_3_eval.to_f64().unwrap() - 1000.0f64.powf(1.0 / 3.0) < 1e-8,
         "root(3) should be close to 10.0"
     );
 }
@@ -334,4 +334,13 @@ fn test_gen_deep_clone() {
         g_clone.ptr(),
         "deep_clone should create a new underlying gen_t"
     );
+}
+
+#[test_log::test]
+fn parse_and_simplify_basic() {
+    // single-threaded test that calls into the GIAC FFI
+    let ctx = Context::new();
+    let g = Gen::parse("2+2", &ctx).expect("parse failed");
+    let s = g.simplify().expect("simplify failed");
+    assert_eq!(s.to_string(), "4");
 }

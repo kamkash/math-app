@@ -18,6 +18,7 @@ grammar LaTeX;
 // --- Top-level block rule for multiple expressions ---
 block
 	: (relation | expr) (SEPARATOR (relation | expr))* SEPARATOR* EOF
+	| LATEX_BLOCK L_BRACE (relation | expr) (LATEX_NEWLINE (relation | expr))* R_BRACE SEPARATOR* EOF
 	;
 
 
@@ -52,16 +53,17 @@ additive: additive sumop mp
 | mp ;
 
 // mult part
-//mp:
-//	mp multop mp
-//	| exp
-//	| unary ;
-//
+mp:
+	mp multop mp
+	| exp
+	| unary ;
+
 
 // Recommended cleanup for the multiplicative expression rule
-mp:
-	mp multop unary // A multiplicative expression is a series of unary expressions
-	| unary;
+// mult part
+//mp:
+//	mp multop unary // A multiplicative expression is a series of unary expressions
+//	| unary;
 
 mp_nofunc:
 	mp_nofunc multop mp_nofunc
@@ -325,7 +327,7 @@ LT: '<';
 LTE: ('\\leq' | '\\le' | LTE_Q | LTE_S);
 LTE_Q: '\\leqq';
 LTE_S: '\\leqslant';
-
+LATEX_BLOCK: '\\displaylines';
 GT: '>';
 GTE: ('\\geq' | '\\ge' | GTE_Q | GTE_S);
 GTE_Q: '\\geqq';
@@ -333,6 +335,7 @@ GTE_S: '\\geqslant';
 
 WS: [ \t]+ -> skip;
 BANG: '!';
+LATEX_NEWLINE: '\\\\';
 SINGLE_QUOTES: '\''+;
 SYMBOL: '\\' [a-zA-Z]+;
 SEPARATOR: NEWLINE;
