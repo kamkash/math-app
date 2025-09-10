@@ -9,10 +9,7 @@
 
 #include <string>
 #include <new>
-// <-- accidental hash removed
-// Uncomment the following line to enable GIAC mutex locking locally in this file.
-// Alternatively compile with -DUSE_LOCK to enable locks project-wide.
-// #define USE_LOCK
+#define USE_LOCK
 #ifdef USE_LOCK
 #include <mutex>
 #endif

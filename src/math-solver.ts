@@ -1,13 +1,13 @@
 // src/libs/math-solver.ts
-import mathSolverTemplate from './math-solver.html?raw';
-import { MathfieldElement } from "mathlive";
+import mathSolverTemplate from "./math-solver.html?raw";
+import { MathfieldElement, InsertOptions } from "mathlive";
 import {
   run_llm_generate,
   run_greet,
   run_add_grammar,
   run_reset_model,
   run_reset_context,
-  run_solver
+  run_solver,
 } from "./solver.ts";
 
 class MathSolver extends HTMLElement {
@@ -24,11 +24,25 @@ class MathSolver extends HTMLElement {
   connectedCallback() {
     this.loadElements();
     this.attachEventListeners();
+    if (this.promptInputEl) {
+      this.promptInputEl.setValue(
+        `\\displaylines{
+            x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a} \\\\
+            e^{i\\pi} + 1 = 0 \\\\
+            \\int_0^\\infty e^{-x^2}\\,dx = \\frac{\\sqrt{\\pi}}{2}
+        }`,
+        { mode: "math" }
+      );
+    }
   }
 
   private loadElements() {
-    this.promptInputEl = this.shadow.querySelector("#prompt-input") as MathfieldElement | null;
-    this.responseOutputEl = this.shadow.querySelector("#response-output") as MathfieldElement | null;
+    this.promptInputEl = this.shadow.querySelector(
+      "#prompt-input"
+    ) as MathfieldElement | null;
+    this.responseOutputEl = this.shadow.querySelector(
+      "#response-output"
+    ) as MathfieldElement | null;
 
     if (!this.promptInputEl) {
       console.error("MathSolver: #prompt-input not found in shadow DOM");
@@ -39,45 +53,57 @@ class MathSolver extends HTMLElement {
   }
 
   private attachEventListeners() {
-    this.shadow.querySelector("#llm-solver")?.addEventListener("click", async (e) => {
-      e.preventDefault();
-      if (this.promptInputEl && this.responseOutputEl) {
-        await run_llm_generate(this.promptInputEl, this.responseOutputEl);
-      }
-    });
+    this.shadow
+      .querySelector("#llm-solver")
+      ?.addEventListener("click", async (e) => {
+        e.preventDefault();
+        if (this.promptInputEl && this.responseOutputEl) {
+          await run_llm_generate(this.promptInputEl, this.responseOutputEl);
+        }
+      });
 
-    this.shadow.querySelector("#math-solver")?.addEventListener("click", async (e) => {
-      e.preventDefault();
-      if (this.promptInputEl && this.responseOutputEl) {
-        await run_solver(this.promptInputEl, this.responseOutputEl);
-      }
-    });
+    this.shadow
+      .querySelector("#math-solver")
+      ?.addEventListener("click", async (e) => {
+        e.preventDefault();
+        if (this.promptInputEl && this.responseOutputEl) {
+          await run_solver(this.promptInputEl, this.responseOutputEl);
+        }
+      });
 
-    this.shadow.querySelector("#reset_context")?.addEventListener("click", async (e) => {
-      e.preventDefault();
-      // Topic can be configurable via an attribute or property if needed
-      await run_reset_context("new topic from math-solver");
-    });
+    this.shadow
+      .querySelector("#reset_context")
+      ?.addEventListener("click", async (e) => {
+        e.preventDefault();
+        // Topic can be configurable via an attribute or property if needed
+        await run_reset_context("new topic from math-solver");
+      });
 
-    this.shadow.querySelector("#reset_model")?.addEventListener("click", async (e) => {
-      e.preventDefault();
-      // Model name can be configurable
-      await run_reset_model("new model from math-solver");
-    });
+    this.shadow
+      .querySelector("#reset_model")
+      ?.addEventListener("click", async (e) => {
+        e.preventDefault();
+        // Model name can be configurable
+        await run_reset_model("new model from math-solver");
+      });
 
-    this.shadow.querySelector("#add_grammar")?.addEventListener("click", async (e) => {
-      e.preventDefault();
-      if (this.promptInputEl && this.responseOutputEl) {
-        await run_add_grammar(this.promptInputEl, this.responseOutputEl);
-      }
-    });
+    this.shadow
+      .querySelector("#add_grammar")
+      ?.addEventListener("click", async (e) => {
+        e.preventDefault();
+        if (this.promptInputEl && this.responseOutputEl) {
+          await run_add_grammar(this.promptInputEl, this.responseOutputEl);
+        }
+      });
 
-    this.shadow.querySelector("#greet")?.addEventListener("click", async (e) => {
-      e.preventDefault();
-      if (this.promptInputEl && this.responseOutputEl) {
-        await run_greet(this.promptInputEl, this.responseOutputEl);
-      }
-    });
+    this.shadow
+      .querySelector("#greet")
+      ?.addEventListener("click", async (e) => {
+        e.preventDefault();
+        if (this.promptInputEl && this.responseOutputEl) {
+          await run_greet(this.promptInputEl, this.responseOutputEl);
+        }
+      });
   }
 }
 customElements.define("math-solver", MathSolver);

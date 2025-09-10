@@ -3,7 +3,7 @@ import "mathlive/fonts.css";
 
 import "./solver.ts"; // This import will execute the DOMContentLoaded listener within it.
 import "./math-solver"
-import "./math-solver-old"
+// import "./math-solver-old"
 
 console.log("Main.ts loaded. Shared logic and math-solver component should be initializing.");
 

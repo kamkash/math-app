@@ -6,7 +6,7 @@ use log::info;
 use math_parser::gen_parsers::{latexlexer::LaTeXLexer, latexparser::LaTeXParser};
 use test_log;
 
-macro_rules! hide {
+macro_rules! _hide {
     ($($t:tt)*) => {};
 }
 
@@ -45,7 +45,9 @@ fn eval_symbol_to_f64(visitor: &mut LaTeXGenVisitor, var_name: &str) -> f64 {
         .map(|g| g.to_string())
         .unwrap_or_else(|| panic!("No expression found for {}", var_name));
     let assign = format!("{} := {}", var_name, expr_str);
-    Gen::new(assign.as_str(), &visitor.giac_context).unwrap().eval();
+    Gen::new(assign.as_str(), &visitor.giac_context)
+        .unwrap()
+        .eval();
     let read = Gen::new(var_name, &visitor.giac_context).unwrap().eval();
     if let Some(r) = read {
         if let Some(v) = r.to_f64() {
@@ -132,7 +134,10 @@ fn test_latex_gen_power() {
 
     for (var_name, expected_val) in checks {
         let actual_f64 = eval_symbol_to_f64(&mut visitor, var_name);
-        info!("Checking: {} = {} actual {}", var_name, expected_val, actual_f64);
+        info!(
+            "Checking: {} = {} actual {}",
+            var_name, expected_val, actual_f64
+        );
 
         assert!(
             (actual_f64 - expected_val).abs() < EPSILON,
@@ -199,24 +204,22 @@ fn test_latex_gen_eval() {
     checks.push(("sqrt_res2", (10.0f64 * 10.0f64).sqrt()));
     input_lines.push("sqrt_res3 = \\sqrt{2.0}".to_string());
     checks.push(("sqrt_res3", 2.0f64.sqrt()));
-    
+
     // Nth Root (with root parameter)
     input_lines.push("cbrt_res = \\sqrt[3]{8.0}".to_string()); // cube root of 8 = 2
-    checks.push(("cbrt_res", 8.0f64.powf(1.0/3.0)));
+    checks.push(("cbrt_res", 8.0f64.powf(1.0 / 3.0)));
     input_lines.push("fourth_root_res = \\sqrt[4]{16.0}".to_string()); // 4th root of 16 = 2
-    checks.push(("fourth_root_res", 16.0f64.powf(1.0/4.0)));
-    
-    hide! {
-        // Combined operations / Order of operations
-        input_lines.push("combo_res1 = a + b * 2".to_string()); // 10 + 20.5 * 2 = 10 + 41 = 51
-        checks.push(("combo_res1", 10.0 + 20.5 * 2.0));
-        input_lines.push("combo_res2 = (a + b) * 2".to_string()); // (10 + 20.5) * 2 = 30.5 * 2 = 61
-        checks.push(("combo_res2", (10.0 + 20.5) * 2.0));
-        input_lines.push("combo_res3 = a - b / 2 + 1".to_string()); // 10 - 20.5/2 + 1 = 10 - 10.25 + 1 = 0.75
-        checks.push(("combo_res3", 10.0 - 20.5 / 2.0 + 1.0));
-        input_lines.push("combo_res4 = sqrt(a^2 + 3*b - 1.5)".to_string()); // sqrt(100 + 3*20.5 - 1.5) = sqrt(100 + 61.5 - 1.5) = sqrt(160)
-        checks.push(("combo_res4", (10.0f64.powi(2) + 3.0 * 20.5 - 1.5).sqrt()));
-    }
+    checks.push(("fourth_root_res", 16.0f64.powf(1.0 / 4.0)));
+
+    // Combined operations / Order of operations
+    input_lines.push("combo_res1 = a + b * 2".to_string()); // 10 + 20.5 * 2 = 10 + 41 = 51
+    checks.push(("combo_res1", 10.0 + 20.5 * 2.0));
+    input_lines.push("combo_res2 = (a + b) * 2".to_string()); // (10 + 20.5) * 2 = 30.5 * 2 = 61
+    checks.push(("combo_res2", (10.0 + 20.5) * 2.0));
+    input_lines.push("combo_res3 = a - b / 2 + 1".to_string()); // 10 - 20.5/2 + 1 = 10 - 10.25 + 1 = 0.75
+    checks.push(("combo_res3", 10.0 - 20.5 / 2.0 + 1.0));
+    input_lines.push("combo_res4 = \\sqrt{a^2 + 3*b - 1.5}".to_string()); // sqrt(100 + 3*20.5 - 1.5) = sqrt(100 + 61.5 - 1.5) = sqrt(160)
+    checks.push(("combo_res4", (10.0f64.powi(2) + 3.0 * 20.5 - 1.5).sqrt()));
 
     let final_input = input_lines.join("\n");
     info!(
@@ -301,7 +304,6 @@ fn test_latex_gen_implicit_multiply() {
         );
     }
 }
-
 
 #[test_log::test]
 fn test_latex_gen_group() {
