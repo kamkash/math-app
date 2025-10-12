@@ -451,6 +451,18 @@ fn enter_ceil(&mut self, _ctx: &CeilContext<'input>) { }
  */
 fn exit_ceil(&mut self, _ctx: &CeilContext<'input>) { }
 /**
+ * Enter a parse tree produced by the {@code atomVarSym}
+ * labeled alternative in {@link LaTeXParser#var_sym}.
+ * @param ctx the parse tree
+ */
+fn enter_atomVarSym(&mut self, _ctx: &AtomVarSymContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code atomVarSym}
+ * labeled alternative in {@link LaTeXParser#var_sym}.
+ * @param ctx the parse tree
+ */
+fn exit_atomVarSym(&mut self, _ctx: &AtomVarSymContext<'input>) { }
+/**
  * Enter a parse tree produced by {@link LaTeXParser#func_normal}.
  * @param ctx the parse tree
  */
@@ -473,17 +485,29 @@ fn enter_fn_normal(&mut self, _ctx: &Fn_normalContext<'input>) { }
  */
 fn exit_fn_normal(&mut self, _ctx: &Fn_normalContext<'input>) { }
 /**
- * Enter a parse tree produced by the {@code fn_symbol}
+ * Enter a parse tree produced by the {@code fn_var}
  * labeled alternative in {@link LaTeXParser#func}.
  * @param ctx the parse tree
  */
-fn enter_fn_symbol(&mut self, _ctx: &Fn_symbolContext<'input>) { }
+fn enter_fn_var(&mut self, _ctx: &Fn_varContext<'input>) { }
 /**
- * Exit a parse tree produced by the {@code fn_symbol}
+ * Exit a parse tree produced by the {@code fn_var}
  * labeled alternative in {@link LaTeXParser#func}.
  * @param ctx the parse tree
  */
-fn exit_fn_symbol(&mut self, _ctx: &Fn_symbolContext<'input>) { }
+fn exit_fn_var(&mut self, _ctx: &Fn_varContext<'input>) { }
+/**
+ * Enter a parse tree produced by the {@code fn_anonym}
+ * labeled alternative in {@link LaTeXParser#func}.
+ * @param ctx the parse tree
+ */
+fn enter_fn_anonym(&mut self, _ctx: &Fn_anonymContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code fn_anonym}
+ * labeled alternative in {@link LaTeXParser#func}.
+ * @param ctx the parse tree
+ */
+fn exit_fn_anonym(&mut self, _ctx: &Fn_anonymContext<'input>) { }
 /**
  * Enter a parse tree produced by the {@code fn_int}
  * labeled alternative in {@link LaTeXParser#func}.
@@ -509,29 +533,29 @@ fn enter_fn_sqrt(&mut self, _ctx: &Fn_sqrtContext<'input>) { }
  */
 fn exit_fn_sqrt(&mut self, _ctx: &Fn_sqrtContext<'input>) { }
 /**
- * Enter a parse tree produced by the {@code fn_overline}
+ * Enter a parse tree produced by the {@code fc_overline}
  * labeled alternative in {@link LaTeXParser#func}.
  * @param ctx the parse tree
  */
-fn enter_fn_overline(&mut self, _ctx: &Fn_overlineContext<'input>) { }
+fn enter_fc_overline(&mut self, _ctx: &Fc_overlineContext<'input>) { }
 /**
- * Exit a parse tree produced by the {@code fn_overline}
+ * Exit a parse tree produced by the {@code fc_overline}
  * labeled alternative in {@link LaTeXParser#func}.
  * @param ctx the parse tree
  */
-fn exit_fn_overline(&mut self, _ctx: &Fn_overlineContext<'input>) { }
+fn exit_fc_overline(&mut self, _ctx: &Fc_overlineContext<'input>) { }
 /**
- * Enter a parse tree produced by the {@code fn_sum}
+ * Enter a parse tree produced by the {@code fn_sum_prod}
  * labeled alternative in {@link LaTeXParser#func}.
  * @param ctx the parse tree
  */
-fn enter_fn_sum(&mut self, _ctx: &Fn_sumContext<'input>) { }
+fn enter_fn_sum_prod(&mut self, _ctx: &Fn_sum_prodContext<'input>) { }
 /**
- * Exit a parse tree produced by the {@code fn_sum}
+ * Exit a parse tree produced by the {@code fn_sum_prod}
  * labeled alternative in {@link LaTeXParser#func}.
  * @param ctx the parse tree
  */
-fn exit_fn_sum(&mut self, _ctx: &Fn_sumContext<'input>) { }
+fn exit_fn_sum_prod(&mut self, _ctx: &Fn_sum_prodContext<'input>) { }
 /**
  * Enter a parse tree produced by the {@code fn_limit}
  * labeled alternative in {@link LaTeXParser#func}.

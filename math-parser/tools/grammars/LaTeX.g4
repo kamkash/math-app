@@ -144,6 +144,8 @@ binom:
 floor: L_FLOOR val = expr R_FLOOR;
 ceil: L_CEIL val = expr R_CEIL;
 
+var_sym: (VAR|SYMBOL) #atomVarSym;
+
 func_normal:
 	FUNC_EXP
 	| FUNC_LOG
@@ -173,16 +175,16 @@ func:
 		L_PAREN func_arg R_PAREN
 		| func_arg_noparens
 	) #fn_normal
-	| (VAR | SYMBOL) (subexpr? SINGLE_QUOTES? | SINGLE_QUOTES? subexpr?) // e.g. f(x), f_1'(x)
-	L_PAREN args R_PAREN  #fn_symbol
+	| var_sym (subexpr? SINGLE_QUOTES? | SINGLE_QUOTES? subexpr?) #fn_var // e.g. f(x), f_1'(x)
+	| L_PAREN args R_PAREN  #fn_anonym
 	| FUNC_INT (subexpr supexpr | supexpr subexpr)? (
 		additive? DIFFERENTIAL
 		| frac
 		| additive
 	) #fn_int
 	| FUNC_SQRT (L_BRACKET root = expr R_BRACKET)? L_BRACE sqrbase = expr R_BRACE #fn_sqrt
-	| FUNC_OVERLINE L_BRACE olbase = expr R_BRACE #fn_overline
-	| (FUNC_SUM | FUNC_PROD) (subeq supexpr | supexpr subeq) mp #fn_sum
+	| FUNC_OVERLINE L_BRACE olbase = expr R_BRACE #fc_overline
+	| (FUNC_SUM | FUNC_PROD) (subeq supexpr | supexpr subeq) mp #fn_sum_prod
 	| FUNC_LIM limit_sub mp #fn_limit;
 
 args: (expr ',' args) | expr;
@@ -318,7 +320,7 @@ DIFFERENTIAL: 'd' WS_CHAR*? ([a-zA-Z] | '\\' [a-zA-Z]+);
 
 DIGIT: [0-9];
 // VAR: [a-zA-Z]+;
-VAR: [_]* [a-zA-Z] [a-zA-Z0-9_]*;
+VAR: ('_'|'\\_')* [a-zA-Z] ([a-zA-Z0-9_]|'\\')*;
 
 EQUAL: (('&' WS_CHAR*?)? '=') | ('=' (WS_CHAR*? '&')?);
 NEQ: '\\neq';

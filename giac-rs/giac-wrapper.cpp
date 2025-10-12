@@ -84,6 +84,24 @@ gen_t *gen_new(const char *expr, context_t *ctx)
     }
 }
 
+gen_t *gen_symbol(const char *expr, context_t *ctx)
+{
+    GIAC_LOCK();
+    try
+    {
+        gen_t *g = new gen_t();
+        std::string str(expr);
+        identificateur sym(str);
+        g->value = gen(sym);
+        return g;
+    }
+    catch (...)
+    {
+        return nullptr;
+    }
+}
+
+
 // Parse API: explicit alias for creating a gen from a string.
 // Kept as a separate function to make intent clear to C callers.
 gen_t *gen_parse(const char *expr, context_t *ctx)

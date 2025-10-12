@@ -1,7 +1,7 @@
 use crate::asciimath_gen_interpreter::SymEquationGen;
-use antlr_rust::InputStream;
 use antlr_rust::common_token_stream::CommonTokenStream;
 use antlr_rust::tree::{ParseTree, ParseTreeVisitorCompat, TerminalNode, Tree};
+use antlr_rust::InputStream;
 use giac_rs::context::Context;
 use giac_rs::gen::Gen;
 use giac_rs::gen::{GEN_ADD, GEN_DIV, GEN_MUL, GEN_POW, GEN_SUB};
@@ -13,9 +13,70 @@ use std::rc::Rc;
 use log::{error, info};
 // Import the generated parser context type
 use math_parser::gen_parsers::latexparser::{
-    AdditiveContext, AtomVariableContext, BlockContext, EqualityContext, ExpContext, ExprContext, LaTeXParser, LaTeXParserContextType, MathContext, MpContext, MultopContext, NumberContext, PowopContext, RelationContext, RelopContext, SumopContext
+    AdditiveContext, AtomVariableContext, BlockContext, EqualityContext, ExpContext, ExprContext,
+    FracContext, LaTeXParser, LaTeXParserContextType, MathContext, MpContext, MultopContext,
+    PowopContext, RelationContext, RelopContext, SumopContext,
 };
 use math_parser::gen_parsers::latexvisitor::LaTeXVisitorCompat;
+
+pub fn eval_symbol_to_f64(visitor: &mut LaTeXGenVisitor, var_name: &str) -> f64 {
+    let actual_sym = visitor
+        .result_table
+        .get(&Gen::symbol(var_name, &visitor.giac_context).unwrap())
+        .unwrap_or_else(|| panic!("Variable {} not found in result_table", var_name));
+
+    // Try direct conversion
+    if let Some(v) = actual_sym.to_f64() {
+        return v;
+    }
+
+    // Try evaluating stored gen
+    if let Some(evaled) = actual_sym.eval() {
+        if let Some(v) = evaled.to_f64() {
+            return v;
+        }
+    }
+
+    // Try simplifying then evaluating
+    if let Some(simp) = actual_sym.simplify() {
+        if let Some(evaled) = simp.eval() {
+            if let Some(v) = evaled.to_f64() {
+                return v;
+            }
+        }
+    }
+
+    // Fallback: assign the expression to the symbol in the context and read it back
+    let sym = Gen::symbol(var_name, &visitor.giac_context).unwrap();
+    let expr_str = visitor
+        .symbol_table
+        .get(&sym)
+        .map(|g| g.to_string())
+        .unwrap_or_else(|| panic!("No expression found for {}", var_name));
+    let assign = format!("{} := {}", var_name, expr_str);
+    Gen::new(assign.as_str(), &visitor.giac_context)
+        .unwrap()
+        .eval();
+    let read = Gen::new(var_name, &visitor.giac_context).unwrap().eval();
+    if let Some(r) = read {
+        if let Some(v) = r.to_f64() {
+            return v;
+        }
+    }
+
+    // Some GIAC evaluations produce singleton-list string forms like "[10.0]".
+    // Try to parse a numeric value out of a singleton list before failing.
+    let s = actual_sym.to_string();
+    if s.starts_with('[') && s.ends_with(']') {
+        let inner = s.trim_start_matches('[').trim_end_matches(']').trim();
+        if let Ok(v) = inner.parse::<f64>() {
+            return v;
+        }
+    }
+
+    panic!("Variable {} did not evaluate to f64, got: {}", var_name, s);
+}
+
 pub struct LaTeXGenVisitor {
     pub tmp_result: Rc<Gen>,
     pub visitor_stack: Vec<Rc<Gen>>,
@@ -201,22 +262,33 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
         res
     }
 
+    fn visit_frac(&mut self, ctx: &FracContext<'input>) -> Self::Return {
+        let res = self.visit_children(ctx);
+        dbg!(ctx.get_text());
+        let len = ctx.get_child_count();
+        let stack_len = self.visitor_stack.len();
+        if len > 1 && stack_len >= 2 {
+            let right_item = self.visitor_stack.pop().unwrap();
+            dbg!(right_item.to_string());
+            let left_item = self.visitor_stack.pop().unwrap();
+            dbg!(left_item.to_string());
+            let frac = Rc::new(left_item.div(&right_item).unwrap());
+            self.visitor_stack.push(frac);
+        }
+        res
+    }
+
     fn visit_exp(&mut self, ctx: &ExpContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
         let len = ctx.get_child_count();
         let stack_len = self.visitor_stack.len();
-        if len > 1 && stack_len >= len {
-            let remove_at = stack_len - len;
-            let mut left = self.visitor_stack.remove(remove_at);
-            for _ in 0..(len - 1) / 2 {
-                let op_gen = self.visitor_stack.remove(remove_at);
-                if op_gen.is_pow() {
-                    let right = self.visitor_stack.remove(remove_at);
-                    left = Rc::new(left.symb_pow(&right).unwrap());
-                } else {
-                    info!("Unexpected operator in exp: {}", op_gen.to_string());
-                }
-            }
+        if len > 1 && stack_len >= 3 {
+            let right = self.visitor_stack.pop().unwrap();
+            let op_gen = self.visitor_stack.pop().unwrap();
+            let mut left = self.visitor_stack.pop().unwrap();
+            // info!("left {}, op {}, right {}", left.to_string(), op_gen.to_string(), right.to_string());
+            assert!(op_gen.is_pow());
+            left = Rc::new(left.symb_pow(&right).unwrap());
             self.visitor_stack.push(left);
         }
         res
@@ -252,15 +324,102 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
         res
     }
 
-    fn visit_atomVariable(&mut self, ctx: &AtomVariableContext<'input>) -> Self::Return {
+    fn visit_func_normal(
+        &mut self,
+        ctx: &math_parser::gen_parsers::latexparser::Func_normalContext<'input>,
+    ) -> Self::Return {
+        let res = self.visit_children(ctx);
+        let func_name = ctx.get_text();
+        let func_name_text = format!("__{}__", func_name.replace("\\", ""));
+        let f = Rc::new(Gen::symbol(&func_name_text, &self.giac_context).unwrap());
+        info!("func_name : {} {} ", func_name, f);
+        self.visitor_stack.push(f);
+        res
+    }
+
+    fn visit_fn_normal(
+        &mut self,
+        ctx: &math_parser::gen_parsers::latexparser::Fn_normalContext<'input>,
+    ) -> Self::Return {
+        // Record stack length before visiting children so we can determine
+        // how many Gen values the children pushed (these represent args,
+        // including any sub/superscript expressions which the user wants
+        // treated as additional args).
+        let before = self.visitor_stack.len();
+        info!("stack {:?} ", self.visitor_stack);
+        let res = self.visit_children(ctx);
+        info!("stack {:?} ", self.visitor_stack);
+        let after = self.visitor_stack.len();
+        let mut pushed = after.saturating_sub(before);
+
+        if pushed > 0 {
+            info!("stack {:?} ", self.visitor_stack);
+        info!("stack {:?} ", self.visitor_stack);
+            let func_name = self.visitor_stack.remove(before);
+            // Remove single quotes, commas, and backslashes from function name
+            let func_name_text = func_name.to_string();
+            info!("func_name : {} {}", func_name_text, func_name);
+            pushed -= 1;
+            info!("stack {:?} ", self.visitor_stack);
+            // Pop the pushed items (they're in left-to-right visit order, but the
+            // stack's top is the last pushed; collect and reverse to restore
+            // left-to-right argument order).
+            let mut args_rc: Vec<Rc<Gen>> = Vec::with_capacity(pushed);
+            for _ in 0..pushed {
+                args_rc.push(self.visitor_stack.pop().unwrap());
+            }
+            args_rc.reverse();
+
+            // Prepare a slice of &Gen for the FFI helper
+            let arg_refs: Vec<&Gen> = args_rc.iter().map(|rc| rc.as_ref()).collect();
+
+            match Gen::function_call(&func_name_text, &arg_refs, &self.giac_context) {
+                Some(g) => {
+                    let rc = Rc::new(g);
+                    self.visitor_stack.push(Rc::clone(&rc));
+                    info!("func_name (call): {} {}", func_name_text, rc);
+                }
+                None => {
+                    // If constructing the function failed, push back the original
+                    // args followed by the function symbol (preserve stack state
+                    // somewhat predictably).
+                    for a in args_rc.into_iter() {
+                        self.visitor_stack.push(a);
+                    }
+                    let sym = Rc::new(Gen::symbol(&func_name_text, &self.giac_context).unwrap());
+                    self.visitor_stack.push(Rc::clone(&sym));
+                    info!("func_name (fallback symbol): {} {}", func_name_text, sym);
+                }
+            }
+        }
+        res
+    }
+
+    fn visit_atomVarSym(
+        &mut self,
+        ctx: &math_parser::gen_parsers::latexparser::AtomVarSymContext<'input>,
+    ) -> Self::Return {
         let res = self.visit_children(ctx);
         let var_text = ctx.get_text();
-        let var_symbol = Rc::new(Gen::symbol(&var_text, &self.giac_context).unwrap());
+        let filtered = var_text.replace("\\", "");
+        let var_symbol = Rc::new(Gen::symbol(&filtered, &self.giac_context).unwrap());
         self.visitor_stack.push(var_symbol);
         res
     }
 
-    fn visit_number(&mut self, ctx: &NumberContext<'input>) -> Self::Return {
+    fn visit_atomVariable(&mut self, ctx: &AtomVariableContext<'input>) -> Self::Return {
+        let res = self.visit_children(ctx);
+        let var_text = ctx.get_text();
+        let filtered = var_text.replace("\\", "");
+        let var_symbol = Rc::new(Gen::symbol(&filtered, &self.giac_context).unwrap());
+        self.visitor_stack.push(var_symbol);
+        res
+    }
+
+    fn visit_atomNumber(
+        &mut self,
+        ctx: &math_parser::gen_parsers::latexparser::AtomNumberContext<'input>,
+    ) -> Self::Return {
         let res = self.visit_children(ctx);
         let sci_text = ctx.get_text();
         let filtered: String = sci_text
@@ -296,7 +455,7 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
     fn visit_multop(&mut self, ctx: &MultopContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
         let op_text = ctx.get_text();
-        if op_text == "*" {
+        if op_text == "*" || op_text == "\\times" || op_text == "\\cdot" {
             self.visitor_stack.push(Rc::new(GEN_MUL.clone()));
         } else {
             self.visitor_stack.push(Rc::new(GEN_DIV.clone()));

@@ -23,6 +23,7 @@ extern "C"
     gen_t *gen_new_from_double(double value, context_t *ctx);
     const char *gen_to_string(gen_t *g, context_t *ctx);
     void gen_free(gen_t *g);
+    gen_t *gen_symbol(const char *expr, context_t *ctx);
 
     // Example API
     gen_t *gen_simplify(gen_t *g, context_t *ctx);

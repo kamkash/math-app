@@ -677,10 +677,53 @@ impl Gen {
         }
     }
 
+    /// Construct a function call Gen for a function with the given name and arguments.
+    ///
+    /// This will special-case a few common builtins (sin, cos, tan, ln, log, exp, sqrt)
+    /// to use the dedicated symbolic FFI helpers where available. For other names
+    /// it will synthesize a GIAC expression string like `f(arg1,arg2,...)` and
+    /// parse it via `gen_parse`.
+    pub fn function_call(name: &str, args: &[&Gen], ctx: &Context) -> Option<Self> {
+        // normalize name (strip leading backslash if present)
+        let name = if let Some(stripped) = name.strip_prefix('\\') {
+            stripped
+        } else {
+            name
+        };
+
+        // special-case common single-arg symbolic functions
+        if args.len() >= 1 {
+            match name.to_lowercase().as_str() {
+                "__sin__" => return Gen::sin(args[0]),
+                "__cos__" => return Gen::cos(args[0]),
+                "__tan__" => return Gen::tan(args[0]),
+                "__ln__" => return Gen::ln(args[0]),
+                "__log__" => return Gen::log(args[0]),
+                "__exp__" => return Gen::exp(args[0]),
+                "__sqrt__" => return args[0].symb_sqrt(),
+                _ => {}
+            }
+        }
+
+        // Fallback: build a textual function call and parse it.
+        let mut s = String::new();
+        s.push_str(name);
+        s.push('(');
+        for (i, a) in args.iter().enumerate() {
+            if i > 0 {
+                s.push(',');
+            }
+            s.push_str(&a.to_string());
+        }
+        s.push(')');
+
+        Gen::parse(&s, ctx)
+    }
+
     /// Creates a new symbolic variable with the given name in the given context.
     pub fn symbol(name: &str, ctx: &Context) -> Option<Self> {
         let cstr = CString::new(name).ok()?;
-        let ptr = unsafe { gen_new(cstr.as_ptr(), ctx.as_ptr()) };
+        let ptr = unsafe { gen_symbol(cstr.as_ptr(), ctx.as_ptr()) };
         if ptr.is_null() {
             None
         } else {

@@ -275,6 +275,13 @@ pub trait LaTeXVisitor<'input>: ParseTreeVisitor<'input,LaTeXParserContextType>{
 	fn visit_ceil(&mut self, ctx: &CeilContext<'input>) { self.visit_children(ctx) }
 
 	/**
+	 * Visit a parse tree produced by the {@code atomVarSym}
+	 * labeled alternative in {@link LaTeXParser#var_sym}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_atomVarSym(&mut self, ctx: &AtomVarSymContext<'input>) { self.visit_children(ctx) }
+
+	/**
 	 * Visit a parse tree produced by {@link LaTeXParser#func_normal}.
 	 * @param ctx the parse tree
 	 */
@@ -288,11 +295,18 @@ pub trait LaTeXVisitor<'input>: ParseTreeVisitor<'input,LaTeXParserContextType>{
 	fn visit_fn_normal(&mut self, ctx: &Fn_normalContext<'input>) { self.visit_children(ctx) }
 
 	/**
-	 * Visit a parse tree produced by the {@code fn_symbol}
+	 * Visit a parse tree produced by the {@code fn_var}
 	 * labeled alternative in {@link LaTeXParser#func}.
 	 * @param ctx the parse tree
 	 */
-	fn visit_fn_symbol(&mut self, ctx: &Fn_symbolContext<'input>) { self.visit_children(ctx) }
+	fn visit_fn_var(&mut self, ctx: &Fn_varContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by the {@code fn_anonym}
+	 * labeled alternative in {@link LaTeXParser#func}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_fn_anonym(&mut self, ctx: &Fn_anonymContext<'input>) { self.visit_children(ctx) }
 
 	/**
 	 * Visit a parse tree produced by the {@code fn_int}
@@ -309,18 +323,18 @@ pub trait LaTeXVisitor<'input>: ParseTreeVisitor<'input,LaTeXParserContextType>{
 	fn visit_fn_sqrt(&mut self, ctx: &Fn_sqrtContext<'input>) { self.visit_children(ctx) }
 
 	/**
-	 * Visit a parse tree produced by the {@code fn_overline}
+	 * Visit a parse tree produced by the {@code fc_overline}
 	 * labeled alternative in {@link LaTeXParser#func}.
 	 * @param ctx the parse tree
 	 */
-	fn visit_fn_overline(&mut self, ctx: &Fn_overlineContext<'input>) { self.visit_children(ctx) }
+	fn visit_fc_overline(&mut self, ctx: &Fc_overlineContext<'input>) { self.visit_children(ctx) }
 
 	/**
-	 * Visit a parse tree produced by the {@code fn_sum}
+	 * Visit a parse tree produced by the {@code fn_sum_prod}
 	 * labeled alternative in {@link LaTeXParser#func}.
 	 * @param ctx the parse tree
 	 */
-	fn visit_fn_sum(&mut self, ctx: &Fn_sumContext<'input>) { self.visit_children(ctx) }
+	fn visit_fn_sum_prod(&mut self, ctx: &Fn_sum_prodContext<'input>) { self.visit_children(ctx) }
 
 	/**
 	 * Visit a parse tree produced by the {@code fn_limit}
@@ -733,6 +747,15 @@ pub trait LaTeXVisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= LaTeXP
 		}
 
 	/**
+	 * Visit a parse tree produced by the {@code atomVarSym}
+	 * labeled alternative in {@link LaTeXParser#var_sym}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_atomVarSym(&mut self, ctx: &AtomVarSymContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
 	 * Visit a parse tree produced by {@link LaTeXParser#func_normal}.
 	 * @param ctx the parse tree
 	 */
@@ -750,11 +773,20 @@ pub trait LaTeXVisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= LaTeXP
 		}
 
 	/**
-	 * Visit a parse tree produced by the {@code fn_symbol}
+	 * Visit a parse tree produced by the {@code fn_var}
 	 * labeled alternative in {@link LaTeXParser#func}.
 	 * @param ctx the parse tree
 	 */
-		fn visit_fn_symbol(&mut self, ctx: &Fn_symbolContext<'input>) -> Self::Return {
+		fn visit_fn_var(&mut self, ctx: &Fn_varContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by the {@code fn_anonym}
+	 * labeled alternative in {@link LaTeXParser#func}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_fn_anonym(&mut self, ctx: &Fn_anonymContext<'input>) -> Self::Return {
 			self.visit_children(ctx)
 		}
 
@@ -777,20 +809,20 @@ pub trait LaTeXVisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= LaTeXP
 		}
 
 	/**
-	 * Visit a parse tree produced by the {@code fn_overline}
+	 * Visit a parse tree produced by the {@code fc_overline}
 	 * labeled alternative in {@link LaTeXParser#func}.
 	 * @param ctx the parse tree
 	 */
-		fn visit_fn_overline(&mut self, ctx: &Fn_overlineContext<'input>) -> Self::Return {
+		fn visit_fc_overline(&mut self, ctx: &Fc_overlineContext<'input>) -> Self::Return {
 			self.visit_children(ctx)
 		}
 
 	/**
-	 * Visit a parse tree produced by the {@code fn_sum}
+	 * Visit a parse tree produced by the {@code fn_sum_prod}
 	 * labeled alternative in {@link LaTeXParser#func}.
 	 * @param ctx the parse tree
 	 */
-		fn visit_fn_sum(&mut self, ctx: &Fn_sumContext<'input>) -> Self::Return {
+		fn visit_fn_sum_prod(&mut self, ctx: &Fn_sum_prodContext<'input>) -> Self::Return {
 			self.visit_children(ctx)
 		}
 
@@ -1088,6 +1120,11 @@ where
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
+	fn visit_atomVarSym(&mut self, ctx: &AtomVarSymContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_atomVarSym(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
 	fn visit_func_normal(&mut self, ctx: &Func_normalContext<'input>){
 		let result = <Self as LaTeXVisitorCompat>::visit_func_normal(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
@@ -1098,8 +1135,13 @@ where
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
-	fn visit_fn_symbol(&mut self, ctx: &Fn_symbolContext<'input>){
-		let result = <Self as LaTeXVisitorCompat>::visit_fn_symbol(self, ctx);
+	fn visit_fn_var(&mut self, ctx: &Fn_varContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_fn_var(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_fn_anonym(&mut self, ctx: &Fn_anonymContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_fn_anonym(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
@@ -1113,13 +1155,13 @@ where
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
-	fn visit_fn_overline(&mut self, ctx: &Fn_overlineContext<'input>){
-		let result = <Self as LaTeXVisitorCompat>::visit_fn_overline(self, ctx);
+	fn visit_fc_overline(&mut self, ctx: &Fc_overlineContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_fc_overline(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
-	fn visit_fn_sum(&mut self, ctx: &Fn_sumContext<'input>){
-		let result = <Self as LaTeXVisitorCompat>::visit_fn_sum(self, ctx);
+	fn visit_fn_sum_prod(&mut self, ctx: &Fn_sum_prodContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_fn_sum_prod(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 

@@ -250,6 +250,7 @@ fn test_gen_to_f64() {
 fn test_gen_math_function() {
     let ctx = Context::new();
     let [x, xx, y] = Gen::symbols(["x", "xx", "y"], &ctx);
+    info!("Symbols: {} {} {}", x, xx, y);
 
     let log_fn = Gen::log(&x).expect("Failed to create log function");
     let ln_fn = Gen::ln(&y).expect("Failed to create ln function");
