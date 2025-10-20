@@ -9,6 +9,15 @@ java -cp antlr-4.13.2-complete.jar org.antlr.v4.runtime.misc.TestRig calculator 
 java -cp .:../antlr-4.13.2-complete.jar org.antlr.v4.gui.TestRig calculator multiplyingExpression -tokens
 java -cp .:../antlr-4.13.2-complete.jar org.antlr.v4.gui.TestRig calculator multiplyingExpression -tree
 java -cp .:../antlr-4.13.2-complete.jar org.antlr.v4.gui.TestRig calculator multiplyingExpression -tree -gui
+
+
+java -cp ../antlr-4.13.2-complete.jar org.antlr.v4.Tool -visitor LaTeX.g4 
+javac *.java
+alias grun='java org.antlr.v4.gui.TestRig'
+export CLASSPATH=`pwd`/../antlr-4.13.2-complete.jar:`pwd`:$CLASSPATH
+CLASSPATH=.:../antlr-4.13.2-complete.jar grun LaTeX  block -tree -gui block.tex 
+
+
 ```
 
 ## antlr-rust

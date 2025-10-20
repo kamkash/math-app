@@ -354,7 +354,6 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
 
         if pushed > 0 {
             info!("stack {:?} ", self.visitor_stack);
-        info!("stack {:?} ", self.visitor_stack);
             let func_name = self.visitor_stack.remove(before);
             // Remove single quotes, commas, and backslashes from function name
             let func_name_text = func_name.to_string();

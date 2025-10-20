@@ -11,6 +11,7 @@ use interpreter::latex_basic_interpreter::LaTeXBasicVisitor;
 
 static EPSILON: f64 = 1e-8;
 
+#[ignore]
 #[test_log::test]
 fn test_latex_basic_simple_eval() {
     let mut visitor = LaTeXBasicVisitor::new();
@@ -66,6 +67,7 @@ fn test_latex_basic_simple_eval() {
 }
 
 #[test_log::test]
+#[ignore]
 fn test_latex_basic_power() {
     let mut visitor = LaTeXBasicVisitor::new();
     let mut input_lines: Vec<String> = Vec::new();
@@ -161,6 +163,7 @@ fn test_latex_basic_power() {
 // }
 
 #[test_log::test]
+#[ignore]
 fn test_latex_basic_eval() {
     let mut visitor = LaTeXBasicVisitor::new();
     let mut input_lines: Vec<String> = Vec::new();

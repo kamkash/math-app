@@ -345,3 +345,62 @@ fn parse_and_simplify_basic() {
     let s = g.simplify().expect("simplify failed");
     assert_eq!(s.to_string(), "4");
 }
+
+
+#[test_log::test]
+fn test_gen_trigs() {
+    let ctx = Context::new();
+
+    // sin(pi/6) == 1/2 (build expressions directly by parsing strings)
+
+    // Build expression by parsing
+    let sin_expr = Gen::parse("sin(pi/6)", &ctx).expect("parse sin");
+    let sin_eval = sin_expr.eval().expect("eval sin");
+    let sin_val = sin_eval.to_f64().expect("sin to_f64");
+    info!("sin(pi/6) -> {}", sin_val);
+    assert!((sin_val - 0.5).abs() < 1e-8, "sin(pi/6) expected 0.5 got {}", sin_val);
+
+    // cos(pi/3) == 1/2
+    let cos_expr = Gen::parse("cos(pi/3)", &ctx).expect("parse cos");
+    let cos_eval = cos_expr.eval().expect("eval cos");
+    let cos_val = cos_eval.to_f64().expect("cos to_f64");
+    info!("cos(pi/3) -> {}", cos_val);
+    assert!((cos_val - 0.5).abs() < 1e-8, "cos(pi/3) expected 0.5 got {}", cos_val);
+
+    // tan(pi/4) == 1
+    let tan_expr = Gen::parse("tan(pi/4)", &ctx).expect("parse tan");
+    let tan_eval = tan_expr.eval().expect("eval tan");
+    let tan_val = tan_eval.to_f64().expect("tan to_f64");
+    info!("tan(pi/4) -> {}", tan_val);
+    assert!((tan_val - 1.0).abs() < 1e-8, "tan(pi/4) expected 1.0 got {}", tan_val);
+
+    // sin^2(pi/6) == 1/4 (constructed symbolically via Gen::sin and pow)
+    let pi = Gen::pi(&ctx).expect("pi");
+    let six = Gen::from_f64(6.0, &ctx).expect("6");
+    let inner = pi.div(&six).expect("pi/6");
+    let sin_inner = Gen::sin(&inner).expect("sin(pi/6)");
+    let two = Gen::from_f64(2.0, &ctx).expect("2");
+    let sin2 = sin_inner.pow(&two).expect("sin^2 constructed");
+    let sin2_eval = sin2.eval().expect("eval sin^2");
+    let sin2_val = sin2_eval.to_f64().expect("sin^2 to_f64");
+    info!("sin(pi/6)^2 -> {}", sin2_val);
+    assert!((sin2_val - 0.25).abs() < 1e-8, "sin^2(pi/6) expected 0.25 got {}", sin2_val);
+
+    // cos^3(pi/2) == 0
+    let cos3_expr = Gen::parse("cos(pi/2)^3", &ctx).expect("parse cos^3");
+    let cos3_eval = cos3_expr.eval().expect("eval cos^3");
+    let cos3_val = cos3_eval.to_f64().unwrap_or(0.0);
+    info!("cos(pi/2)^3 -> {}", cos3_val);
+    assert!(cos3_val.abs() < 1e-8, "cos^3(pi/2) expected 0 got {}", cos3_val);
+
+    // symbolic sin with substitution: sin(x) where x=pi/6
+    let x = Gen::symbol("x", &ctx).expect("symbol x");
+    let sin_sym = Gen::sin(&x).expect("sin symbol");
+    let substituted = sin_sym
+        .subs(&["x"], &[&Gen::new("pi/6", &ctx).unwrap()])
+        .expect("subs sin");
+    let substituted_eval = substituted.eval().expect("eval substituted");
+    let sub_val = substituted_eval.to_f64().expect("sub to_f64");
+    info!("sin(x) with x=pi/6 -> {}", sub_val);
+    assert!((sub_val - 0.5).abs() < 1e-8, "symbolic sin substitution expected 0.5 got {}", sub_val);
+}

@@ -108,17 +108,23 @@ fn test_trigonometry() {
     let mut input_lines = Vec::new();
     let mut checks = Vec::new();
 
+    input_lines.push("x = 10".to_string());
+    checks.push(("x", 10.0));
+    
     input_lines.push("t1 = \\sin{\\frac{\\pi}{2}}".to_string());
-    checks.push(("t1", 1.0));
+    checks.push(("t1", std::f64::consts::FRAC_PI_2.sin()));
 
     input_lines.push("t2 = \\cos{0}".to_string());
-    checks.push(("t2", 1.0));
+    checks.push(("t2", 0.0f64.cos()));
 
     input_lines.push("t3 = \\tan{\\frac{\\pi}{4}}".to_string());
-    checks.push(("t3", 1.0));
+    checks.push(("t3", std::f64::consts::FRAC_PI_4.tan()));
 
     input_lines.push("t4 = \\sin^{2}{\\frac{\\pi}{6}} + \\cos^{2}{\\frac{\\pi}{6}}".to_string());
     checks.push(("t4", 1.0));
+    
+    input_lines.push("t5 = \\sin^{x+2}{\\frac{\\pi}{6}}".to_string());
+    checks.push(("t5", (std::f64::consts::FRAC_PI_6.sin()).powf(12.0)));
 
     run_test(input_lines, checks);
 }

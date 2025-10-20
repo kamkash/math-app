@@ -691,13 +691,26 @@ impl Gen {
             name
         };
 
-        // special-case common single-arg symbolic functions
+        // special-case common single-arg symbolic functions.
         if args.len() >= 1 {
             match name.to_lowercase().as_str() {
+                "__sin__" if args.len() == 2 => {
+                    let sin_inner = Gen::sin(args[1])?;
+                    return sin_inner.pow(args[0]);
+                }
                 "__sin__" => return Gen::sin(args[0]),
+                "__cos__" if args.len() == 2 => {
+                    let cos_inner = Gen::cos(args[1])?;
+                    return cos_inner.pow(args[0]);
+                }
                 "__cos__" => return Gen::cos(args[0]),
                 "__tan__" => return Gen::tan(args[0]),
                 "__ln__" => return Gen::ln(args[0]),
+                "__log__" if args.len() == 2 => {
+                    if let Some(base) = args[0].to_f64() {
+                        return Gen::logb(args[1], base);
+                    }
+                }
                 "__log__" => return Gen::log(args[0]),
                 "__exp__" => return Gen::exp(args[0]),
                 "__sqrt__" => return args[0].symb_sqrt(),
