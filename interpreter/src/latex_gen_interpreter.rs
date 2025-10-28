@@ -19,6 +19,86 @@ use math_parser::gen_parsers::latexparser::{
 };
 use math_parser::gen_parsers::latexvisitor::LaTeXVisitorCompat;
 
+/// Construct a function call Gen for a function with the given name and arguments.
+///
+/// This will special-case a few common builtins (sin, cos, tan, ln, log, exp, sqrt)
+/// to use the dedicated symbolic FFI helpers where available. For other names
+/// it will synthesize a GIAC expression string like `f(arg1,arg2,...)` and
+/// parse it via `gen_parse`.
+pub fn function_call(name: &str, args: &[&Gen], ctx: &Context) -> Option<Gen> {
+    // normalize name (strip leading backslash if present)
+    let name = if let Some(stripped) = name.strip_prefix('\\') {
+        stripped
+    } else {
+        name
+    };
+
+    // special-case common single-arg symbolic functions.
+    if args.len() >= 1 {
+        match name.to_lowercase().as_str() {
+            "__sin__" if args.len() == 2 => {
+                let sin_inner = Gen::sin(args[1])?;
+                return sin_inner.pow(args[0]);
+            }
+            "__sin__" => return Gen::sin(args[0]),
+            "__cos__" if args.len() == 2 => {
+                let cos_inner = Gen::cos(args[1])?;
+                return cos_inner.pow(args[0]);
+            }
+            "__cos__" => return Gen::cos(args[0]),
+            "__tan__" if args.len() == 2 => {
+                let tan_inner = Gen::tan(args[1])?;
+                return tan_inner.pow(args[0]);
+            }
+            "__tan__" => return Gen::tan(args[0]),
+
+            "__sinh__" if args.len() == 2 => {
+                let cos_inner = Gen::symb_sinh(args[1])?;
+                return cos_inner.pow(args[0]);
+            }
+            "__sinh__" => return Gen::symb_sinh(args[0]),
+            "__cosh__" if args.len() == 2 => {
+                let cos_inner = Gen::symb_cosh(args[1])?;
+                return cos_inner.pow(args[0]);
+            }
+            "__cosh__" => return Gen::symb_cosh(args[0]),
+            "__tanh__" if args.len() == 2 => {
+                let tan_inner = Gen::symb_tanh(args[1])?;
+                return tan_inner.pow(args[0]);
+            }
+            "__tanh__" => return Gen::symb_tanh(args[0]),
+            "__abs__" if args.len() == 2 => {
+                let sin_inner = Gen::sin(args[1])?;
+                return sin_inner.pow(args[0]);
+            }
+            "__ln__" => return Gen::ln(args[0]),
+            "__log__" if args.len() == 2 => {
+                if let Some(base) = args[0].to_f64() {
+                    return Gen::logb(args[1], base);
+                }
+            }
+            "__log__" => return Gen::log(args[0]),
+            "__exp__" => return Gen::exp(args[0]),
+            "__sqrt__" => return args[0].symb_sqrt(),
+            _ => {}
+        }
+    }
+
+    // Fallback: build a textual function call and parse it.
+    let mut s = String::new();
+    s.push_str(name);
+    s.push('(');
+    for (i, a) in args.iter().enumerate() {
+        if i > 0 {
+            s.push(',');
+        }
+        s.push_str(&a.to_string());
+    }
+    s.push(')');
+
+    Gen::parse(&s, ctx)
+}
+
 pub fn eval_symbol_to_f64(visitor: &mut LaTeXGenVisitor, var_name: &str) -> f64 {
     let actual_sym = visitor
         .result_table
@@ -171,7 +251,6 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
 
     fn visit_relation(&mut self, ctx: &RelationContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
-        // dbg!(ctx.get_text());
         let len = ctx.get_child_count();
         let stack_len = self.visitor_stack.len();
         if len >= 3 && stack_len >= 3 {
@@ -218,7 +297,6 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
 
     fn visit_mp(&mut self, ctx: &MpContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
-        // dbg!(ctx.get_text());
         let len = ctx.get_child_count();
         let stack_len = self.visitor_stack.len();
         if len > 1 && stack_len >= len {
@@ -264,14 +342,11 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
 
     fn visit_frac(&mut self, ctx: &FracContext<'input>) -> Self::Return {
         let res = self.visit_children(ctx);
-        dbg!(ctx.get_text());
         let len = ctx.get_child_count();
         let stack_len = self.visitor_stack.len();
         if len > 1 && stack_len >= 2 {
             let right_item = self.visitor_stack.pop().unwrap();
-            dbg!(right_item.to_string());
             let left_item = self.visitor_stack.pop().unwrap();
-            dbg!(left_item.to_string());
             let frac = Rc::new(left_item.div(&right_item).unwrap());
             self.visitor_stack.push(frac);
         }
@@ -286,7 +361,6 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
             let right = self.visitor_stack.pop().unwrap();
             let op_gen = self.visitor_stack.pop().unwrap();
             let mut left = self.visitor_stack.pop().unwrap();
-            // info!("left {}, op {}, right {}", left.to_string(), op_gen.to_string(), right.to_string());
             assert!(op_gen.is_pow());
             left = Rc::new(left.symb_pow(&right).unwrap());
             self.visitor_stack.push(left);
@@ -332,7 +406,6 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
         let func_name = ctx.get_text();
         let func_name_text = format!("__{}__", func_name.replace("\\", ""));
         let f = Rc::new(Gen::symbol(&func_name_text, &self.giac_context).unwrap());
-        info!("func_name : {} {} ", func_name, f);
         self.visitor_stack.push(f);
         res
     }
@@ -346,20 +419,15 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
         // including any sub/superscript expressions which the user wants
         // treated as additional args).
         let before = self.visitor_stack.len();
-        info!("stack {:?} ", self.visitor_stack);
         let res = self.visit_children(ctx);
-        info!("stack {:?} ", self.visitor_stack);
         let after = self.visitor_stack.len();
         let mut pushed = after.saturating_sub(before);
 
         if pushed > 0 {
-            info!("stack {:?} ", self.visitor_stack);
             let func_name = self.visitor_stack.remove(before);
             // Remove single quotes, commas, and backslashes from function name
             let func_name_text = func_name.to_string();
-            info!("func_name : {} {}", func_name_text, func_name);
             pushed -= 1;
-            info!("stack {:?} ", self.visitor_stack);
             // Pop the pushed items (they're in left-to-right visit order, but the
             // stack's top is the last pushed; collect and reverse to restore
             // left-to-right argument order).
@@ -372,11 +440,10 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
             // Prepare a slice of &Gen for the FFI helper
             let arg_refs: Vec<&Gen> = args_rc.iter().map(|rc| rc.as_ref()).collect();
 
-            match Gen::function_call(&func_name_text, &arg_refs, &self.giac_context) {
+            match function_call(&func_name_text, &arg_refs, &self.giac_context) {
                 Some(g) => {
                     let rc = Rc::new(g);
                     self.visitor_stack.push(Rc::clone(&rc));
-                    info!("func_name (call): {} {}", func_name_text, rc);
                 }
                 None => {
                     // If constructing the function failed, push back the original
@@ -387,7 +454,6 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
                     }
                     let sym = Rc::new(Gen::symbol(&func_name_text, &self.giac_context).unwrap());
                     self.visitor_stack.push(Rc::clone(&sym));
-                    info!("func_name (fallback symbol): {} {}", func_name_text, sym);
                 }
             }
         }

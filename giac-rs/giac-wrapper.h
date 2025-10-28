@@ -52,6 +52,10 @@ extern "C"
     gen_t *gen_symb_sin(gen_t *a, context_t *ctx);
     gen_t *gen_symb_cos(gen_t *a, context_t *ctx);
     gen_t *gen_symb_tan(gen_t *a, context_t *ctx);
+    // Hyperbolic functions
+    gen_t *gen_symb_sinh(gen_t *a, context_t *ctx);
+    gen_t *gen_symb_cosh(gen_t *a, context_t *ctx);
+    gen_t *gen_symb_tanh(gen_t *a, context_t *ctx);
     // Square root (symbolic)
     gen_t *gen_symb_sqrt(gen_t *a, context_t *ctx);
 

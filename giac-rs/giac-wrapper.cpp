@@ -441,6 +441,57 @@ gen_t *gen_symb_tan(gen_t *a, context_t *ctx)
     }
 }
 
+gen_t *gen_symb_sinh(gen_t *a, context_t *ctx)
+{
+    GIAC_LOCK();
+    try
+    {
+        gen_t *result = new gen_t;
+        vecteur v;
+        v.push_back(a->value);
+        result->value = symbolic(at_sinh, v);
+        return result;
+    }
+    catch (...)
+    {
+        return nullptr;
+    }
+}
+
+gen_t *gen_symb_cosh(gen_t *a, context_t *ctx)
+{
+    GIAC_LOCK();
+    try
+    {
+        gen_t *result = new gen_t;
+        vecteur v;
+        v.push_back(a->value);
+        result->value = symbolic(at_cosh, v);
+        return result;
+    }
+    catch (...)
+    {
+        return nullptr;
+    }
+}
+
+gen_t *gen_symb_tanh(gen_t *a, context_t *ctx)
+{
+    GIAC_LOCK();
+    try
+    {
+        gen_t *result = new gen_t;
+        vecteur v;
+        v.push_back(a->value);
+        result->value = symbolic(at_tanh, v);
+        return result;
+    }
+    catch (...)
+    {
+        return nullptr;
+    }
+}
+
 gen_t *gen_symb_sqrt(gen_t *a, context_t *ctx)
 {
     GIAC_LOCK();

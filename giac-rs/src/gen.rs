@@ -16,8 +16,8 @@
 use math_core::common::LogicalOperator;
 use regex::Regex;
 
-use crate::{context::Context, giac_ffi::*};
 use crate::giac_vec;
+use crate::{context::Context, giac_ffi::*};
 use std::{
     ffi::{CStr, CString},
     fmt,
@@ -358,6 +358,15 @@ impl Gen {
         }
     }
 
+    pub fn symb_sinh(&self) -> Option<Self> {
+        let ptr = unsafe { gen_symb_sinh(self.ptr, self.ctx) };
+        if ptr.is_null() {
+            None
+        } else {
+            Some(Gen { ptr, ctx: self.ctx })
+        }
+    }
+
     pub fn symb_cos(&self) -> Option<Self> {
         let ptr = unsafe { gen_symb_cos(self.ptr, self.ctx) };
         if ptr.is_null() {
@@ -367,8 +376,26 @@ impl Gen {
         }
     }
 
+    pub fn symb_cosh(&self) -> Option<Self> {
+        let ptr = unsafe { gen_symb_cosh(self.ptr, self.ctx) };
+        if ptr.is_null() {
+            None
+        } else {
+            Some(Gen { ptr, ctx: self.ctx })
+        }
+    }
+
     pub fn symb_tan(&self) -> Option<Self> {
         let ptr = unsafe { gen_symb_tan(self.ptr, self.ctx) };
+        if ptr.is_null() {
+            None
+        } else {
+            Some(Gen { ptr, ctx: self.ctx })
+        }
+    }
+
+    pub fn symb_tanh(&self) -> Option<Self> {
+        let ptr = unsafe { gen_symb_tanh(self.ptr, self.ctx) };
         if ptr.is_null() {
             None
         } else {
@@ -677,62 +704,6 @@ impl Gen {
         }
     }
 
-    /// Construct a function call Gen for a function with the given name and arguments.
-    ///
-    /// This will special-case a few common builtins (sin, cos, tan, ln, log, exp, sqrt)
-    /// to use the dedicated symbolic FFI helpers where available. For other names
-    /// it will synthesize a GIAC expression string like `f(arg1,arg2,...)` and
-    /// parse it via `gen_parse`.
-    pub fn function_call(name: &str, args: &[&Gen], ctx: &Context) -> Option<Self> {
-        // normalize name (strip leading backslash if present)
-        let name = if let Some(stripped) = name.strip_prefix('\\') {
-            stripped
-        } else {
-            name
-        };
-
-        // special-case common single-arg symbolic functions.
-        if args.len() >= 1 {
-            match name.to_lowercase().as_str() {
-                "__sin__" if args.len() == 2 => {
-                    let sin_inner = Gen::sin(args[1])?;
-                    return sin_inner.pow(args[0]);
-                }
-                "__sin__" => return Gen::sin(args[0]),
-                "__cos__" if args.len() == 2 => {
-                    let cos_inner = Gen::cos(args[1])?;
-                    return cos_inner.pow(args[0]);
-                }
-                "__cos__" => return Gen::cos(args[0]),
-                "__tan__" => return Gen::tan(args[0]),
-                "__ln__" => return Gen::ln(args[0]),
-                "__log__" if args.len() == 2 => {
-                    if let Some(base) = args[0].to_f64() {
-                        return Gen::logb(args[1], base);
-                    }
-                }
-                "__log__" => return Gen::log(args[0]),
-                "__exp__" => return Gen::exp(args[0]),
-                "__sqrt__" => return args[0].symb_sqrt(),
-                _ => {}
-            }
-        }
-
-        // Fallback: build a textual function call and parse it.
-        let mut s = String::new();
-        s.push_str(name);
-        s.push('(');
-        for (i, a) in args.iter().enumerate() {
-            if i > 0 {
-                s.push(',');
-            }
-            s.push_str(&a.to_string());
-        }
-        s.push(')');
-
-        Gen::parse(&s, ctx)
-    }
-
     /// Creates a new symbolic variable with the given name in the given context.
     pub fn symbol(name: &str, ctx: &Context) -> Option<Self> {
         let cstr = CString::new(name).ok()?;
@@ -757,7 +728,10 @@ impl Gen {
             }
             // Fallback: some GIAC operations return a singleton vecteur (e.g. "[10.0]").
             // Try to extract a numeric element from a singleton vecteur using the FFI helpers.
-            if !self.ptr.is_null() && !self.ctx.is_null() && giac_vec::is_vecteur(self.ptr as *const gen_t, self.ctx) {
+            if !self.ptr.is_null()
+                && !self.ctx.is_null()
+                && giac_vec::is_vecteur(self.ptr as *const gen_t, self.ctx)
+            {
                 let len = giac_vec::vecteur_len(self.ptr as *const gen_t, self.ctx);
                 if len == 1 {
                     let elem_ptr = giac_vec::vecteur_get(self.ptr as *const gen_t, 0, self.ctx);

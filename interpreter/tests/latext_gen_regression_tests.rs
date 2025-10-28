@@ -137,6 +137,9 @@ fn test_hyperbolic() {
     let mut input_lines = Vec::new();
     let mut checks = Vec::new();
 
+    input_lines.push("x = 10".to_string());
+    checks.push(("x", 10.0));
+    
     input_lines.push("h1 = \\sinh{0}".to_string());
     checks.push(("h1", 0.0));
 
@@ -145,6 +148,9 @@ fn test_hyperbolic() {
 
     input_lines.push("h3 = \\tanh{10}".to_string());
     checks.push(("h3", (10.0f64).tanh()));
+
+    input_lines.push("t5 = \\sinh^{x+2}{\\frac{\\pi}{6}}".to_string());
+    checks.push(("t5", (std::f64::consts::FRAC_PI_6.sinh()).powf(12.0)));
 
     run_test(input_lines, checks);
 }
@@ -160,10 +166,10 @@ fn test_variable_context() {
     input_lines.push("a = 10".to_string());
     input_lines.push("b = 20.5".to_string());
 
-    input_lines.push("combo1 = a^{2} + 3b - 1.5".to_string()); // 100 + 61.5 - 1.5 = 160
+    input_lines.push("combo1 = a^{2} + 3*b - 1.5".to_string()); // 100 + 61.5 - 1.5 = 160
     checks.push(("combo1", 160.0));
 
-    input_lines.push("combo2 = \\sqrt{a^{2} + 3b - 1.5}".to_string()); // sqrt(160)
+    input_lines.push("combo2 = \\sqrt{a^{2} + 3*b - 1.5}".to_string()); // sqrt(160)
     checks.push(("combo2", (160.0f64).sqrt()));
 
     run_test(input_lines, checks);

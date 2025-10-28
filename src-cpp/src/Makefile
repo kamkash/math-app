@@ -3,7 +3,7 @@ CXX = g++
 CC = clang++
 
 ifeq ($(OS), Darwin)  # macOS
-	LLAMA_CPP_PATH = /Users/kamran/llama.cpp
+	LLAMA_CPP_PATH = /Users/kamran/mathappws/llama.cpp
 	DY_TARGET=dylib
 endif
 ifeq ($(OS), Linux)

@@ -10,4 +10,15 @@ MODEL_FILE=/Users/kamran/.lmstudio/models/lmstudio-community/gemma-3-4b-it-GGUF/
 # MODEL_FILE=/Users/kamran/.lmstudio/models/QuantFactory/deepseek-math-7b-instruct-GGUF/deepseek-math-7b-instruct.Q4_K_S.gguf
 # LLAMA_BUILD_PATH=/Users/kamran/llama.cpp/build/bin
 LLAMA_BUILD_PATH=/Users/kamran/mathappws/math-app/src-tauri/assets/libs
-DYLD_LIBRARY_PATH=.:$DYLD_LIBRARY_PATH:$LLAMA_BUILD_PATH ./target/main -m $MODEL_FILE $*
+# DYLD_LIBRARY_PATH=.:$DYLD_LIBRARY_PATH:$LLAMA_BUILD_PATH ./target/main -m $MODEL_FILE $*
+DYLD_LIBRARY_PATH=.:$DYLD_LIBRARY_PATH:$LLAMA_BUILD_PATH ./target/main -n 2048 -m $MODEL_FILE `cat <<EOF
+You are a helpful assistant that extracts a block of math LaTex between $$ and $$ from input and outputs only valid JSON describing a function call.
+Available function:
+solve_math_block(argument: string) -> string
+
+User: Hello assistant. Solve this: $$ \displaylines{x = 10 \\ y = x^2 + 5x + 6 \\ z = x^{2} \\ rat2 = \\frac{2*x}{4*x}} $$
+Output JSON only, like:
+{"name": "solve_math_block", "arguments": "latex block here"}
+EOF
+`
+

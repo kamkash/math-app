@@ -18,7 +18,7 @@ grammar LaTeX;
 // --- Top-level block rule for multiple expressions ---
 block
 	: (relation | expr) (SEPARATOR (relation | expr))* SEPARATOR* EOF
-	| LATEX_BLOCK L_BRACE (relation | expr) (LATEX_NEWLINE (relation | expr))* R_BRACE SEPARATOR* EOF
+	| LATEX_BLOCK L_BRACE (relation | expr) (LATEX_NEWLINE (relation | expr))* LATEX_NEWLINE* R_BRACE LATEX_NEWLINE* SEPARATOR* EOF
 	;
 
 

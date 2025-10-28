@@ -80,12 +80,12 @@ export async function run_llm_generate(
     if (promptInputEl && responseOutputEl && promptInputEl.value) {
         let ascii = convertLatexToAsciiMath(promptInputEl.value);
         console.log("AsciiMath", ascii);
-        ascii += " Important: Answer in LaTeX format.";
+        // ascii += " Important: Answer in LaTeX format.";
         const answer: string = await invoke("llm_generate", {
             prompt: ascii,
         });
         console.log("llm_generate", answer);
-        responseOutputEl.value = processLatexBlock(answer);
+        responseOutputEl.value = answer; // processLatexBlock(answer);
     }
 }
 
