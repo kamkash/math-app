@@ -347,6 +347,18 @@ fn enter_atomBinom(&mut self, _ctx: &AtomBinomContext<'input>) { }
  */
 fn exit_atomBinom(&mut self, _ctx: &AtomBinomContext<'input>) { }
 /**
+ * Enter a parse tree produced by the {@code atomText}
+ * labeled alternative in {@link LaTeXParser#atom}.
+ * @param ctx the parse tree
+ */
+fn enter_atomText(&mut self, _ctx: &AtomTextContext<'input>) { }
+/**
+ * Exit a parse tree produced by the {@code atomText}
+ * labeled alternative in {@link LaTeXParser#atom}.
+ * @param ctx the parse tree
+ */
+fn exit_atomText(&mut self, _ctx: &AtomTextContext<'input>) { }
+/**
  * Enter a parse tree produced by the {@code atomBra}
  * labeled alternative in {@link LaTeXParser#atom}.
  * @param ctx the parse tree
@@ -430,6 +442,26 @@ fn enter_binom(&mut self, _ctx: &BinomContext<'input>) { }
  * @param ctx the parse tree
  */
 fn exit_binom(&mut self, _ctx: &BinomContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link LaTeXParser#text}.
+ * @param ctx the parse tree
+ */
+fn enter_text(&mut self, _ctx: &TextContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link LaTeXParser#text}.
+ * @param ctx the parse tree
+ */
+fn exit_text(&mut self, _ctx: &TextContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link LaTeXParser#text_content}.
+ * @param ctx the parse tree
+ */
+fn enter_text_content(&mut self, _ctx: &Text_contentContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link LaTeXParser#text_content}.
+ * @param ctx the parse tree
+ */
+fn exit_text_content(&mut self, _ctx: &Text_contentContext<'input>) { }
 /**
  * Enter a parse tree produced by {@link LaTeXParser#floor}.
  * @param ctx the parse tree

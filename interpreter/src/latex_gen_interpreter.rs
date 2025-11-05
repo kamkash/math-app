@@ -460,6 +460,12 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
         res
     }
 
+    fn visit_atomText(&mut self, ctx: &math_parser::gen_parsers::latexparser::AtomTextContext<'input>) -> Self::Return {
+        let res = self.visit_children(ctx);
+        let text = ctx.get_text();
+        log::info!("Ignoring text atom: {}", text);
+        res
+    }
     fn visit_atomVarSym(
         &mut self,
         ctx: &math_parser::gen_parsers::latexparser::AtomVarSymContext<'input>,

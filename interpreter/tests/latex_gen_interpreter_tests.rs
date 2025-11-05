@@ -112,3 +112,14 @@ fn test_latex_gen_group() {
     checks.push(("b", 2.0 * (1.0 + 10.0)));
     run_test(input_lines, checks);
 }
+
+#[test_log::test]
+fn test_atom_text_ignored() {
+    let mut input_lines: Vec<String> = Vec::new();
+    let mut checks: Vec<(&str, f64)> = Vec::new();
+
+    input_lines.push(r"\text{solve the following:}".to_string());
+    input_lines.push("x = 2".to_string());
+    checks.push(("x", 2.0));
+    run_test(input_lines, checks);
+}

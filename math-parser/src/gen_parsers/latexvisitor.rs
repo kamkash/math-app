@@ -213,6 +213,13 @@ pub trait LaTeXVisitor<'input>: ParseTreeVisitor<'input,LaTeXParserContextType>{
 	fn visit_atomBinom(&mut self, ctx: &AtomBinomContext<'input>) { self.visit_children(ctx) }
 
 	/**
+	 * Visit a parse tree produced by the {@code atomText}
+	 * labeled alternative in {@link LaTeXParser#atom}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_atomText(&mut self, ctx: &AtomTextContext<'input>) { self.visit_children(ctx) }
+
+	/**
 	 * Visit a parse tree produced by the {@code atomBra}
 	 * labeled alternative in {@link LaTeXParser#atom}.
 	 * @param ctx the parse tree
@@ -261,6 +268,18 @@ pub trait LaTeXVisitor<'input>: ParseTreeVisitor<'input,LaTeXParserContextType>{
 	 * @param ctx the parse tree
 	 */
 	fn visit_binom(&mut self, ctx: &BinomContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#text}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_text(&mut self, ctx: &TextContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#text_content}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_text_content(&mut self, ctx: &Text_contentContext<'input>) { self.visit_children(ctx) }
 
 	/**
 	 * Visit a parse tree produced by {@link LaTeXParser#floor}.
@@ -665,6 +684,15 @@ pub trait LaTeXVisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= LaTeXP
 		}
 
 	/**
+	 * Visit a parse tree produced by the {@code atomText}
+	 * labeled alternative in {@link LaTeXParser#atom}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_atomText(&mut self, ctx: &AtomTextContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
 	 * Visit a parse tree produced by the {@code atomBra}
 	 * labeled alternative in {@link LaTeXParser#atom}.
 	 * @param ctx the parse tree
@@ -727,6 +755,22 @@ pub trait LaTeXVisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= LaTeXP
 	 * @param ctx the parse tree
 	 */
 		fn visit_binom(&mut self, ctx: &BinomContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#text}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_text(&mut self, ctx: &TextContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#text_content}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_text_content(&mut self, ctx: &Text_contentContext<'input>) -> Self::Return {
 			self.visit_children(ctx)
 		}
 
@@ -1070,6 +1114,11 @@ where
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
+	fn visit_atomText(&mut self, ctx: &AtomTextContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_atomText(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
 	fn visit_atomBra(&mut self, ctx: &AtomBraContext<'input>){
 		let result = <Self as LaTeXVisitorCompat>::visit_atomBra(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
@@ -1107,6 +1156,16 @@ where
 
 	fn visit_binom(&mut self, ctx: &BinomContext<'input>){
 		let result = <Self as LaTeXVisitorCompat>::visit_binom(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_text(&mut self, ctx: &TextContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_text(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_text_content(&mut self, ctx: &Text_contentContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_text_content(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 

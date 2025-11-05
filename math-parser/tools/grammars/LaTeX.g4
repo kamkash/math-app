@@ -124,6 +124,7 @@ atom: (VAR | SYMBOL) (subexpr? SINGLE_QUOTES? | SINGLE_QUOTES? subexpr?) # atomV
 	| mathit                                                              # atomMathit
 	| frac                                                                # atomFrac
 	| binom                                                               # atomBinom
+	| text                                                                # atomText
 	| bra                                                                 # atomBra
 	| ket                                                                 # atomKet
 	;
@@ -140,6 +141,11 @@ frac: CMD_FRAC (upperd = DIGIT | L_BRACE upper = expr R_BRACE)
 
 binom:
 	(CMD_BINOM | CMD_DBINOM | CMD_TBINOM) L_BRACE n = expr R_BRACE L_BRACE k = expr R_BRACE;
+
+text:
+	CMD_TEXT L_BRACE text_content R_BRACE;
+
+text_content: ( ~R_BRACE )* ;
 
 floor: L_FLOOR val = expr R_FLOOR;
 ceil: L_CEIL val = expr R_CEIL;
@@ -306,6 +312,8 @@ CMD_FRAC:
 	| '\\dfrac'
 	| '\\tfrac';
 CMD_BINOM: '\\binom';
+
+CMD_TEXT: '\\text';
 CMD_DBINOM: '\\dbinom';
 CMD_TBINOM: '\\tbinom';
 

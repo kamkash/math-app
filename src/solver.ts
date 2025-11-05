@@ -1,5 +1,5 @@
 import {invoke} from "@tauri-apps/api/core";
-import {convertLatexToAsciiMath, MathfieldElement,} from "mathlive";
+import {MathfieldElement,} from "mathlive";
 
 
 export function formatLatexBlock(text: string): string {
@@ -11,7 +11,8 @@ export function formatLatexBlock(text: string): string {
         .replace(/^```latex\s*$/gm, "\\begin{align}")
         .replace(/^```\s*$/gm, "\\end{align}")
         .replace(/\r?\n|\r$/g, "\\\\")
-        .replace(/ +/gm, "~");
+        .replace(/ +/gm, "~")
+        .replace(/^\{(.*)\}$/s, "$1"); // Remove outer braces if they exist
 }
 
 export function processLatexBlock(answer: string): string {
@@ -23,15 +24,13 @@ export function processLatexBlock(answer: string): string {
 export async function run_solver(
     promptInputEl: MathfieldElement,
     responseOutputEl: MathfieldElement,
-    _solverName?: string // Added for consistency with potential future use, though currently unused by backend
 ) {
     if (responseOutputEl && promptInputEl && promptInputEl.value) {
-        // let prompt = convertLatexToAsciiMath(promptInputEl.value);
-        // console.log(`MathML: ${convertLatexToMathMl(promptInputEl.value)}`);
-        // console.log("AsciiMath input", prompt);
-        console.log(promptInputEl.value)
+        let promptLatex = promptInputEl.getValue("latex");
+        promptLatex = formatLatexBlock(promptLatex);
+        console.log("solver send", promptLatex);
         const res = await invoke("run_solver", {
-            input:promptInputEl.value,
+            input: promptLatex,
         });
         responseOutputEl.setValue(res as string, {mode: "text"});
     }
@@ -78,14 +77,16 @@ export async function run_llm_generate(
     responseOutputEl: MathfieldElement
 ) {
     if (promptInputEl && responseOutputEl && promptInputEl.value) {
-        let ascii = convertLatexToAsciiMath(promptInputEl.value);
-        console.log("AsciiMath", ascii);
-        // ascii += " Important: Answer in LaTeX format.";
-        const answer: string = await invoke("llm_generate", {
-            prompt: ascii,
+        let prompt = promptInputEl.getValue("latex-expanded") ;
+        prompt += "  Important: Answer in LaTeX format.";
+        console.log("llm_generate send", prompt);
+        let answer: string = await invoke("llm_generate", {
+            prompt: prompt,
         });
-        console.log("llm_generate", answer);
-        responseOutputEl.value = answer; // processLatexBlock(answer);
+        console.log("llm_generate answer", answer);
+        responseOutputEl.setValue(answer as string, {mode: "auto"});
     }
 }
+
+
 
