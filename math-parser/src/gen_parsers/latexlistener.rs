@@ -433,6 +433,16 @@ fn enter_frac(&mut self, _ctx: &FracContext<'input>) { }
  */
 fn exit_frac(&mut self, _ctx: &FracContext<'input>) { }
 /**
+ * Enter a parse tree produced by {@link LaTeXParser#derivative}.
+ * @param ctx the parse tree
+ */
+fn enter_derivative(&mut self, _ctx: &DerivativeContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link LaTeXParser#derivative}.
+ * @param ctx the parse tree
+ */
+fn exit_derivative(&mut self, _ctx: &DerivativeContext<'input>) { }
+/**
  * Enter a parse tree produced by {@link LaTeXParser#binom}.
  * @param ctx the parse tree
  */

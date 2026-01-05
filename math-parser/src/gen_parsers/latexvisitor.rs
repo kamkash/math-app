@@ -264,6 +264,12 @@ pub trait LaTeXVisitor<'input>: ParseTreeVisitor<'input,LaTeXParserContextType>{
 	fn visit_frac(&mut self, ctx: &FracContext<'input>) { self.visit_children(ctx) }
 
 	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#derivative}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_derivative(&mut self, ctx: &DerivativeContext<'input>) { self.visit_children(ctx) }
+
+	/**
 	 * Visit a parse tree produced by {@link LaTeXParser#binom}.
 	 * @param ctx the parse tree
 	 */
@@ -751,6 +757,14 @@ pub trait LaTeXVisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= LaTeXP
 		}
 
 	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#derivative}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_derivative(&mut self, ctx: &DerivativeContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
 	 * Visit a parse tree produced by {@link LaTeXParser#binom}.
 	 * @param ctx the parse tree
 	 */
@@ -1151,6 +1165,11 @@ where
 
 	fn visit_frac(&mut self, ctx: &FracContext<'input>){
 		let result = <Self as LaTeXVisitorCompat>::visit_frac(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_derivative(&mut self, ctx: &DerivativeContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_derivative(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 

@@ -174,3 +174,27 @@ fn test_variable_context() {
 
     run_test(input_lines, checks);
 }
+
+// #[test_log::test]
+// fn test_calculus() {
+//     let mut input_lines = Vec::new();
+//     let mut checks = Vec::new();
+
+//     input_lines.push("f(x) = x^{2}".to_string());
+//     input_lines.push("f'(x) = 2*x".to_string());
+//     input_lines.push("f''(x) = 2".to_string());
+
+//     input_lines.push(r"\text{solve the following:}".to_string());
+//     input_lines.push("x = 2".to_string());
+//     checks.push(("x", 2.0));
+//     input_lines.push("poly1 = (x+1)^{3}".to_string());
+//     input_lines.push("poly2 = x^{2} - 1".to_string());
+//     input_lines.push("f(x)=xy".to_string());
+//     input_lines.push(r"\frac{d (x^3-10*x+3)}{dx}".to_string());
+//     input_lines.push("d (x^3-10*x+3)/dx".to_string());
+//     input_lines.push(r"\int x^3 dx".to_string());
+//     input_lines.push(r"\int_{0}^{1} x^3 dx".to_string());
+
+
+//     run_test(input_lines, checks);
+// }

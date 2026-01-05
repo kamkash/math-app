@@ -97,6 +97,7 @@ comp:
 	group
 	| abs_group
 	| func
+	| derivative                                                          
 	| atom
 	| floor
 	| ceil;
@@ -125,8 +126,8 @@ atom: (VAR | SYMBOL) (subexpr? SINGLE_QUOTES? | SINGLE_QUOTES? subexpr?) # atomV
 	| frac                                                                # atomFrac
 	| binom                                                               # atomBinom
 	| text                                                                # atomText
-	| bra                                                                 # atomBra
-	| ket                                                                 # atomKet
+	| bra                                                                # atomBra
+	| ket                                                                # atomKet
 	;
 
 
@@ -138,6 +139,10 @@ mathit_text: VAR?;
 
 frac: CMD_FRAC (upperd = DIGIT | L_BRACE upper = expr R_BRACE)
 	(lowerd = DIGIT | L_BRACE lower = expr R_BRACE);
+
+derivative: CMD_FRAC 
+    L_BRACE DIFFERENTIAL? expr R_BRACE
+    L_BRACE DIFFERENTIAL R_BRACE;
 
 binom:
 	(CMD_BINOM | CMD_DBINOM | CMD_TBINOM) L_BRACE n = expr R_BRACE L_BRACE k = expr R_BRACE;
@@ -324,7 +329,7 @@ CARET: '^';
 COLON: ':';
 
 fragment WS_CHAR: [ \t\r\n];
-DIFFERENTIAL: 'd' WS_CHAR*? ([a-zA-Z] | '\\' [a-zA-Z]+);
+DIFFERENTIAL: 'd' WS_CHAR*? ([a-zA-Z] | '\\' [a-zA-Z]+)?;
 
 DIGIT: [0-9];
 // VAR: [a-zA-Z]+;

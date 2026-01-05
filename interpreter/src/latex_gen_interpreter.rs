@@ -398,6 +398,15 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
         res
     }
 
+    fn visit_fn_int(
+        &mut self,
+        ctx: &math_parser::gen_parsers::latexparser::Fn_intContext<'input>,
+    ) -> Self::Return {
+        let res = self.visit_children(ctx);
+        info!("Ignoring integral: {}", ctx.get_text());
+        res
+    }
+
     fn visit_func_normal(
         &mut self,
         ctx: &math_parser::gen_parsers::latexparser::Func_normalContext<'input>,
@@ -460,7 +469,18 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
         res
     }
 
-    fn visit_atomText(&mut self, ctx: &math_parser::gen_parsers::latexparser::AtomTextContext<'input>) -> Self::Return {
+    fn visit_derivative(
+        &mut self,
+        ctx: &math_parser::gen_parsers::latexparser::DerivativeContext<'input>,
+    ) -> Self::Return {
+        let res = self.visit_children(ctx);
+        res
+    }
+
+    fn visit_atomText(
+        &mut self,
+        ctx: &math_parser::gen_parsers::latexparser::AtomTextContext<'input>,
+    ) -> Self::Return {
         let res = self.visit_children(ctx);
         let text = ctx.get_text();
         log::info!("Ignoring text atom: {}", text);
