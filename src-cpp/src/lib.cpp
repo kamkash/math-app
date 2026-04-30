@@ -160,8 +160,8 @@ extern "C"
         }
         else
         {
-            // llama_perf_context_reset(ctx);
-            llama_kv_self_clear(ctx);
+            llama_perf_context_reset(ctx);
+            // llama_kv_self_clear(ctx);
         }
         if (smpl == nullptr)
         {

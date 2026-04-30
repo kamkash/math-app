@@ -2,21 +2,26 @@ OS := $(shell uname)
 CXX = g++
 CC = clang++
 
-ifeq ($(OS), Darwin)  # macOS
-	LLAMA_CPP_PATH = /Users/kamran/mathappws/llama.cpp
-	DY_TARGET=dylib
+
+ifeq ($(OS), Darwin)
+    LLAMA_CPP_PATH = /Users/kamran/mathappws/llama.cpp
+	LLAMA_LIBS=$(LLAMA_CPP_PATH)/build-cpu/bin
+    DY_TARGET=dylib
+    # Add these frameworks for macOS GPU support
+	LDFLAGS = -L$(LLAMA_LIBS) -lllama -lggml -lggml-base -lggml-metal \
+	          -framework Foundation -framework Metal -framework MetalKit -framework Accelerate \
+	          -Wl,-rpath,$(LLAMA_LIBS)
 endif
 ifeq ($(OS), Linux)
 	LLAMA_CPP_PATH = /media/kamran/T7/llama.cpp
+	LLAMA_LIBS=$(LLAMA_CPP_PATH)/build-cpu/bin
 	DY_TARGET=so
+	LDFLAGS = -L$(LLAMA_LIBS) -lllama -lggml -lggml-base -Wl,-rpath,$(LLAMA_LIBS)
 endif
 
 LLAMA_INCLUDE=$(LLAMA_CPP_PATH)/include
 GGML_INCLUDE=$(LLAMA_CPP_PATH)/ggml/include
-LLAMA_LIBS=$(LLAMA_CPP_PATH)/build/bin
-
 CXXFLAGS = -std=c++17 -Wall -I$(LLAMA_INCLUDE) -I$(GGML_INCLUDE)
-LDFLAGS = -L$(LLAMA_LIBS) -lllama -lggml -lggml-base 
 
 TARGET_DIR = ../target
 SRC = main.cpp
@@ -35,7 +40,7 @@ $(TARGET_DIR)/%.o: %.cpp | $(TARGET_DIR)
 	$(CC) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(TARGET_DIR)
+	rm -f $(OBJ) $(TARGET) 
 
 .PHONY: all clean
 

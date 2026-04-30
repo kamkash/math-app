@@ -1,0 +1,29 @@
+[package]
+name = "axum-backend"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+
+[[bin]]
+name = "axum-backend"
+path = "src/main.rs"
+
+[dependencies]
+axum = "0.7"
+tokio = { version = "1", features = ["full"] }
+serde = { workspace = true }
+serde_json = "1.0"
+tower-http = { version = "0.5", features = ["cors", "trace", "fs"] }
+log = "0.4"
+env_logger = "0.4"
+dotenv = "0.15"
+
+# Shared math crates
+interpreter = { path = "../interpreter" }
+math-parser = { path = "../math-parser" }
+math-core = { path = "../math-core" }
+calculus = { path = "../calculus" }
+linear-algebra = { path = "../linear-algebra" }
+statistics = { path = "../statistics" }
+algebra = { path = "../algebra" }
+symbolic-engine = { path = "../symbolic-engine" }

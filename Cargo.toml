@@ -2,6 +2,7 @@
 resolver = "2"
 members = [
     "src-tauri",
+    "axum-backend",
     "math-core",
     "math-parser",
     "interpreter",
@@ -12,6 +13,7 @@ members = [
     "statistics",
     "algebra",
     "symbolic-engine",
+    "llama-cpp-rs",
 ]
 
 [workspace.package]
@@ -24,6 +26,7 @@ log = "0.4.27"
 test-log = "0.2.17"
 antlr-rust = "0.3.0-beta"
 serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
 giac-rs = { path = "giac-rs" }
 symengine-rs = { path = "symengine-rs" }
 math-core = { path = "math-core" }
@@ -32,3 +35,4 @@ linear-algebra = { path = "linear-algebra" }
 statistics = { path = "statistics" }
 algebra = { path = "algebra" }
 symbolic-engine = { path = "symbolic-engine" }
+llama-cpp-rs = { path = "llama-cpp-rs" }
