@@ -1,3 +1,58 @@
+# dylib loading
+
+```bash
+$ otool -l libllama.dylib
+```
+
+The crash is not because `src-tauri/assets/libs/libllama.dylib` is missing. It is there, and your log shows your Rust code loads it first.
+
+The failure is macOS `dyld` resolving `libmathapp.dylib`’s own dependencies:
+
+```text
+libmathapp.dylib depends on @rpath/libllama.dylib
+dyld tried target/debug, deps, rustup lib, ~/lib, /usr/local/lib, /usr/lib
+dyld did not try src-tauri/assets/libs
+```
+
+From `otool`, `libmathapp.dylib` contains:
+
+```text
+@rpath/libllama.dylib
+@rpath/libggml.dylib
+@rpath/libggml-base.dylib
+```
+
+But it has no `LC_RPATH` pointing at `src-tauri/assets/libs`. Loading `libllama.dylib` by absolute path in Rust does not add that directory to `@rpath`.
+
+There is also a naming mismatch: your bundled `libllama.dylib` identifies itself as:
+
+```text
+@rpath/libllama.0.dylib
+```
+
+while `libmathapp.dylib` asks for:
+
+```text
+@rpath/libllama.dylib
+```
+
+So even preloading may not satisfy dyld’s dependency lookup reliably.
+
+The clean fix is to make the bundled dylibs self-relative. Since they all live in the same folder, patch or build them so dependencies use `@loader_path`:
+
+```bash
+install_name_tool -id @loader_path/libmathapp.dylib src-tauri/assets/libs/libmathapp.dylib
+install_name_tool -change @rpath/libllama.dylib @loader_path/libllama.dylib src-tauri/assets/libs/libmathapp.dylib
+install_name_tool -change @rpath/libggml.dylib @loader_path/libggml.dylib src-tauri/assets/libs/libmathapp.dylib
+install_name_tool -change @rpath/libggml-base.dylib @loader_path/libggml-base.dylib src-tauri/assets/libs/libmathapp.dylib
+```
+
+You likely also need to patch `libllama.dylib`’s ggml dependencies, because it asks for versioned names like `@rpath/libggml.0.dylib` while your files are named `libggml.dylib`, `libggml-cpu.dylib`, etc.
+
+In short: your Rust path is correct, but the embedded Mach-O dependency paths inside the dylibs are not relocatable to `assets/libs`. Use `@loader_path` or add matching rpaths/install names during the CMake/build step.
+
+
+
 The short answer is **yes, it is generally best practice to remove the `build/` folder**, especially if you are switching between different hardware backends or if you’ve recently updated the source code.
 
 While build systems like CMake are designed to be "incremental" (meaning they only recompile what has changed), they aren’t always perfect. Here is why and when you should clear it out:
