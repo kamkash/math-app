@@ -1,10 +1,11 @@
+use giac_rs::r#gen::Gen;
 use log::info;
 use symengine_rs::basic::Basic;
 
 use std::{fmt, rc::Rc};
 pub mod asciimath_basic_interpreter;
-pub mod asciimath_gen_interpreter;
 pub mod asciimath_basic_string_interpreter;
+pub mod asciimath_gen_interpreter;
 pub mod calc_basic_interpreter;
 pub mod calc_basic_string_interpreter;
 pub mod latex_basic_interpreter;
@@ -31,6 +32,30 @@ impl std::fmt::Debug for SymEquation {
 impl std::fmt::Display for SymEquation {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{} {} {}", self.left, self.relop, self.right)
+    }
+}
+
+pub struct SymEquationGen {
+    pub left: Rc<Gen>,
+    pub right: Rc<Gen>,
+    pub op: Rc<Gen>,
+}
+
+impl SymEquationGen {
+    pub fn new(left: Rc<Gen>, right: Rc<Gen>, op: Rc<Gen>) -> Self {
+        SymEquationGen { left, right, op }
+    }
+}
+
+impl std::fmt::Debug for SymEquationGen {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?} {:?} {:?}", self.left, self.op, self.right)
+    }
+}
+
+impl std::fmt::Display for SymEquationGen {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{} {} {}", self.left, self.op, self.right)
     }
 }
 

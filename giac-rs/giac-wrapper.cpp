@@ -9,7 +9,7 @@
 
 #include <string>
 #include <new>
-#define USE_LOCK
+#undef USE_LOCK
 #ifdef USE_LOCK
 #include <mutex>
 #endif

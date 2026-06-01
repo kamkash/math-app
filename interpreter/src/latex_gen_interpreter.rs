@@ -1,4 +1,4 @@
-use crate::asciimath_gen_interpreter::SymEquationGen;
+use crate::SymEquationGen;
 use antlr_rust::common_token_stream::CommonTokenStream;
 use antlr_rust::tree::{ParseTree, ParseTreeVisitorCompat, TerminalNode, Tree};
 use antlr_rust::InputStream;

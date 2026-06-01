@@ -13,6 +13,7 @@
 //!   - The underlying GIAC library is not guaranteed thread-safe. For deterministic tests
 //!     that exercise the GIAC FFI, run test suites single-threaded in CI:
 //!       RUST_TEST_THREADS=1 cargo test --workspace
+
 use math_core::common::LogicalOperator;
 use regex::Regex;
 
@@ -24,6 +25,9 @@ use std::{
 };
 
 lazy_static::lazy_static! {
+    /// A global lock to ensure only one thread interacts with Giac at a time.
+    /// This must protect ALL FFI calls, including gen_free.
+
     pub static ref RE_LOG_BASE: Regex = Regex::new(r"^log_(\d+)$").unwrap();
     pub static ref GEN_ADD: Gen = Gen {
         ptr: unsafe {

@@ -1,3 +1,4 @@
+use crate::SymEquationGen;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
@@ -29,30 +30,6 @@ macro_rules! filter_optional_children_texts {
             .map(|child| child.get_text())
             .collect::<Vec<_>>()
     };
-}
-
-pub struct SymEquationGen {
-    pub left: Rc<Gen>,
-    pub right: Rc<Gen>,
-    pub op: Rc<Gen>,
-}
-
-impl SymEquationGen {
-    pub fn new(left: Rc<Gen>, right: Rc<Gen>, op: Rc<Gen>) -> Self {
-        SymEquationGen { left, right, op }
-    }
-}
-
-impl std::fmt::Debug for SymEquationGen {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:?} {:?} {:?}", self.left, self.op, self.right)
-    }
-}
-
-impl std::fmt::Display for SymEquationGen {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{} {} {}", self.left, self.op, self.right)
-    }
 }
 
 pub struct AsciiMathGenVisitor {
