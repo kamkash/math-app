@@ -65,7 +65,7 @@ fn init_logging() {
 /// Load environment variables from .env file
 fn init_env() {
     dotenv::dotenv().ok();
-}   
+}
 
 #[tokio::main]
 async fn main() {

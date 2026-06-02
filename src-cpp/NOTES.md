@@ -47,6 +47,10 @@ install_name_tool -change @rpath/libggml.dylib @loader_path/libggml.dylib src-ta
 install_name_tool -change @rpath/libggml-base.dylib @loader_path/libggml-base.dylib src-tauri/assets/libs/libmathapp.dylib
 ```
 
+```bash
+otool -L my_solver_executable
+```
+
 You likely also need to patch `libllama.dylib`’s ggml dependencies, because it asks for versioned names like `@rpath/libggml.0.dylib` while your files are named `libggml.dylib`, `libggml-cpu.dylib`, etc.
 
 In short: your Rust path is correct, but the embedded Mach-O dependency paths inside the dylibs are not relocatable to `assets/libs`. Use `@loader_path` or add matching rpaths/install names during the CMake/build step.

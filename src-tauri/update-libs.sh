@@ -13,6 +13,17 @@ require_tool() {
     fi
 }
 
+sign_dylib() {
+    local dylib="$1"
+
+    if command -v codesign >/dev/null 2>&1; then
+        echo "  signing $(basename "$dylib")"
+        codesign --force --sign - "$dylib"
+    else
+        echo "  warning: codesign not found; leaving $(basename "$dylib") unsigned" >&2
+    fi
+}
+
 resolve_dependency_filename() {
     local dependency="$1"
     local filename="${dependency##*/}"
@@ -92,6 +103,8 @@ patch_dylib() {
         otool -l "$dylib" |
             awk '/cmd LC_RPATH/ { in_rpath = 1; next } in_rpath && /path / { print $2; in_rpath = 0 }'
     )
+
+    sign_dylib "$dylib"
 }
 
 patch_bundled_dylibs() {
