@@ -98,6 +98,8 @@ pub fn function_call(name: &str, args: &[&Gen], ctx: &Context) -> Option<Gen> {
     }
     s.push(')');
 
+    log::info!("Constructing function call: {}", s);
+
     Gen::parse(&s, ctx)
 }
 
@@ -464,8 +466,10 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
 
             match function_call(&func_name_text, &arg_refs, &self.giac_context) {
                 Some(g) => {
-                    let rc = Rc::new(g);
-                    self.visitor_stack.push(Rc::clone(&rc));
+                    // Enhancement: Store the symbolic result by calling eval().
+                    // Since numeric values haven't been assigned in the context yet, this is symbolic.
+                    let symbolic_g = g.eval().unwrap_or(g);
+                    self.visitor_stack.push(Rc::new(symbolic_g));
                 }
                 None => {
                     // If constructing the function failed, push back the original
@@ -530,8 +534,9 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
             .chars()
             .filter(|c| c.is_numeric() || *c == '.' || *c == '-')
             .collect();
-        let value: f64 = filtered.parse().unwrap_or(0.0);
-        let result = Rc::new(Gen::from_f64(value, &self.giac_context).unwrap());
+        // Use Gen::new(string) instead of from_f64 to preserve type (Integer vs Double).
+        // This is crucial for symbolic operations like \factor.
+        let result = Rc::new(Gen::new(&filtered, &self.giac_context).unwrap_or_else(|| Gen::from_f64(0.0, &self.giac_context).unwrap()));
         self.visitor_stack.push(result);
         res
     }
@@ -624,7 +629,10 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
         let arg_refs: Vec<&Gen> = args.iter().map(|rc| rc.as_ref()).collect();
 
         if let Some(g) = function_call(&cmd_name, &arg_refs, &self.giac_context) {
-            self.visitor_stack.push(Rc::new(g));
+            // Enhancement: Store the symbolic result by calling eval().
+            // This allows storing results like factored polynomials or solution sets in the symbol table.
+            let symbolic_g = g.eval().unwrap_or(g);
+            self.visitor_stack.push(Rc::new(symbolic_g));
         } else {
             error!("Failed to construct function call for {}", cmd_name);
         }

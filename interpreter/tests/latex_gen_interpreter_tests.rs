@@ -244,5 +244,9 @@ fn test_latex_gen_custom_commands() {
     input_lines.push(r"int_res = \integrate{x}{x}{0}{2}".to_string());
     checks.push(("int_res", 2.0));
 
+    // 5. Indefinite Integrate: int(x, x) = x^2/2. With x=5, 12.5.
+    input_lines.push(r"int_indef = \integrate{x}{x}".to_string());
+    checks.push(("int_indef", 12.5));
+
     run_test(input_lines, checks);
 }
