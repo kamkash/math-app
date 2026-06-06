@@ -15,6 +15,54 @@ pub trait LaTeXVisitor<'input>: ParseTreeVisitor<'input,LaTeXParserContextType>{
 	fn visit_block(&mut self, ctx: &BlockContext<'input>) { self.visit_children(ctx) }
 
 	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#inline_math}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_inline_math(&mut self, ctx: &Inline_mathContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#block_math}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_block_math(&mut self, ctx: &Block_mathContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#align_math}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_align_math(&mut self, ctx: &Align_mathContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#block_body}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_block_body(&mut self, ctx: &Block_bodyContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#align_body}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_align_body(&mut self, ctx: &Align_bodyContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#align_line}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_align_line(&mut self, ctx: &Align_lineContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#label}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_label(&mut self, ctx: &LabelContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#label_content}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_label_content(&mut self, ctx: &Label_contentContext<'input>) { self.visit_children(ctx) }
+
+	/**
 	 * Visit a parse tree produced by {@link LaTeXParser#math}.
 	 * @param ctx the parse tree
 	 */
@@ -300,6 +348,18 @@ pub trait LaTeXVisitor<'input>: ParseTreeVisitor<'input,LaTeXParserContextType>{
 	fn visit_ceil(&mut self, ctx: &CeilContext<'input>) { self.visit_children(ctx) }
 
 	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#custom_command}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_custom_command(&mut self, ctx: &Custom_commandContext<'input>) { self.visit_children(ctx) }
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#command_arg}.
+	 * @param ctx the parse tree
+	 */
+	fn visit_command_arg(&mut self, ctx: &Command_argContext<'input>) { self.visit_children(ctx) }
+
+	/**
 	 * Visit a parse tree produced by the {@code atomVarSym}
 	 * labeled alternative in {@link LaTeXParser#var_sym}.
 	 * @param ctx the parse tree
@@ -424,6 +484,70 @@ pub trait LaTeXVisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= LaTeXP
 	 * @param ctx the parse tree
 	 */
 		fn visit_block(&mut self, ctx: &BlockContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#inline_math}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_inline_math(&mut self, ctx: &Inline_mathContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#block_math}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_block_math(&mut self, ctx: &Block_mathContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#align_math}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_align_math(&mut self, ctx: &Align_mathContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#block_body}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_block_body(&mut self, ctx: &Block_bodyContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#align_body}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_align_body(&mut self, ctx: &Align_bodyContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#align_line}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_align_line(&mut self, ctx: &Align_lineContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#label}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_label(&mut self, ctx: &LabelContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#label_content}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_label_content(&mut self, ctx: &Label_contentContext<'input>) -> Self::Return {
 			self.visit_children(ctx)
 		}
 
@@ -805,6 +929,22 @@ pub trait LaTeXVisitorCompat<'input>:ParseTreeVisitorCompat<'input, Node= LaTeXP
 		}
 
 	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#custom_command}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_custom_command(&mut self, ctx: &Custom_commandContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
+	 * Visit a parse tree produced by {@link LaTeXParser#command_arg}.
+	 * @param ctx the parse tree
+	 */
+		fn visit_command_arg(&mut self, ctx: &Command_argContext<'input>) -> Self::Return {
+			self.visit_children(ctx)
+		}
+
+	/**
 	 * Visit a parse tree produced by the {@code atomVarSym}
 	 * labeled alternative in {@link LaTeXParser#var_sym}.
 	 * @param ctx the parse tree
@@ -965,6 +1105,46 @@ where
 {
 	fn visit_block(&mut self, ctx: &BlockContext<'input>){
 		let result = <Self as LaTeXVisitorCompat>::visit_block(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_inline_math(&mut self, ctx: &Inline_mathContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_inline_math(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_block_math(&mut self, ctx: &Block_mathContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_block_math(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_align_math(&mut self, ctx: &Align_mathContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_align_math(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_block_body(&mut self, ctx: &Block_bodyContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_block_body(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_align_body(&mut self, ctx: &Align_bodyContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_align_body(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_align_line(&mut self, ctx: &Align_lineContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_align_line(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_label(&mut self, ctx: &LabelContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_label(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_label_content(&mut self, ctx: &Label_contentContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_label_content(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 
@@ -1195,6 +1375,16 @@ where
 
 	fn visit_ceil(&mut self, ctx: &CeilContext<'input>){
 		let result = <Self as LaTeXVisitorCompat>::visit_ceil(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_custom_command(&mut self, ctx: &Custom_commandContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_custom_command(self, ctx);
+        *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
+	}
+
+	fn visit_command_arg(&mut self, ctx: &Command_argContext<'input>){
+		let result = <Self as LaTeXVisitorCompat>::visit_command_arg(self, ctx);
         *<Self as ParseTreeVisitorCompat>::temp_result(self) = result;
 	}
 

@@ -2,10 +2,6 @@ use test_log;
 mod common_latex_gen;
 use crate::common_latex_gen::run_test;
 
-macro_rules! _hide {
-    ($($t:tt)*) => {};
-}
-
 #[test_log::test]
 fn test_latex_gen_simple_eval() {
     let mut input_lines = Vec::new();
@@ -69,7 +65,6 @@ fn test_latex_gen_eval() {
     checks.push(("div_res3", 10.0 / 2.0));
 
     // Power tests
-    input_lines.push("a = 10.0".to_string());
     input_lines.push("pow_res1 = a ^ 2".to_string());
     checks.push(("pow_res1", 10.0f64.powi(2)));
     input_lines.push("pow_res2 = 2.0 ^ 3".to_string());
@@ -121,5 +116,133 @@ fn test_atom_text_ignored() {
     input_lines.push(r"\text{solve the following:}".to_string());
     input_lines.push("x = 2".to_string());
     checks.push(("x", 2.0));
+    run_test(input_lines, checks);
+}
+
+#[test_log::test]
+fn test_inline_dollar() {
+    let mut input_lines = Vec::new();
+    let mut checks = Vec::new();
+    input_lines.push(r"$a = 10$".to_string());
+    checks.push(("a", 10.0));
+    run_test(input_lines, checks);
+}
+
+#[test_log::test]
+fn test_inline_paren() {
+    let mut input_lines = Vec::new();
+    let mut checks = Vec::new();
+    input_lines.push(r"\(b = 20.5\)".to_string());
+    checks.push(("b", 20.5));
+    run_test(input_lines, checks);
+}
+
+#[test_log::test]
+fn test_block_bracket() {
+    let mut input_lines = Vec::new();
+    let mut checks = Vec::new();
+    input_lines.push(r"\[ x = 5 \]".to_string());
+    checks.push(("x", 5.0));
+    run_test(input_lines, checks);
+}
+
+#[test_log::test]
+fn test_block_equation() {
+    let mut input_lines = Vec::new();
+    let mut checks = Vec::new();
+    input_lines.push(r"\begin{equation} y = 3 \end{equation}".to_string());
+    checks.push(("y", 3.0));
+    run_test(input_lines, checks);
+}
+
+#[test_log::test]
+fn test_block_equation_star() {
+    let mut input_lines = Vec::new();
+    let mut checks = Vec::new();
+    input_lines.push(r"\begin{equation*} z = 7 \end{equation*}".to_string());
+    checks.push(("z", 7.0));
+    run_test(input_lines, checks);
+}
+
+#[test_log::test]
+fn test_block_equation_with_label() {
+    let mut input_lines = Vec::new();
+    let mut checks = Vec::new();
+    input_lines.push(r"\begin{equation} E = 4 \label{eq:energy} \end{equation}".to_string());
+    checks.push(("E", 4.0));
+    run_test(input_lines, checks);
+}
+
+#[test_log::test]
+fn test_align() {
+    let mut input_lines = Vec::new();
+    let mut checks = Vec::new();
+    input_lines.push(
+        r"\begin{align}
+          f = 12 \\
+          g &= 24
+        \end{align}".to_string()
+    );
+    checks.push(("f", 12.0));
+    checks.push(("g", 24.0));
+    run_test(input_lines, checks);
+}
+
+#[test_log::test]
+fn test_align_star() {
+    let mut input_lines = Vec::new();
+    let mut checks = Vec::new();
+    input_lines.push(
+        r"\begin{align*}
+          h &= 100 \\
+          k = 200
+        \end{align*}".to_string()
+    );
+    checks.push(("h", 100.0));
+    checks.push(("k", 200.0));
+    run_test(input_lines, checks);
+}
+
+#[test_log::test]
+fn test_block_bracket_multiline() {
+    let mut input_lines = Vec::new();
+    let mut checks = Vec::new();
+    input_lines.push(
+        r"\[
+          p = 50 \\
+          q &= 150
+        \]".to_string()
+    );
+    checks.push(("p", 50.0));
+    checks.push(("q", 150.0));
+    run_test(input_lines, checks);
+}
+
+#[test_log::test]
+fn test_latex_gen_custom_commands() {
+    let mut input_lines = Vec::new();
+    let mut checks = Vec::new();
+
+    // 1. Solve: x - 10 (implies = 0) => x = 10
+    // GIAC solve(x-10=0) usually returns [10.0]. 
+    // LaTeXGenVisitor handles singleton lists in eval_symbol_to_f64.
+    input_lines.push(r"sol_res = \solve{x - 10}".to_string());
+    checks.push(("sol_res", 10.0));
+
+    // 2. Factor: x^2 - 1 => (x-1)(x+1). 
+    // We evaluate by setting x = 5. (5-1)*(5+1) = 24.
+    input_lines.push("x = 5.0".to_string());
+    input_lines.push(r"fac_res = \factor{x^2 - 1}".to_string());
+    checks.push(("fac_res", 24.0));
+
+    // 3. Diff: d/dx(x^3) = 3*x^2. With x=5, 3*25 = 75.
+    input_lines.push(r"diff_res = \diff{x^3}{x}".to_string());
+    checks.push(("diff_res", 75.0));
+
+    // 4. Integrate: int(x, x, 0, 2) = [x^2/2]_0^2 = 2.
+    // Note: GIAC integrate(expr, var, lower, upper)
+    input_lines.push(r"int_res = \integrate{x}{x}{0}{2}".to_string());
+    checks.push(("int_res", 2.0));
+
     run_test(input_lines, checks);
 }

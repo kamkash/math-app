@@ -15,6 +15,86 @@ fn enter_block(&mut self, _ctx: &BlockContext<'input>) { }
  */
 fn exit_block(&mut self, _ctx: &BlockContext<'input>) { }
 /**
+ * Enter a parse tree produced by {@link LaTeXParser#inline_math}.
+ * @param ctx the parse tree
+ */
+fn enter_inline_math(&mut self, _ctx: &Inline_mathContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link LaTeXParser#inline_math}.
+ * @param ctx the parse tree
+ */
+fn exit_inline_math(&mut self, _ctx: &Inline_mathContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link LaTeXParser#block_math}.
+ * @param ctx the parse tree
+ */
+fn enter_block_math(&mut self, _ctx: &Block_mathContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link LaTeXParser#block_math}.
+ * @param ctx the parse tree
+ */
+fn exit_block_math(&mut self, _ctx: &Block_mathContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link LaTeXParser#align_math}.
+ * @param ctx the parse tree
+ */
+fn enter_align_math(&mut self, _ctx: &Align_mathContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link LaTeXParser#align_math}.
+ * @param ctx the parse tree
+ */
+fn exit_align_math(&mut self, _ctx: &Align_mathContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link LaTeXParser#block_body}.
+ * @param ctx the parse tree
+ */
+fn enter_block_body(&mut self, _ctx: &Block_bodyContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link LaTeXParser#block_body}.
+ * @param ctx the parse tree
+ */
+fn exit_block_body(&mut self, _ctx: &Block_bodyContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link LaTeXParser#align_body}.
+ * @param ctx the parse tree
+ */
+fn enter_align_body(&mut self, _ctx: &Align_bodyContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link LaTeXParser#align_body}.
+ * @param ctx the parse tree
+ */
+fn exit_align_body(&mut self, _ctx: &Align_bodyContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link LaTeXParser#align_line}.
+ * @param ctx the parse tree
+ */
+fn enter_align_line(&mut self, _ctx: &Align_lineContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link LaTeXParser#align_line}.
+ * @param ctx the parse tree
+ */
+fn exit_align_line(&mut self, _ctx: &Align_lineContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link LaTeXParser#label}.
+ * @param ctx the parse tree
+ */
+fn enter_label(&mut self, _ctx: &LabelContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link LaTeXParser#label}.
+ * @param ctx the parse tree
+ */
+fn exit_label(&mut self, _ctx: &LabelContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link LaTeXParser#label_content}.
+ * @param ctx the parse tree
+ */
+fn enter_label_content(&mut self, _ctx: &Label_contentContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link LaTeXParser#label_content}.
+ * @param ctx the parse tree
+ */
+fn exit_label_content(&mut self, _ctx: &Label_contentContext<'input>) { }
+/**
  * Enter a parse tree produced by {@link LaTeXParser#math}.
  * @param ctx the parse tree
  */
@@ -492,6 +572,26 @@ fn enter_ceil(&mut self, _ctx: &CeilContext<'input>) { }
  * @param ctx the parse tree
  */
 fn exit_ceil(&mut self, _ctx: &CeilContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link LaTeXParser#custom_command}.
+ * @param ctx the parse tree
+ */
+fn enter_custom_command(&mut self, _ctx: &Custom_commandContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link LaTeXParser#custom_command}.
+ * @param ctx the parse tree
+ */
+fn exit_custom_command(&mut self, _ctx: &Custom_commandContext<'input>) { }
+/**
+ * Enter a parse tree produced by {@link LaTeXParser#command_arg}.
+ * @param ctx the parse tree
+ */
+fn enter_command_arg(&mut self, _ctx: &Command_argContext<'input>) { }
+/**
+ * Exit a parse tree produced by {@link LaTeXParser#command_arg}.
+ * @param ctx the parse tree
+ */
+fn exit_command_arg(&mut self, _ctx: &Command_argContext<'input>) { }
 /**
  * Enter a parse tree produced by the {@code atomVarSym}
  * labeled alternative in {@link LaTeXParser#var_sym}.

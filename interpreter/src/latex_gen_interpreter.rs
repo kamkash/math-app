@@ -11,11 +11,13 @@ use std::collections::{HashMap, VecDeque};
 use std::rc::Rc;
 
 use log::{error, info};
-// Import the generated parser context type
 use math_parser::gen_parsers::latexparser::{
     AdditiveContext, AtomVariableContext, BlockContext, EqualityContext, ExpContext, ExprContext,
     FracContext, LaTeXParser, LaTeXParserContextType, MathContext, MpContext, MultopContext,
-    PowopContext, RelationContext, RelopContext, SumopContext,
+    PowopContext, RelationContext, RelopContext, SumopContext, Inline_mathContext,
+    Block_mathContext, Align_mathContext, Block_bodyContext, Align_bodyContext,
+    Align_lineContext, LabelContext, Label_contentContext, Custom_commandContext,
+    Command_argContext,
 };
 use math_parser::gen_parsers::latexvisitor::LaTeXVisitorCompat;
 
@@ -164,6 +166,7 @@ pub struct LaTeXGenVisitor {
     pub giac_context: Rc<Context>,
     pub symbol_table: HashMap<Rc<Gen>, Rc<Gen>>,
     pub result_table: HashMap<Rc<Gen>, Rc<Gen>>,
+    pub command_arg_depth: usize,
 }
 
 impl LaTeXGenVisitor {
@@ -176,6 +179,7 @@ impl LaTeXGenVisitor {
             giac_context: ctx,
             symbol_table: HashMap::new(),
             result_table: HashMap::new(),
+            command_arg_depth: 0,
         }
     }
 
@@ -257,8 +261,17 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
             let right = self.visitor_stack.pop().unwrap();
             let op = self.visitor_stack.pop().unwrap();
             let left = self.visitor_stack.pop().unwrap();
-            let equation = SymEquationGen::new(left, right, op);
-            self.block_expressions.push(equation);
+            if self.command_arg_depth > 0 {
+                let eq_str = format!("{} {} {}", left, op, right);
+                if let Some(eq_gen) = Gen::parse(&eq_str, &self.giac_context) {
+                    self.visitor_stack.push(Rc::new(eq_gen));
+                } else {
+                    error!("Failed to parse relation: {}", eq_str);
+                }
+            } else {
+                let equation = SymEquationGen::new(left, right, op);
+                self.block_expressions.push(equation);
+            }
         }
         res
     }
@@ -560,6 +573,68 @@ impl<'input> LaTeXVisitorCompat<'input> for LaTeXGenVisitor {
         if op_text == "^" || op_text == "**" {
             self.visitor_stack.push(Rc::new(GEN_POW.clone()));
         }
+        res
+    }
+
+    fn visit_inline_math(&mut self, ctx: &Inline_mathContext<'input>) -> Self::Return {
+        self.visit_children(ctx)
+    }
+
+    fn visit_block_math(&mut self, ctx: &Block_mathContext<'input>) -> Self::Return {
+        self.visit_children(ctx)
+    }
+
+    fn visit_align_math(&mut self, ctx: &Align_mathContext<'input>) -> Self::Return {
+        self.visit_children(ctx)
+    }
+
+    fn visit_block_body(&mut self, ctx: &Block_bodyContext<'input>) -> Self::Return {
+        self.visit_children(ctx)
+    }
+
+    fn visit_align_body(&mut self, ctx: &Align_bodyContext<'input>) -> Self::Return {
+        self.visit_children(ctx)
+    }
+
+    fn visit_align_line(&mut self, ctx: &Align_lineContext<'input>) -> Self::Return {
+        self.visit_children(ctx)
+    }
+
+    fn visit_label(&mut self, _ctx: &LabelContext<'input>) -> Self::Return {
+        Rc::new(Gen::new("0", &self.giac_context).unwrap())
+    }
+
+    fn visit_label_content(&mut self, _ctx: &Label_contentContext<'input>) -> Self::Return {
+        Rc::new(Gen::new("0", &self.giac_context).unwrap())
+    }
+
+    fn visit_custom_command(&mut self, ctx: &Custom_commandContext<'input>) -> Self::Return {
+        let before = self.visitor_stack.len();
+        let res = self.visit_children(ctx);
+        let after = self.visitor_stack.len();
+        let pushed = after.saturating_sub(before);
+
+        let mut args: Vec<Rc<Gen>> = Vec::with_capacity(pushed);
+        for _ in 0..pushed {
+            args.push(self.visitor_stack.pop().unwrap());
+        }
+        args.reverse();
+
+        let cmd_name = ctx.get_child(0).unwrap().get_text().replace("\\", "");
+        let arg_refs: Vec<&Gen> = args.iter().map(|rc| rc.as_ref()).collect();
+
+        if let Some(g) = function_call(&cmd_name, &arg_refs, &self.giac_context) {
+            self.visitor_stack.push(Rc::new(g));
+        } else {
+            error!("Failed to construct function call for {}", cmd_name);
+        }
+        res
+    }
+
+    fn visit_command_arg(&mut self, ctx: &Command_argContext<'input>) -> Self::Return {
+        self.command_arg_depth += 1;
+        let res = self.visit_children(ctx);
+        self.command_arg_depth -= 1;
         res
     }
 }

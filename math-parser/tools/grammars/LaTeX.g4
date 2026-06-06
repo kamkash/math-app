@@ -17,8 +17,54 @@ grammar LaTeX;
 
 // --- Top-level block rule for multiple expressions ---
 block
-	: (relation | expr) (SEPARATOR (relation | expr))* SEPARATOR* EOF
-	| LATEX_BLOCK L_BRACE (relation | expr) (LATEX_NEWLINE (relation | expr))* LATEX_NEWLINE* R_BRACE LATEX_NEWLINE* SEPARATOR* EOF
+	: (relation | expr) (SEPARATOR (relation | expr))* SEPARATOR* EOF                                                              // plain expressions
+	| LATEX_BLOCK L_BRACE (relation | expr) (LATEX_NEWLINE (relation | expr))* LATEX_NEWLINE* R_BRACE LATEX_NEWLINE* SEPARATOR* EOF  // \displaylines (legacy)
+	| inline_math SEPARATOR* EOF                                                                                                    // $...$ or \(...\)
+	| block_math SEPARATOR* EOF                                                                                                     // \[...\], equation, equation*
+	| align_math SEPARATOR* EOF                                                                                                     // align, align*
+	;
+
+// --- Inline math: $...$ or \(...\) ---
+inline_math
+	: DOLLAR (relation | expr) DOLLAR
+	| INLINE_OPEN_PAREN (relation | expr) INLINE_CLOSE_PAREN
+	;
+
+// --- Block math: \[...\], \begin{equation}...\end{equation}, \begin{equation*}...\end{equation*} ---
+block_math
+	: BLOCK_OPEN_BRACKET SEPARATOR* block_body SEPARATOR* BLOCK_CLOSE_BRACKET
+	| BEGIN_CMD L_BRACE ENV_EQUATION R_BRACE label? SEPARATOR* block_body SEPARATOR* END_CMD L_BRACE ENV_EQUATION R_BRACE
+	| BEGIN_CMD L_BRACE ENV_EQUATION_STAR R_BRACE label? SEPARATOR* block_body SEPARATOR* END_CMD L_BRACE ENV_EQUATION_STAR R_BRACE
+	;
+
+// --- Align: \begin{align}...\end{align}, \begin{align*}...\end{align*} ---
+align_math
+	: BEGIN_CMD L_BRACE ENV_ALIGN R_BRACE SEPARATOR* align_body SEPARATOR* END_CMD L_BRACE ENV_ALIGN R_BRACE
+	| BEGIN_CMD L_BRACE ENV_ALIGN_STAR R_BRACE SEPARATOR* align_body SEPARATOR* END_CMD L_BRACE ENV_ALIGN_STAR R_BRACE
+	;
+
+// --- Shared body for block/align math (supports multi-line with \\) ---
+block_body
+	: align_line (SEPARATOR* LATEX_NEWLINE SEPARATOR* align_line)* SEPARATOR* LATEX_NEWLINE? SEPARATOR*
+	;
+
+// --- Align body: series of align_line separated by \\\\ ---
+align_body
+	: align_line (SEPARATOR* LATEX_NEWLINE SEPARATOR* align_line)* SEPARATOR* LATEX_NEWLINE? SEPARATOR*
+	;
+
+// --- Single line inside align/block: optional & separates LHS from RHS ---
+align_line
+	: relation label?
+	;
+
+// --- \label{...} — just consume and ignore ---
+label
+	: LABEL_CMD L_BRACE label_content R_BRACE
+	;
+
+label_content
+	: (~R_BRACE)*
 	;
 
 
@@ -97,6 +143,7 @@ comp:
 	group
 	| abs_group
 	| func
+	| custom_command
 	| derivative                                                          
 	| atom
 	| floor
@@ -154,6 +201,14 @@ text_content: ( ~R_BRACE )* ;
 
 floor: L_FLOOR val = expr R_FLOOR;
 ceil: L_CEIL val = expr R_CEIL;
+
+custom_command
+	: (CMD_SOLVE | CMD_FACTOR | CMD_DIFF | CMD_INTEGRATE) command_arg*
+	;
+
+command_arg
+	: L_BRACE relation R_BRACE
+	;
 
 var_sym: (VAR|SYMBOL) #atomVarSym;
 
@@ -238,7 +293,6 @@ IGNORE:
 		| '\\.'
 		| '\\/'
 		| '\\"'
-		| '\\('
 		| '\\='
 	) -> skip;
 
@@ -332,10 +386,17 @@ fragment WS_CHAR: [ \t\r\n];
 DIFFERENTIAL: 'd' WS_CHAR*? ([a-zA-Z] | '\\' [a-zA-Z]+)?;
 
 DIGIT: [0-9];
+
+// --- Environment names (must appear before VAR to take priority) ---
+ENV_EQUATION_STAR: 'equation*';
+ENV_EQUATION: 'equation';
+ENV_ALIGN_STAR: 'align*';
+ENV_ALIGN: 'align';
+
 // VAR: [a-zA-Z]+;
 VAR: ('_'|'\\_')* [a-zA-Z] ([a-zA-Z0-9_]|'\\')*;
 
-EQUAL: (('&' WS_CHAR*?)? '=') | ('=' (WS_CHAR*? '&')?);
+EQUAL: '=';
 NEQ: '\\neq';
 
 LT: '<';
@@ -343,6 +404,22 @@ LTE: ('\\leq' | '\\le' | LTE_Q | LTE_S);
 LTE_Q: '\\leqq';
 LTE_S: '\\leqslant';
 LATEX_BLOCK: '\\displaylines';
+
+// --- Inline math delimiters ---
+DOLLAR: '$';
+INLINE_OPEN_PAREN: '\\(';
+INLINE_CLOSE_PAREN: '\\)';
+
+// --- Block math delimiters ---
+BLOCK_OPEN_BRACKET: '\\[';
+BLOCK_CLOSE_BRACKET: '\\]';
+
+// --- Label command ---
+LABEL_CMD: '\\label';
+
+// --- Environment commands ---
+BEGIN_CMD: '\\begin';
+END_CMD: '\\end';
 GT: '>';
 GTE: ('\\geq' | '\\ge' | GTE_Q | GTE_S);
 GTE_Q: '\\geqq';
@@ -352,6 +429,12 @@ WS: [ \t]+ -> skip;
 BANG: '!';
 LATEX_NEWLINE: '\\\\';
 SINGLE_QUOTES: '\''+;
+CMD_SOLVE: '\\solve';
+CMD_FACTOR: '\\factor';
+CMD_DIFF: '\\diff';
+CMD_INTEGRATE: '\\integrate';
+
 SYMBOL: '\\' [a-zA-Z]+;
+AMPERSAND: '&' -> skip;
 SEPARATOR: NEWLINE;
 fragment NEWLINE: '\r'? '\n' | '\r';
