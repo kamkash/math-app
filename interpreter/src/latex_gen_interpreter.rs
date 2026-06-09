@@ -161,6 +161,31 @@ pub fn eval_symbol_to_f64(visitor: &mut LaTeXGenVisitor, var_name: &str) -> f64 
     panic!("Variable {} did not evaluate to f64, got: {}", var_name, s);
 }
 
+/// Utility to format the symbolic results from the visitor's symbol table into a LaTeX block.
+///
+/// This takes the mapping of variables to their symbolic GIAC expressions and produces
+/// a string wrapped in a LaTeX `aligned` environment, suitable for display in the UI.
+pub fn format_symbolic_results(visitor: &LaTeXGenVisitor) -> String {
+    if visitor.symbol_table.is_empty() {
+        return String::new();
+    }
+
+    let mut entries: Vec<_> = visitor.symbol_table.iter().collect();
+    // Sort by key string representation for deterministic output
+    entries.sort_by_key(|(k, _)| k.to_string());
+
+    let lines: Vec<String> = entries
+        .into_iter()
+        .map(|(sym, expr)| {
+            let key = sym.to_string().replace('_', r"\_");
+            // Return the symbolic expression as a string.
+            format!("{} &= {}", key, expr.to_string())
+        })
+        .collect();
+
+    format!(r"\begin{{aligned}} {} \end{{aligned}}", lines.join(r" \\ "))
+}
+
 pub struct LaTeXGenVisitor {
     pub tmp_result: Rc<Gen>,
     pub visitor_stack: Vec<Rc<Gen>>,
@@ -658,7 +683,9 @@ pub fn evaluate_latex_block(input: &str) -> Result<String, String> {
         Ok(context) => {
             let _ = visitor.visit(&*context);
             let result = format!("{:?}", visitor.result_table);
-            Ok(result)
+            let symbolic_result = format_symbolic_results(&visitor);
+            info!("Symbolic result: {}", symbolic_result);
+            Ok(r"\begin{aligned}".to_owned() + symbolic_result.as_str() + r"\\" + &result + r"\end{aligned}")
         }
         Err(e) => Err(format!("parser error {}", e).to_string()),
     }

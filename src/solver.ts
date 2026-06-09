@@ -32,7 +32,8 @@ export async function run_solver(
         const res = await invoke("run_solver", {
             input: promptLatex,
         });
-        responseOutputEl.setValue(res as string, {mode: "text"});
+        // responseOutputEl.setValue(res as string, {mode: "text"});
+        responseOutputEl.setValue(res as string, {mode: "auto"});
     }
 }
 
